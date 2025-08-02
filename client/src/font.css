@@ -1,0 +1,64 @@
+@font-face {
+    font-family: Alata;
+    src: url('./assets/font/Alata-Regular.ttf');
+}
+
+@font-face {
+    font-family: Cardo;
+    src: url('./assets/font/Cardo-Regular.ttf');
+}
+
+@font-face {
+    font-family: Lora;
+    src: url('./assets/font/Lora-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url('./assets/font/Montserrat-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: OpenSans;
+    src: url('./assets/font/OpenSans-VariableFont_wdth\,wght.ttf');
+}
+
+@font-face {
+    font-family: Pacifico;
+    src: url('./assets/font/Pacifico-Regular.ttf');
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('./assets/font/Poppins-Regular.ttf');
+}
+
+@font-face {
+    font-family: MontserratAlt;
+    src: url('./assets/font/MontserratAlternates-Black.ttf');
+}
+
+@font-face {
+    font-family: SourGummy;
+    src: url('./assets/font/SourGummy-Black.ttf');
+}
+
+@font-face {
+    font-family: Ubuntu;
+    src: url('./assets/font/Ubuntu-Bold.ttf');
+}
+
+@font-face {
+    font-family: ABeeZee;
+    src: url('./assets/font/ABeeZee-Regular.ttf');
+}
+
+@font-face {
+    font-family: Alef;
+    src: url('./assets/font/Alef-Regular.ttf');
+}
+
+@font-face {
+    font-family: Alike;
+    src: url('./assets/font/Alike-Regular.ttf');
+}
