@@ -82,8 +82,8 @@ const Navbar = () =>
                     <h1 className={ `${ isFixed || location.pathname === "/" ? "text-white" : "text-treevia-primary" } text-4xl font-pacifico` }>Treevia</h1>
                 </div>
             </NavLink>
-            <nav className={ `flex text-lg border ${ isFixed || location.pathname === "/" ? "text-white" : "text-treevia-primary" } rounded-full items-center gap-15 font-alata` }>
-                <ul className="flex items-center justify-center gap-10 px-10 py-2">
+            <nav className={ `flex font-500 ${ isFixed || location.pathname === "/" ? "text-white" : "text-treevia-primary" } rounded-full justify-center items-center font-poppins` }>
+                <ul className="flex items-center justify-center gap-5">
                     {links.map( ( item, index ) => (
                         <motion.span
                             key={ index }
@@ -123,34 +123,34 @@ const Navbar = () =>
                     </motion.span>
                 </ul>
             </nav>
-            { user ? (
-                <div className="relative flex flex-row-reverse">
-                    <motion.span
-                        whileTap={ { scale: 0.8 } }
-                        className="flex justify-center text-2xl rounded-full cursor-pointer text-teal-100 items-center bg-teal-500 p-2"
-                        onClick={ () => setDisplay( ( prev ) => !prev ) }
-                    >
-                        <Fa.FaUser />
-                    </motion.span>
-                    { display && (
-                        <div className="fixed bg-teal-900 shadow-2xl text-white w-60 m-2 p-4 top-20 z-50 right-0 rounded-xl">
-                            <h2>{ user.username }</h2>
-                            <h4>{ user.email }</h4>
-                            <button
-                                className="bg-teal-700 w-full p-2 mt-4 cursor-pointer"
-                                onClick={ handleLogout }
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    ) }
-                </div>
-            ) : (
-                <div className="flex gap-4">
-                    <NavLink to="/login">Login</NavLink>
-                    <NavLink to="/register">Register</NavLink>
-                </div>
-            ) }
+                { user ? (
+                    <div className="relative flex flex-row-reverse">
+                        <motion.span
+                            whileTap={ { scale: 0.8 } }
+                            className="flex justify-center text-2xl rounded-full cursor-pointer text-teal-100 items-center bg-teal-500 p-2"
+                            onClick={ () => setDisplay( ( prev ) => !prev ) }
+                        >
+                            <Fa.FaUser />
+                        </motion.span>
+                        { display && (
+                            <div className="fixed bg-teal-900 shadow-2xl text-white w-60 m-2 p-4 top-20 z-50 right-0 rounded-xl">
+                                <h2>{ user.username }</h2>
+                                <h4>{ user.email }</h4>
+                                <button
+                                    className="bg-teal-700 w-full p-2 mt-4 cursor-pointer"
+                                    onClick={ handleLogout }
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        ) }
+                    </div>
+                ) : (
+                    <div >
+                        <NavLink to="/login">Login</NavLink>
+                        <NavLink to="/register">Register</NavLink>
+                    </div>
+                ) }
         </motion.div>
     );
 };

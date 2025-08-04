@@ -8,3 +8,13 @@ export const LoginButtonVariant = {
 		scale: 0.8
 	},
 }
+
+export const HoverVariant = {
+	hover: {
+		backgroundColor: 'rgba(255,255,255,.25)',
+		y: '-3px',
+	},
+	tap: {
+		scale: .9
+	}
+}

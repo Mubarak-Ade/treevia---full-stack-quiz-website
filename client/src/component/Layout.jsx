@@ -13,7 +13,7 @@ const Layout = () => {
 	return (
 		<>
 			{!isDashboard && <Navbar />}
-			<main className='relative'>
+			<main className=''>
 				<Outlet />
 			</main>
 			<Footer />

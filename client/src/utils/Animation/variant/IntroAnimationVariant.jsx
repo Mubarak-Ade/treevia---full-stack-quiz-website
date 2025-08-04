@@ -27,7 +27,9 @@ export const TextScaleVariant = {
 
 export const LinkVariant = {
     hover: {
-        borderBottom: '2px solid var(--color-treevia-accent)',
+        y: "-2px",
+        borderBottom: '2px solid white',
+        borderBottomHeight:  10,
         color: 'var(--color-white)'
     },
     tap: {

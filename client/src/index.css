@@ -3,11 +3,13 @@
 
 @theme {
 	/* color */
-	--color-custom-100: #018DA5;
-	--color-custom-200: #80DAEB;
-	--color-custom-300: #67DDAB;
-	--color-custom-400: #0B9B8A;
-	--color-custom-500: #909090;
+	--color-custom-100: #2d5a27;
+	--color-custom-200: #4a7c59;
+	--color-custom-300: #6b9080;
+	--color-custom-400: #52b788;
+	--color-custom-500: #40916c;
+	--color-custom-600: #74c69d;
+	--color-custom-700: #1b4332;
 
 	--color-treevia-primary: #0F3828;
 	--color-treevia-primary: #;
@@ -48,5 +50,3 @@
 	/* background image  */
 	--background-image-forest: url('./assets/images/image.jpg')
 }
-
-body
