@@ -43,3 +43,11 @@ export interface QuizWithCategory {
     categoryDescription: Category["description"],
     quizzes: Quiz[],
 }
+
+export interface Result {
+    totalQuestion: number,
+    correctAnswers: number,
+    userAnswers: number,
+    score: number,
+    percentage: number,
+}

@@ -1,10 +1,10 @@
-import Result from "@/pages/Quiz/Result";
+import { Question } from "@/models/Quiz";
 import { Check } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { QuizNavBtn } from "./QuizNavBtn";
-import { Question } from "@/models/Quiz";
+import { useSubmitAnswers } from "@/features/queries/useQuiz";
 
 interface QuizTakingCardProps {
 	quiz: Question[];
@@ -25,9 +25,9 @@ export const QuizTakingCard = ({
 	// console.log(questionText);
 
 	const navigate = useNavigate();
-	// const {id} = useParams()
+	const { id } = useParams();
 
-	// const submit = useSubmitAnswers()
+	const submit = useSubmitAnswers();
 
 	const { questionText, options } = quiz[currentIndex];
 
@@ -38,7 +38,7 @@ export const QuizTakingCard = ({
 
 	const hasAnsweredQuestion = selectedIndex !== -1;
 
-	const allIsAnsered = selectedOption.every((opt) => opt !== -1);
+	const allIsAnswered = selectedOption.every((opt) => opt !== -1);
 
 	const handleSelectedOption = (index: number) => {
 		const updateSelection = [...selectedOption];
@@ -56,13 +56,25 @@ export const QuizTakingCard = ({
 		goToPrevQuestion();
 	};
 
-	// const handleSendResults = () => {
-	//     // Implementation for sending results to server can be added here
-	//     submit.mutate({
-	//         quizId: id as string,
-	//         selectedOption: selectedOption
-	//     })
-	// }
+	const handleSendResults = () => {
+		// Implementation for sending results to server can be added here
+		if (!allIsAnswered) return;
+		submit.mutate(
+			{
+				quizId: id as string,
+				selectedOption: selectedOption,
+			},
+			{
+				onSuccess: (data) => {
+					navigate("/result", {
+						state: { data },
+					});
+				},
+			}
+		);
+	};
+
+	console.log(submit.data);
 
 	return (
 		<AnimatePresence>
@@ -134,10 +146,10 @@ export const QuizTakingCard = ({
 						/>
 					) : (
 						<motion.button
-							onClick={() => navigate("/result/1")}
-							disabled={!allIsAnsered}
+							onClick={handleSendResults}
+							disabled={!allIsAnswered}
 							whileHover={
-								allIsAnsered
+								allIsAnswered
 									? {
 											scale: 1.1,
 									  }
@@ -147,7 +159,7 @@ export const QuizTakingCard = ({
 								scale: 0.8,
 							}}
 							className={`px-4  text-sm py-2 ${
-								allIsAnsered
+								allIsAnswered
 									? "bg-red-700 cursor-pointer"
 									: "bg-red-900/80 cursor-not-allowed"
 							} text-white rounded-full`}
@@ -156,8 +168,6 @@ export const QuizTakingCard = ({
 						</motion.button>
 					)}
 				</div>
-
-				<Result />
 			</motion.div>
 		</AnimatePresence>
 	);

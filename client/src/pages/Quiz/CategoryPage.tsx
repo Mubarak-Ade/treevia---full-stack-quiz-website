@@ -7,13 +7,16 @@ import { motion } from "motion/react";
 export const CategoryPage = () => {
     const {data, isLoading, isError} = useFetchCategories()
 
-    if (isLoading) {
+    if (isLoading || !data) {
         return <p>loading ...</p>
     }
 
-	if (isError || !data) {
+	if (isError) {
 		return <p>error loading categories</p>;
 	}    
+
+	console.log(data);
+	
     
 	return (
 		<div className="max-w-5xl w-full p-5 m-auto">
@@ -47,7 +50,7 @@ export const CategoryPage = () => {
 				</div>
 			</div>
 			<ul className="mt-10 gap-5 grid grid-cols-3">
-				{data.map((category : Category, index : number) => (
+				{data.map((category, index) => (
 					<CategoriesCard key={index} name={category.name} quizCount={category.quizCount} slug={category.slug} description={category.description} tags={category.tags} />
 				))}
 			</ul>

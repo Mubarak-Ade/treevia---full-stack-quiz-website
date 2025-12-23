@@ -12,12 +12,12 @@ export const QuizTaking = () => {
 	const navigate = useNavigate()
 	const { data, isLoading } = useFetchQuestion(id as string);
 	const [currentIndex, setCurrentIndex] = useState(0);
-	if (isLoading || !data) {
-		return <p>Loading...</p>;
-	}
 	const [selectedOption, setSelectedOption] = useState(
 		Array(data?.length).fill(-1)
 	);
+	if (isLoading || !data) {
+		return <p>Loading...</p>;
+	}
 
 	const NextIndex = currentIndex < data.length - 1;
 	const PrevIndex = currentIndex > 0;
@@ -34,7 +34,7 @@ export const QuizTaking = () => {
 		}
 	};
 
-	console.log(selectedOption);
+	console.log(data);
 
 	const progress = ((currentIndex + 1) / data.length) * 100;
 	return (

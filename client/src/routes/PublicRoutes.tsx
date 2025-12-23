@@ -15,7 +15,7 @@ const PublicRoutes = (): JSX.Element[] => [
 		element={<QuizTaking />}
 	/>,
 	<Route
-		path="/result/:id"
+		path="/result"
 		element={<Result />}
 	/>,
 
