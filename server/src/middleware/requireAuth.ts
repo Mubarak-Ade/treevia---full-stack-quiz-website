@@ -1,6 +1,8 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/User.js';
+import env from '../env.js';
+import createHttpError from 'http-errors';
 
 interface AuthRequest extends Request {
   user?: any;
@@ -11,21 +13,22 @@ interface DecodedToken extends JwtPayload {
 }
 
 const requireAuth = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  const header = req.header("Authorization");
+
+  if (!header) {
+    throw createHttpError(401, "No token, authorization denied")
+  }
+
+  const token = header.split(" ")[1]
+
+  if (!token) {
+    throw createHttpError(401, "No token, authorization denied")
+  }
   try {
-    const { authorization } = req.headers;
+    
+    const decode = jwt.verify(token, env.SECRET!) as DecodedToken;
 
-    if (!authorization) {
-      res.status(401).json({ error: 'Authorization token required' });
-      return;
-    }
-
-    const token = authorization.split(' ')[1];
-
-    const decode = jwt.verify(token, process.env.SECRET!) as DecodedToken;
-
-    const user = await User.findOne(decode.userId).select('_id');
-
-    req.user = user;
+    req.user = decode;
     next();
   } catch (error) {
     console.log(error);

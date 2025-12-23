@@ -2,7 +2,6 @@ export function validateQuiz (
 	title: string,
 	category: string,
 	timeLimit: number,
-	description: string
 ): string | null {
 	if (!title || typeof title !== 'string') {
 		return 'Title is required and must be a string.';

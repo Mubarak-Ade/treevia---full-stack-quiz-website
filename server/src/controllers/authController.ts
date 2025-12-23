@@ -1,5 +1,5 @@
 import { Response, Request, RequestHandler } from 'express';
-import User, { IUser } from '../models/User.js';
+import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';

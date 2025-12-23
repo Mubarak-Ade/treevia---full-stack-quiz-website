@@ -1,5 +1,5 @@
 import "dotenv/config"
-import express, { Express, NextFunction } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoute.js';
@@ -22,7 +22,7 @@ app.use('/api/quizzes', quizRoutes);
 app.use('/api/results', resultRoute);
 app.use('/api/categories', categoryRoute);
 
-app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+app.use((error: unknown, req: Request, res: Response, _next: NextFunction) => {
     console.error(error)
     let errorMessage = "An Unknown Error Occured"
     let statusCode = 500

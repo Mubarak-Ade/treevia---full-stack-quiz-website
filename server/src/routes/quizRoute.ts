@@ -4,13 +4,11 @@ import {
   deleteQuizById,
   editQuestions,
   getAllQuiz,
-  getCategories,
   getQuestionById,
   getQuestions,
   getQuizById,
   getQuizzes,
   submitQuiz,
-  getQuizByCategory
 } from '../controllers/quizController.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { createQuestion, deleteQuestion } from '../controllers/questionController.js';

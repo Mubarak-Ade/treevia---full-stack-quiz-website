@@ -140,7 +140,7 @@ export const submitQuiz = async (req: AuthRequest, res: Response): Promise<void>
 			throw createHttpError(404, "Quiz not found")
 		}
 
-		let userAnswer: number;
+		let userAnswer: number = -1;
 		// Process answers
 		questions.forEach((question, index) => {
 			correctAnswers.push(question.correctAnswer);
