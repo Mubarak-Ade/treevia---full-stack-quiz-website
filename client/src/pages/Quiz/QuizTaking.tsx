@@ -8,9 +8,12 @@ import { X } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 
 export const QuizTaking = () => {
-	const { id } = useParams();
+	const { id } = useParams<{ id: string }>();
+	if (!id) {
+		return <p>No quiz id provided</p>;
+	}
 	const navigate = useNavigate()
-	const { data, isLoading } = useFetchQuestion(id as string);
+	const { data, isLoading } = useFetchQuestion(id);
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [selectedOption, setSelectedOption] = useState(
 		Array(data?.length).fill(-1)
