@@ -9,7 +9,7 @@ const Result = () => {
 
 	const result = location.state.data
 
-	const { totalQuestion, correctAnswers, wrongAnswers, score, percentage } = result as ResultModel;
+	const { totalQuestion, score, percentage } = result as ResultModel;
 
 	console.log(result);
 	
