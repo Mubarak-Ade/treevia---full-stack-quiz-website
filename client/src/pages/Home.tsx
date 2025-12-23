@@ -1,11 +1,7 @@
-import React from 'react'
-import BgImage from '../assets/images/bg_image.jpg'
-import { motion } from 'framer-motion'
-import Hero from '../component/home/Hero'
-import Features from '../component/home/Features'
-import Footer from '../component/Footer'
 import Stat from '@/component/home/Stat'
 import { CircleQuestionMark, Pyramid, User } from 'lucide-react'
+import Features from '../component/home/Features'
+import Hero from '../component/home/Hero'
 
 const Home = () =>
 {

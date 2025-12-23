@@ -7,6 +7,9 @@ interface Register extends Login {
     username: string
 }
 
-interface User extends Login {
+interface User {
+    id: string,
+    email: string,
+    username: string,
     role: string
 }

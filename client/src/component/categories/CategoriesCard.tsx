@@ -1,11 +1,12 @@
-import React from "react";
-import { motion } from "motion/react";
-import { Leaf } from "lucide-react";
-import { getColorFromString } from "@/utils/colorFormat";
+import { Category } from "@/models/Quiz";
 import { useQuizStore } from "@/stores/useQuizStore";
+import { getColorFromString } from "@/utils/colorFormat";
+import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 
-export const CategoriesCard = ({slug, category, tags, description, quizCount }: Category) => {
+
+
+export const CategoriesCard: React.FC<Category> = ({slug, name, tags, description, quizCount }: Category) => {
 
 	const navigate = useNavigate()
 
@@ -17,7 +18,7 @@ export const CategoriesCard = ({slug, category, tags, description, quizCount }: 
 		navigate(`/quizzes/${slug}`)
 	}
 
-	const color = getColorFromString(category)
+	const color = getColorFromString(name)
 	return (
 		<motion.div
 			whileTap={{
@@ -37,18 +38,18 @@ export const CategoriesCard = ({slug, category, tags, description, quizCount }: 
 				<span
 					className={`bg-background ${color.text} absolute bottom-0 border m-4 rounded-full  size-10 flex items-center justify-center font-bold text-xl text-center`}
 				>
-					{category.charAt(0)}
+					{name.charAt(0)}
 				</span>
 			</div>
 			<div className="p-4">
-				<h4 className="font-bold text-lg line-clamp-1 text-white">{category}</h4>
+				<h4 className="font-bold text-lg line-clamp-1 text-white">{name}</h4>
 				<p className="text-sm line-clamp-2 text-secondary-btn">{description}</p>
 			</div>
 			<div className="p-4 border-t flex items-center gap-2 text-secondary/50 border-muted">
 				<h6 className="font-bold text-sm">Popular: </h6>
 				<ul className="flex flex-wrap items-center gap-2">
 					{tags.slice(0,2).map((tag, index) => (
-						<li className="bg-muted px-3 py-0.5 rounded-md text-[10px]">
+						<li key={index} className="bg-muted px-3 py-0.5 rounded-md text-[10px]">
 							{tag.name}
 						</li>
 					))}

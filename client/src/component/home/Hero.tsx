@@ -1,8 +1,5 @@
-import React from "react";
 import { motion } from "framer-motion";
-import Stat from "./Stat";
 import TreeImage from "../../assets/images/transparent tree illustration.png";
-import { HoverVariant } from "../../utils/Animation/variant/HoverVariant";
 
 const Hero = () => {
 	return (

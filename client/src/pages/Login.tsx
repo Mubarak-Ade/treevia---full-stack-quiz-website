@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import Logo from '../assets/logo.png'
 import { motion } from 'framer-motion'
+import Logo from '../assets/logo.png'
 import { LoginButtonVariant } from '../utils/Animation/variant/HoverVariant'
 import { LoginContainerVariant, TextScaleVariant } from '../utils/Animation/variant/IntroAnimationVariant'
-import Loading from '../utils/Animation/loading'
-import { useNavigate } from 'react-router'
-import SvgLoader from '../utils/Animation/SvgLoader'
 
 const Login = () => {
 
 	return (
-		<div className='flex flex-col items-center justify-center h-screen text-white bg-gradient-to-tr from-teal-900 to-green-900' >
+		<div className='flex flex-col items-center justify-center h-screen text-white bg-linear-to-tr from-teal-900 to-green-900' >
 			<motion.div 
 			variants={TextScaleVariant}
 			initial='initial'

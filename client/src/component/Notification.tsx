@@ -1,44 +1,71 @@
-import React, { useContext } from 'react'
-import { MyContext } from '../context/AppContext'
-import { motion } from "framer-motion"
-import { FaX } from 'react-icons/fa6'
+import React from 'react';
+import { motion } from 'motion/react';
+import * as Fa from 'react-icons/fa6';
 
-const Notification = ({id, type = "info", message, onClose}) => {
-
-    const variants = {
-        hidden: {
-            opacity: 0,
-            y: -20
-        },
-        visible: {
-            opacity: 1,
-            y: 0
-        },
-        exit: {
-            opacity: 0,
-            y: 20
-        },
-    }
-
-    const typeStyles = {
-        success: "bg-green-500",
-        error: "bg-red-500",
-        warning: "bg-yellow-500",
-        info: "bg-blue-500",
-    }
-
-    return (
-        <motion.div 
-            variants={variants}
-            animate="visible"
-            exit="exit"
-            initial="hidden"
-            layout
-            className={`w-100 h-20 flex justify-center  ${typeStyles[type]} top-0 right-0 m-5 px-8 py-4 rounded-xl text-white`}>
-            <span className='flex-1'>{message}</span>
-            <button className='cursor-pointer' onClick={onClose}><FaX /></button>
-        </motion.div>
-    )
+interface NotificationProps {
+	id: number;
+	type: "success" | "error" | "info" | "warning";
+	message: string;
+	onClose: () => void;
 }
 
-export default Notification
+const Notification: React.FC<NotificationProps> = ({type, message, onClose }) => {
+	const getIcon = () => {
+		switch (type) {
+			case 'success':
+				return <Fa.FaCircleCheck />;
+			case 'error':
+				return <Fa.FaCircleXmark />;
+			case 'info':
+				return <Fa.FaCircleInfo />;
+			case 'warning':
+				return <Fa.FaTriangleExclamation />;
+		}
+	};
+
+	const getBgColor = () => {
+		switch (type) {
+			case 'success':
+				return 'bg-green-500/20 border-green-500';
+			case 'error':
+				return 'bg-red-500/20 border-red-500';
+			case 'info':
+				return 'bg-blue-500/20 border-blue-500';
+			case 'warning':
+				return 'bg-yellow-500/20 border-yellow-500';
+		}
+	};
+
+	const getTextColor = () => {
+		switch (type) {
+			case 'success':
+				return 'text-green-500';
+			case 'error':
+				return 'text-red-500';
+			case 'info':
+				return 'text-blue-500';
+			case 'warning':
+				return 'text-yellow-500';
+		}
+	};
+
+	return (
+		<motion.div
+			initial={{ opacity: 0, x: 100 }}
+			animate={{ opacity: 1, x: 0 }}
+			exit={{ opacity: 0, x: 100 }}
+			className={`flex items-center gap-3 p-4 rounded-lg border ${getBgColor()} backdrop-blur-sm`}
+		>
+			<span className={getTextColor()}>{getIcon()}</span>
+			<p className="text-sm text-white flex-1">{message}</p>
+			<button
+				onClick={onClose}
+				className="text-white/60 hover:text-white transition"
+			>
+				<Fa.FaXmark />
+			</button>
+		</motion.div>
+	);
+};
+
+export default Notification;

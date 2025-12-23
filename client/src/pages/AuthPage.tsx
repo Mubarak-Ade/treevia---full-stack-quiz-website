@@ -1,4 +1,3 @@
-import React from 'react'
 import AuthFrame from '../component/Auth/AuthFrame'
 
 const AuthPage = () =>

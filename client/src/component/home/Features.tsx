@@ -1,5 +1,3 @@
-import React from 'react'
-import { FaApple } from 'react-icons/fa6'
 
 const Features = () =>
 {
@@ -14,17 +12,17 @@ const Features = () =>
 				<div className="bg-card text-white border border-custom px-10 py-7.5 rounded-3xl">
 					<span className='text-5xl mb-5 block'>🌱</span>
 					<h3 className='text-2xl mb-2.5 font-bold'>Organic Learning</h3>
-					<p className='text-[1.1rem] [line-height:1.6]'>Our adaptive system grows with you, nurturing your knowledge naturally through personalized quiz recommendations that bloom into expertise.</p>
+					<p className='text-[1.1rem] leading-[1.6]'>Our adaptive system grows with you, nurturing your knowledge naturally through personalized quiz recommendations that bloom into expertise.</p>
 				</div>
 				<div className="bg-card text-white border border-custom px-10 py-7.5 rounded-3xl">
 					<span className='text-5xl mb-5 block'>🌿</span>
 					<h3 className='text-2xl mb-2.5 font-bold'>Fresh Content</h3>
-					<p className='text-[1.1rem] [line-height:1.6]'>Like a thriving garden, our quiz library is constantly growing with new, engaging content across countless subjects and difficulty levels.</p>
+					<p className='text-[1.1rem] leading-[1.6]'>Like a thriving garden, our quiz library is constantly growing with new, engaging content across countless subjects and difficulty levels.</p>
 				</div>
 				<div className="bg-card text-white border border-custom py-10 px-7.5 rounded-3xl">
 					<span className='text-5xl mb-5 block'>🏆</span>
 					<h3 className='text-2xl mb-2.5 font-bold'>Flourish Together</h3>
-					<p className='text-[1.1rem] [line-height:1.6]'>Connect with fellow knowledge seekers, compete in seasonal challenges, and watch your learning forest grow alongside a vibrant community.</p>
+					<p className='text-[1.1rem] leading-[1.6]'>Connect with fellow knowledge seekers, compete in seasonal challenges, and watch your learning forest grow alongside a vibrant community.</p>
 				</div>
 			</div>
 			<div className="max-w-5xl font-alata h-50 m-auto flex items-center justify-between text-white p-15 mt-10 rounded-4xl border border-custom w-full bg-card">

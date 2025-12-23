@@ -1,7 +1,6 @@
-import { animate, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import React from 'react';
 import Logo from '../../assets/logo.png';
-import { bouncingDotVariant, dotTransition } from './variant/loadingVariant';
 
 const Loading: React.FC = () => {
   return (

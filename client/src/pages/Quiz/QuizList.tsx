@@ -1,13 +1,11 @@
+import BreadCrumbs from "@/component/BreadCrumbs";
 import { QuizCard } from "@/component/quizlist/QuizCard";
 import {
-	useFetchCategories,
-	useFetchQuizzes,
+	useFetchQuizzes
 } from "@/features/queries/useQuiz";
 import { Leaf } from "lucide-react";
-import React from "react";
 import { useParams } from "react-router";
-import type { QuizWithCategory } from "../../models/Quiz";
-import BreadCrumbs from "@/component/BreadCrumbs";
+import type { CategoryWithQuizzes } from "../../models/Quiz";
 
 export const QuizList = () => {
 	const { slug } = useParams();
@@ -19,10 +17,10 @@ export const QuizList = () => {
 
 	const {
 		category,
-		description: categoryDescription,
+		description,
 		tags,
 		quizzes,
-	} = data as QuizWithCategory;
+	} = data as CategoryWithQuizzes;
 
 	console.log(data);
 
@@ -41,11 +39,11 @@ export const QuizList = () => {
 						{category}
 					</h1>
 					<p className="w-3/4 text-secondary">
-						{categoryDescription}
+						{description}
 					</p>
 					<ul className="flex gap-4">
 						{tags.map((tag, index) => (
-							<li className="px-4 py-2 first:bg-custom first:text-card bg-card font-montserrat rounded-full text-xs text-secondary capitalize font-semibold">
+							<li key={index} className="px-4 py-2 first:bg-custom first:text-card bg-card font-montserrat rounded-full text-xs text-secondary capitalize font-semibold">
 								{tag.name}
 							</li>
 						))}
@@ -56,7 +54,7 @@ export const QuizList = () => {
 			<div className="grid grid-cols-3 p-5 gap-10">
 				{quizzes?.map((q) => (
 					<QuizCard
-						id={q._id}
+						_id={q._id}
 						questionCount={q.questionCount}
 						title={q.title}
 						difficulty={q.difficulty}

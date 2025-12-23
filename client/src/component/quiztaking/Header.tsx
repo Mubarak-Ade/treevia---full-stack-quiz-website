@@ -1,6 +1,4 @@
-import { X } from "lucide-react";
 import Logo from "../../assets/logos.png";
-import { useNavigate } from "react-router";
 
 interface Props {
 	label: string,
@@ -8,7 +6,7 @@ interface Props {
 	icon: React.ReactNode
 }
 
-export const QuizHeader = ({path, icon, label, onClick} : Props) => {
+export const QuizHeader = ({icon, label, onClick} : Props) => {
 	return (
 		<div className="flex items-center justify-between p-3 border-b border-muted">
 			<div className="flex gap-4 items-center">

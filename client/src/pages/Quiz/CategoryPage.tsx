@@ -1,18 +1,19 @@
-import { Leaf, Search } from "lucide-react";
-import React from "react";
-import { motion } from "motion/react";
 import { CategoriesCard } from "@/component/categories/CategoriesCard";
-import { useFetchCategories, useFetchQuizzes } from "@/features/queries/useQuiz";
+import { useFetchCategories } from "@/features/queries/useQuiz";
+import { Category } from "@/models/Quiz";
+import { Search } from "lucide-react";
+import { motion } from "motion/react";
 
 export const CategoryPage = () => {
-    const {data, isLoading} = useFetchCategories()
+    const {data, isLoading, isError} = useFetchCategories()
 
     if (isLoading) {
         return <p>loading ...</p>
     }
 
-    console.log(data);
-    
+	if (isError || !data) {
+		return <p>error loading categories</p>;
+	}    
     
 	return (
 		<div className="max-w-5xl w-full p-5 m-auto">
@@ -47,7 +48,7 @@ export const CategoryPage = () => {
 			</div>
 			<ul className="mt-10 gap-5 grid grid-cols-3">
 				{data.map((category : Category, index : number) => (
-					<CategoriesCard key={index} category={category.name} quizCount={category.quizCount} slug={category.slug} description={category.description} tags={category.tags} />
+					<CategoriesCard key={index} name={category.name} quizCount={category.quizCount} slug={category.slug} description={category.description} tags={category.tags} />
 				))}
 			</ul>
 		</div>

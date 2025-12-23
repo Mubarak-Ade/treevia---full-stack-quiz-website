@@ -1,6 +1,5 @@
 import { QuizHeader } from "@/component/quiztaking/Header";
-import { Check, CircleCheck, CircleX, Grid2X2, Trophy, Undo2, X } from "lucide-react";
-import React from "react";
+import { CircleCheck, CircleX, Grid2X2, Trophy, Undo2 } from "lucide-react";
 import { useNavigate } from "react-router";
 
 const Result = () => {

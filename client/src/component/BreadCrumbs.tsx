@@ -1,7 +1,6 @@
-import { BiChevronRight } from "react-icons/bi";
-import { Link, useLocation, useMatches } from "react-router";
-import { AiOutlineDoubleRight } from "react-icons/ai";
 import { Home } from "lucide-react";
+import { BiChevronRight } from "react-icons/bi";
+import { Link, useLocation } from "react-router";
 
 const BreadCrumbs = () => {
     const location = useLocation();
@@ -18,9 +17,7 @@ const BreadCrumbs = () => {
                     </span>
                 </li>
                 {pathnames.map((value, index) => {
-                    const to = `/${pathnames.slice(0, index + 1).join(() => {
-                        return <BiChevronRight />;
-                    })}`;
+                    const to = `/${pathnames.slice(0, index + 1).join("/")}`;
                     const isLast = index === pathnames.length - 1;
                     return (
                         <li>

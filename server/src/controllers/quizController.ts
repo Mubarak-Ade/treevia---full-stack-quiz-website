@@ -1,7 +1,7 @@
 import { Response, Request, RequestHandler } from 'express';
 import mongoose from 'mongoose';
 import Question from '../models/Question.js';
-import Quiz from '../models/Quiz.js';
+import Quiz from '../models	/Quiz.js';
 import Result from '../models/QuizResult.js';
 import User from '../models/User.js';
 import { validateQuiz } from '../utils/validator.js';

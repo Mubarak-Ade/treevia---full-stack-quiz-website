@@ -1,28 +1,21 @@
 // Path: client\src\component\Navbar.jsx
-import React, { useEffect, useRef, useState } from "react";
-import * as Fa from "react-icons/fa6";
-import Logo from "../assets/logos.png";
-import { NavLink, useLocation, useNavigate } from "react-router";
+import useAuthStore from "@/stores/useAuthStore";
 import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import * as Fa from "react-icons/fa6";
+import { NavLink } from "react-router";
+import Logo from "../assets/logos.png";
 import {
 	HeaderVariant,
 	LinkVariant,
 } from "../utils/Animation/variant/IntroAnimationVariant";
-import useAuthStore from "@/stores/useAuthStore";
 
 const Navbar = () => {
-	const [isFixed, setIsFixed] = useState(false);
 	const [display, setDisplay] = useState(false);
 	const isHome = useRef(null);
 
 	const user = useAuthStore((s) => s.user);
 	const logout = useAuthStore((s) => s.logOut);
-
-	useEffect(() => {
-		window.addEventListener("scroll", () => {
-			scrollY >= 50 ? setIsFixed(true) : setIsFixed(false);
-		});
-	}, [location]);
 
 	const links = [
 		{

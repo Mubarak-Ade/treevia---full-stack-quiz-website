@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { useNavigate } from "react-router";
 

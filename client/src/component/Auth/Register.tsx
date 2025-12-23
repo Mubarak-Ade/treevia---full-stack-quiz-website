@@ -1,13 +1,11 @@
-import React, { Dispatch, SetStateAction } from 'react'
-import { motion } from "framer-motion"
-import { FcGoogle } from 'react-icons/fc'
-import { FaFacebook } from 'react-icons/fa'
-import { focusVariant, submitVariant } from '../../utils/Animation/variant/authVariant'
 import { useNotification } from '@/context/NotificationProvider'
 import { useRegister } from '@/features/mutation/Auth'
-import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { motion } from "framer-motion"
+import { Dispatch, SetStateAction } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import z from 'zod'
+import { focusVariant, submitVariant } from '../../utils/Animation/variant/authVariant'
 
 interface RegisterProps {
 	activeTab: string;

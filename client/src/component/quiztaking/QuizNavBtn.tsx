@@ -1,6 +1,6 @@
-import React from "react";
-import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { motion } from "motion/react";
+import React from "react";
 
 interface QuizNavBtnProps {
 	disable: boolean;
@@ -14,7 +14,6 @@ export const QuizNavBtn = ({
 	disable,
 	onClick,
 	label,
-	icon,
 	direction,
 }: QuizNavBtnProps) => {
 	const nextButtonState = disable

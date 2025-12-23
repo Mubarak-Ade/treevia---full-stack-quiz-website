@@ -1,28 +1,13 @@
-import './App.css';
-import React, { useEffect } from 'react';
-import { BrowserRouter } from 'react-router';
-import AppRoutes from './routes/AppRoutes';
-import NotificationProvider from './context/NotificationProvider';
+import { BrowserRouter } from "react-router";
+import "./App.css";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   const userStr = localStorage.getItem('user');
-
-  //   if (token && userStr) {
-  //     const user = JSON.parse(userStr);
-  //     dispatch(setUser({ token, user }));
-  //   }
-  // }, [dispatch]);
-
-  return (
-    <NotificationProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </NotificationProvider>
-  );
+	return (
+		<BrowserRouter>
+			<AppRoutes />
+		</BrowserRouter>
+	);
 }
 
 export default App;

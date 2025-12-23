@@ -1,23 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import { ProgressBar } from "@/component/quiztaking/ProgressBar";
 import { QuizHeader } from "@/component/quiztaking/Header";
+import { ProgressBar } from "@/component/quiztaking/ProgressBar";
 import { QuizTakingCard } from "@/component/quiztaking/QuizTakingCard";
 import { useFetchQuestion } from "@/features/queries/useQuiz";
-import { useNavigate, useParams } from "react-router";
 import { X } from "lucide-react";
+import { useNavigate, useParams } from "react-router";
 
 export const QuizTaking = () => {
 	const { id } = useParams();
 	const navigate = useNavigate()
 	const { data, isLoading } = useFetchQuestion(id as string);
 	const [currentIndex, setCurrentIndex] = useState(0);
+	if (isLoading || !data) {
+		return <p>Loading...</p>;
+	}
 	const [selectedOption, setSelectedOption] = useState(
 		Array(data?.length).fill(-1)
 	);
-	if (isLoading) {
-		return <p>Loading...</p>;
-	}
 
 	const NextIndex = currentIndex < data.length - 1;
 	const PrevIndex = currentIndex > 0;
@@ -55,9 +55,7 @@ export const QuizTaking = () => {
 					selectedOption={selectedOption}
 					setSelectedOption={setSelectedOption}
 					quiz={data}
-					prevIndex={PrevIndex}
 					currentIndex={currentIndex}
-					nextIndex={NextIndex}
 					goToPrevQuestion={handlePrevQuestion}
 					goToNextQuestion={handleNextQuestion}
 				/>

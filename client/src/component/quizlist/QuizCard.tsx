@@ -1,8 +1,7 @@
-import React from "react";
-import { motion } from "motion/react";
+import { Quiz } from "@/models/Quiz";
 import { getColorFromString } from "@/utils/colorFormat";
 import { Clock, ListOrdered, Play } from "lucide-react";
-import { Quiz, QuizWithCategory } from "@/models/Quiz";
+import { motion } from "motion/react";
 import { Link } from "react-router";
 // import { Quiz } from "@/types";
 
@@ -11,13 +10,13 @@ export const QuizCard = ({
 	description,
 	timeLimit,
 	difficulty,
-	id,
+	_id,
 	questionCount,
 }: Quiz) => {
 	const color = getColorFromString(title);
 
 	return (
-		<Link to={`/quizzes/${id}/questions`}>
+		<Link to={`/quizzes/${_id}/questions`}>
 
 		<motion.div className=" border border-custom/50 w-full cursor-pointer rounded-4xl overflow-hidden bg-card">
 			<div className={`h-30 relative ${color.bg}`}>

@@ -1,17 +1,13 @@
+import Result from "@/pages/Quiz/Result";
 import { Check } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router";
 import { QuizNavBtn } from "./QuizNavBtn";
-import { useNavigate, useParams } from "react-router";
-import { useSubmitAnswers } from "@/features/queries/useQuiz";
-import Result from "@/pages/Quiz/Result";
+import { Question } from "@/models/Quiz";
 
 interface QuizTakingCardProps {
-	quiz: Array<{
-		questionText: string;
-		options: string[];
-		correctAnswer: number;
-	}>;
+	quiz: Question[];
 	goToNextQuestion: () => void;
 	goToPrevQuestion: () => void;
 	currentIndex: number;
@@ -29,11 +25,11 @@ export const QuizTakingCard = ({
 	// console.log(questionText);
 
 	const navigate = useNavigate();
-    const {id} = useParams()
+	// const {id} = useParams()
 
-    const submit = useSubmitAnswers()
+	// const submit = useSubmitAnswers()
 
-	const { questionText, options, correctAnswer } = quiz[currentIndex];
+	const { questionText, options } = quiz[currentIndex];
 
 	const isFirstQuestion = currentIndex === 0;
 	const isLastQuestion = currentIndex === quiz.length - 1;
@@ -59,14 +55,14 @@ export const QuizTakingCard = ({
 		if (isFirstQuestion) return;
 		goToPrevQuestion();
 	};
-    
-    const handleSendResults = () => {
-        // Implementation for sending results to server can be added here
-        submit.mutate({
-            quizId: id as string,
-            selectedOption: selectedOption
-        })
-    }
+
+	// const handleSendResults = () => {
+	//     // Implementation for sending results to server can be added here
+	//     submit.mutate({
+	//         quizId: id as string,
+	//         selectedOption: selectedOption
+	//     })
+	// }
 
 	return (
 		<AnimatePresence>
@@ -160,8 +156,8 @@ export const QuizTakingCard = ({
 						</motion.button>
 					)}
 				</div>
-                
-                <Result />
+
+				<Result />
 			</motion.div>
 		</AnimatePresence>
 	);

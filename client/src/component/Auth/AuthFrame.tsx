@@ -1,27 +1,14 @@
-import { AiFillCheckCircle } from "react-icons/ai"; 
-import React, { useContext, useState } from 'react'
-import Panel from './Panel'
-import Login from './Login'
-import Register from './Register'
-import { useRef } from 'react'
+import { useState } from 'react';
+import Login from './Login';
+import Panel from './Panel';
+import Register from './Register';
 import SuccessPage from "./SuccessPage";
-import { MyContext } from "../../context/AppContext";
-import { useNotification } from "../../context/NotificationProvider";
 
 const AuthFrame = () => {
 	const [ activeTab, setActiveTab ] = useState( "register" )
 
 
-	// const handleClick = () => {
-	// 	setIsLoading( true )
-		
-	// 	setTimeout( () => {
-	// 		setIsLoading( false )
-	// 		// body
-	// 	}, 5000 );
-	// 	setActiveTab("success")
-	// 	showNotification("success", "Successfully login, redirecting to your dashboard...")
-	// }
+
 
 	return (
 		<div className='max-w-250 overflow-hidden w-full min-h-150 flex rounded-3xl border-custom border'>

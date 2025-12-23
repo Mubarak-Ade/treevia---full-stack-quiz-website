@@ -7,6 +7,7 @@ import { CategoryPage } from "@/pages/Quiz/CategoryPage";
 import { QuizList } from "@/pages/Quiz/QuizList";
 import { QuizTaking } from "@/pages/Quiz/QuizTaking";
 import Result from "@/pages/Quiz/Result";
+import { JSX } from "react";
 
 const PublicRoutes = (): JSX.Element[] => [
 	<Route

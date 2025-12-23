@@ -10,8 +10,8 @@ interface AuthState {
 	logOut: () => void;
 }
 
-const useAuthStore = create(
-	persist<AuthState>(
+const useAuthStore = create<AuthState>()(
+	persist(
 		(set) => ({
 			user: null,
 			token: null,
@@ -22,7 +22,7 @@ const useAuthStore = create(
 		}),
 		{
 			name: "auth",
-			partialize: (state) => ({
+			partialize: (state): Pick<AuthState, 'user' | 'token'> => ({
 				user: state.user,
 				token: state.token
 			})

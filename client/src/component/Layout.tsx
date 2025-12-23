@@ -1,12 +1,8 @@
-import {Outlet, useLocation} from 'react-router'
-import Navbar from './Navbar'
+import { Outlet } from 'react-router'
 import Footer from './Footer'
-import Loading from '../utils/Animation/loading'
-import BreadCrumbs from './BreadCrumbs'
+import Navbar from './Navbar'
 
 const Layout = () => {
-
-	const location = useLocation()
 
 	// const isDashboard = location.pathname.startsWith('/admin' || '/user')
 

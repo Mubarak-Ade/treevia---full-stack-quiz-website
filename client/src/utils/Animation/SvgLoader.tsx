@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import React from "react";
-const SvgLoader = ({text}) => {
+const SvgLoader = ({text}: {text: string}) => {
     const dots = Array.from({ length: 8 });
     return (
         <div className="fixed top-0 left-0 z-50 flex flex-col items-center justify-center w-full h-screen bg-teal-700">

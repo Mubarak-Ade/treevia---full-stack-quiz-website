@@ -1,5 +1,5 @@
+import Notification from "@/component/Notification";
 import { createContext, useContext, useState, ReactNode } from "react";
-import Notification from "../component/Notification";
 
 interface Toast {
 	id: number;

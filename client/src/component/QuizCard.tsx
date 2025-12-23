@@ -1,9 +1,22 @@
-import React from "react";
-import * as Fa from "react-icons/fa6";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
-const QuizCard = ({ id, title, category, questions, timelimit, difficulty, description, tags, attempts, rating }) => {
+interface QuizCardProps {
+  id: string;
+  title: string;
+  category: string;
+  questions: any[];
+  timelimit: number;
+  difficulty: string;
+  description: string;
+  tags: string[];
+  attempts: number;
+  rating: number;
+}
+
+const QuizCard = ({ 
+  id, title, category, timelimit, difficulty, attempts, rating 
+} : QuizCardProps) => {
 
     // const questionId = questions[0]._id
 

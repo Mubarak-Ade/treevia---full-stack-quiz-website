@@ -1,20 +1,40 @@
 // import { Quiz } from "@/types"
 
-interface Category {
-    // import { Quiz } from '../types/index';
-    name: string,
-    description: string
-    quizCount: number,
-    tags: [string]
+interface Tag {
+    _id?: string;
+    name: string;
+}
+
+export interface Category {
+    name: string;
+    slug: string;
+    description: string;
+    quizCount?: number;
+    tags: Tag[];
+}
+
+export interface CategoryWithQuizzes {
+    category: Category["name"],
+    description: Category["description"],
+    tags: Category["tags"],
+    quizzes: Quiz[],
 }
 
 export interface Quiz {
-    id: string
+    _id: string
     title: string,
     difficulty: 'easy' | 'medium' | 'hard',
     timeLimit: number,
     description: string,
-    questionCount: number
+    questionCount?: number
+}
+
+export interface Question {
+    _id: string,
+    quizId: string,
+    questionText: string,
+    options: string[],
+    correctOption: number,
 }
 
 export interface QuizWithCategory {
