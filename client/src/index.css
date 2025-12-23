@@ -1,35 +1,20 @@
 @import url('./font.css');
 @import 'tailwindcss';
 
+
 @theme {
+
 	/* color */
-	--color-custom-100: #2d5a27;
-	--color-custom-200: #4a7c59;
-	--color-custom-300: #6b9080;
-	--color-custom-400: #52b788;
-	--color-custom-500: #40916c;
-	--color-custom-600: #74c69d;
-	--color-custom-700: #1b4332;
-
-	--color-treevia-primary: #0F3828;
-	--color-treevia-primary: #;
-	--color-treevia-accent: #1EA873;
-	--color-treevia-light: #cedeca;
-	--color-treevia-hover: #B2D3A8;
-	--color-treevia-dark: hsl(141, 26%, 15%);
-	--color-treevia-base: #D7FFF1;
-	--color-treevia-card: #498467;
-	--color-treevia-hover: #52B788;
-	--color-treevia-text: #306B55;
-	--color-treevia-muted: #5D6616;
-	--color-treevia-error: hsl(6, 63%, 46%);
-	--color-treevia-success: hsl(145, 63%, 49%);
-
-	--color-groove-100: #9AC1F0;
-	--color-groove-200: #72FA93;
-	--color-groove-300: #A0E548;
-	--color-groove-400: #E45F2B;
-	--color-groove-500: #F6C445;
+	--color-background: #0f1c12;
+	--color-secondary-bg: #0b2e16;
+	--color-card: #14251a;
+	--color-custom: #00ff66;
+	--color-muted: #1f3928;
+	--color-primary: #ffffff;
+	--color-primary-btn: #00ff66;
+	--color-secondary-btn: #2f4a3a;
+	--color-secondary: #a3b0a1;
+	/* --color-link: #a3b0a1;	 */
 
 	/* font */
 	--font-alata: "Alata";
@@ -49,4 +34,10 @@
 
 	/* background image  */
 	--background-image-forest: url('./assets/images/image.jpg')
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background-color: var(--color-background);
 }

@@ -1,0 +1,142 @@
+[
+  {
+    "title": "JavaScript Fundamentals",
+    "description": "Test your knowledge of JavaScript basics including variables, functions, and data types",
+    "categories": ["Programming", "JavaScript"],
+    "tags": ["beginner", "fundamentals", "web-development"],
+    "timeLimit": 15
+  },
+  {
+    "title": "React Hooks Mastery",
+    "description": "Deep dive into React hooks and their practical applications in modern development",
+    "categories": ["Programming", "React"],
+    "tags": ["intermediate", "react", "hooks"],
+    "timeLimit": 20
+  },
+  {
+    "title": "World Geography",
+    "description": "Explore capitals, countries, and geographical features from around the world",
+    "categories": ["Geography"],
+    "tags": ["general-knowledge", "world", "capitals"],
+    "timeLimit": 18
+  },
+  {
+    "title": "Python Data Structures",
+    "description": "Master lists, dictionaries, sets, and tuples in Python programming",
+    "categories": ["Programming", "Python"],
+    "tags": ["beginner", "python", "data-structures"],
+    "timeLimit": 25
+  },
+  {
+    "title": "World History Quiz",
+    "description": "Test your knowledge of major historical events and figures across centuries",
+    "categories": ["History"],
+    "tags": ["history", "general-knowledge", "events"],
+    "timeLimit": 22
+  },
+  {
+    "title": "TypeScript Advanced",
+    "description": "Challenge yourself with advanced TypeScript concepts like generics and decorators",
+    "categories": ["Programming", "TypeScript"],
+    "tags": ["advanced", "typescript", "oop"],
+    "timeLimit": 30
+  },
+  {
+    "title": "Biology Basics",
+    "description": "Learn about cells, DNA, evolution, and fundamental biological processes",
+    "categories": ["Science", "Biology"],
+    "tags": ["beginner", "biology", "science"],
+    "timeLimit": 20
+  },
+  {
+    "title": "CSS Grid and Flexbox",
+    "description": "Master modern CSS layout techniques for responsive web design",
+    "categories": ["Programming", "Web Design"],
+    "tags": ["intermediate", "css", "web-design"],
+    "timeLimit": 18
+  },
+  {
+    "title": "General Chemistry",
+    "description": "Understand elements, compounds, reactions, and chemical bonding",
+    "categories": ["Science", "Chemistry"],
+    "tags": ["chemistry", "science", "intermediate"],
+    "timeLimit": 28
+  },
+  {
+    "title": "Shakespeare Literature",
+    "description": "Explore the works and themes of William Shakespeare",
+    "categories": ["Literature"],
+    "tags": ["literature", "classics", "shakespeare"],
+    "timeLimit": 25
+  },
+  {
+    "title": "Database Design",
+    "description": "Learn about normalization, relationships, and SQL query optimization",
+    "categories": ["Programming", "Databases"],
+    "tags": ["advanced", "databases", "sql"],
+    "timeLimit": 30
+  },
+  {
+    "title": "Ancient Civilizations",
+    "description": "Discover the history and culture of ancient Egypt, Rome, Greece, and Mesopotamia",
+    "categories": ["History"],
+    "tags": ["history", "ancient", "civilizations"],
+    "timeLimit": 24
+  },
+  {
+    "title": "Physics Motion and Forces",
+    "description": "Understand Newton's laws, acceleration, velocity, and momentum",
+    "categories": ["Science", "Physics"],
+    "tags": ["physics", "science", "mechanics"],
+    "timeLimit": 22
+  },
+  {
+    "title": "Node.js Backend Development",
+    "description": "Build scalable server-side applications with Node.js and Express",
+    "categories": ["Programming", "Backend"],
+    "tags": ["nodejs", "backend", "intermediate"],
+    "timeLimit": 25
+  },
+  {
+    "title": "Modern Art Movements",
+    "description": "Explore impressionism, cubism, surrealism, and contemporary art styles",
+    "categories": ["Literature"],
+    "tags": ["art", "culture", "movements"],
+    "timeLimit": 18
+  },
+  {
+    "title": "REST API Best Practices",
+    "description": "Design and implement RESTful APIs following industry standards",
+    "categories": ["Programming", "Backend"],
+    "tags": ["api", "rest", "backend", "advanced"],
+    "timeLimit": 20
+  },
+  {
+    "title": "Astronomy and Space",
+    "description": "Journey through planets, stars, galaxies, and cosmic phenomena",
+    "categories": ["Science"],
+    "tags": ["astronomy", "space", "science"],
+    "timeLimit": 19
+  },
+  {
+    "title": "Web Security Fundamentals",
+    "description": "Learn about HTTPS, XSS, CSRF, and other security vulnerabilities",
+    "categories": ["Programming", "Web Design"],
+    "tags": ["security", "web", "advanced"],
+    "timeLimit": 28
+  },
+  {
+    "title": "Renaissance Europe",
+    "description": "Understand the cultural and intellectual rebirth of the Renaissance period",
+    "categories": ["History", "Literature"],
+    "tags": ["history", "renaissance", "europe"],
+    "timeLimit": 21
+  },
+  {
+    "title": "Git and Version Control",
+    "description": "Master version control with Git, branching strategies, and collaboration",
+    "categories": ["Programming"],
+    "tags": ["git", "tools", "collaboration"],
+    "timeLimit": 16
+  }
+]

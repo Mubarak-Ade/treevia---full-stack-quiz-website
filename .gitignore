@@ -32,4 +32,15 @@ server/.env
 # Test coverage
 coverage/
 
+# TypeScript build info
+*.tsbuildinfo
+dist/
+
+# Compiled TypeScript
+**/*.js
+**/*.jsx
+!**/node_modules/**
+!**/.vite/**
+!**/dist/**
+
 # Misc

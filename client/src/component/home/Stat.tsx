@@ -1,0 +1,30 @@
+import React from 'react'
+import {motion} from 'framer-motion'
+import { HoverVariant } from '../../utils/Animation/variant/HoverVariant'
+import { FaFolder } from 'react-icons/fa6'
+import {LucideIcon, LucideScanFace} from "lucide-react"
+
+interface Props {
+	title: string,
+	numbers: number,
+	Icon: LucideIcon
+}
+
+const Stat = ({title= "Title", numbers = 500000, Icon = LucideScanFace} : Props) =>
+{
+	return (
+		<motion.div 
+		whileHover="hover"
+		variants={HoverVariant}
+		transition={{
+			duration: .2,
+		}}
+		className='border border-custom rounded-full text-center text-white py-5 bg-card max-w-xs w-full'>
+			<Icon className='m-auto bg-custom text-background p-2 rounded-md mb-2' size={40} />
+			<h1 className='text-5xl mb-2 font-bold font-alike'>{numbers}</h1>
+			<h2 className='font-poppins text-base text-secondary'>{title}</h2>
+		</motion.div>
+	)
+}
+
+export default Stat
