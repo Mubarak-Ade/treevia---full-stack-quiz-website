@@ -1,19 +1,19 @@
 import { motion } from "framer-motion";
+import { z } from "zod";
 import {
 	focusVariant,
 	submitVariant,
 } from "../../utils/Animation/variant/authVariant";
-import { z } from "zod";
 
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useLogin } from "@/features/mutation/Auth";
 import { useNotification } from "@/context/NotificationProvider";
-import { Dispatch, SetStateAction } from "react";
+import { useLogin } from "@/features/mutation/Auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Dispatch, SetStateAction, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 interface LoginProps {
 	activeTab: string;
-	setToSuccess: Dispatch<SetStateAction<string>>;
+	setTabTo: Dispatch<SetStateAction<string>>;
 }
 
 const schema = z.object({
@@ -23,8 +23,9 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const Login = ({ activeTab, setToSuccess }: LoginProps) => {
+const Login = ({ activeTab, setTabTo }: LoginProps) => {
 	const { showNotification } = useNotification();
+	const [showPassword, setShowPassword] = useState(false)
 
 	const login = useLogin();
 
@@ -40,7 +41,7 @@ const Login = ({ activeTab, setToSuccess }: LoginProps) => {
 	const onSubmit: SubmitHandler<FormData> = (data) => {
 		login.mutate(data, {
 			onSuccess: () => {
-				setToSuccess("success");
+				setTabTo("success");
 				showNotification(
 					"success",
 					"Successfully login, redirecting to your dashboard..."
@@ -61,11 +62,11 @@ const Login = ({ activeTab, setToSuccess }: LoginProps) => {
 		<motion.form
 			onSubmit={handleSubmit(onSubmit)}
 			initial={{
-				x: 0,
+				x: -20,
 				opacity: 0,
 			}}
 			whileInView={{
-				x: -20,
+				x: 0,
 				opacity: 1,
 			}}
 			transition={{
@@ -115,13 +116,13 @@ const Login = ({ activeTab, setToSuccess }: LoginProps) => {
 					<motion.input
 						variants={focusVariant}
 						whileFocus="animate"
-						type="password"
+						type={showPassword ? "text" : "password"}
 						id="password"
 						{...register("password")}
 						placeholder="Enter Your Password"
 						className="w-full placeholder:text-slate-400 bg-white outline-none text-sm px-5 py-2 border-2 border-green-900/20 rounded-2xl"
 					/>
-					<button type="button" className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xl cursor-pointer p-1.5">
+					<button onClick={() => setShowPassword(!showPassword)} type="button" className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xl cursor-pointer p-1.5">
 						👁
 					</button>
 				</div>
@@ -183,28 +184,6 @@ const Login = ({ activeTab, setToSuccess }: LoginProps) => {
 				)}
 			</motion.button>
 
-			{/* <div className="text-center mb-6.5 my-0 text-[#999] relative text-sm before:content-[''] before:absolute before:left-0 before:top-1/2 before:w-35 before:h-0.25 before:bg-white/20 after:content-[''] after:absolute after:right-0 after:top-1/2 after:w-35 after:h-0.25 after:bg-white/20">Continue with</div> */}
-
-			{/* <div className="flex gap-2 mb-6.25">
-				<motion.button
-					variants={ focusVariant }
-					whileHover="animate"
-					transition="transition"
-					// initial="initial"
-					className="flex-1 cursor-pointer flex justify-center items-center gap-4 font-semibold p-3 border-2 border-gray-200 rounded-2xl text-gray-500">
-					<FcGoogle className="text-xl" />
-					Google
-				</motion.button>
-				<motion.button
-					variants={ focusVariant }
-					whileHover="animate"
-					transition="transition"
-					// initial="initial"
-					className="flex-1 cursor-pointer flex justify-center items-center gap-4 font-semibold p-3 border-2 border-gray-200 rounded-2xl text-gray-500">
-					<FaFacebook className="text-blue-600 text-xl" />
-					Facebook
-				</motion.button>
-			</div> */}
 		</motion.form>
 	);
 };

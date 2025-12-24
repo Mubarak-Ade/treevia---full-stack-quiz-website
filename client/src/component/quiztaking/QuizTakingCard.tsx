@@ -67,14 +67,12 @@ export const QuizTakingCard = ({
 			{
 				onSuccess: (data) => {
 					navigate("/result", {
-						state: { data },
+						state: { data, quiz: {...quiz, questionText, options} },
 					});
 				},
 			}
 		);
 	};
-
-	console.log(submit.data);
 
 	return (
 		<AnimatePresence>
@@ -85,7 +83,7 @@ export const QuizTakingCard = ({
 					duration: 1,
 				}}
 				key={currentIndex}
-				className="w-full relative mt-4 rounded-4xl bg-card "
+				className="w-full overflow-hidden relative mt-4 rounded-4xl bg-card "
 			>
 				<div className="text-white text-center font-ubuntu bg-muted/50 text-base p-4 md:text-xl h-50 flex items-center justify-center rounded-b-[50%] ">
 					<span></span>

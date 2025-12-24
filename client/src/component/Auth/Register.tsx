@@ -2,14 +2,14 @@ import { useNotification } from '@/context/NotificationProvider'
 import { useRegister } from '@/features/mutation/Auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from "framer-motion"
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import z from 'zod'
 import { focusVariant, submitVariant } from '../../utils/Animation/variant/authVariant'
 
 interface RegisterProps {
 	activeTab: string;
-	setToSuccess: Dispatch<SetStateAction<string>>;
+	setTabTo: Dispatch<SetStateAction<string>>;
 }
 
 const schema = z.object({
@@ -22,9 +22,11 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 
-const Register = ({ activeTab, setToSuccess }: RegisterProps) => {
+const Register = ({ activeTab, setTabTo }: RegisterProps) => {
 
 	const { showNotification } = useNotification();
+
+		const [showPassword, setShowPassword] = useState(false)
 	
 		const signup = useRegister();
 	
@@ -40,7 +42,7 @@ const Register = ({ activeTab, setToSuccess }: RegisterProps) => {
 		const onSubmit: SubmitHandler<FormData> = (data) => {
 			signup.mutate(data, {
 				onSuccess: () => {
-					setToSuccess("success");
+					setTabTo("success");
 					showNotification(
 						"success",
 						"Successfully Sign up, redirecting to your dashboard..."
@@ -61,11 +63,11 @@ const Register = ({ activeTab, setToSuccess }: RegisterProps) => {
 		<motion.form
 			onSubmit={handleSubmit(onSubmit)}
 			initial={ {
-				x: 0,
+				x: -20,
 				opacity: 0
 			} }
 			whileInView={ {
-				x: -10,
+				x: 0,
 				opacity: 1
 			} }
 			transition={ {
@@ -73,8 +75,8 @@ const Register = ({ activeTab, setToSuccess }: RegisterProps) => {
 			} }
 			layout
 			className={ activeTab === "register" ? "block" : "hidden" }>
-			<h2 className="font-poppins font-semibold mb-2.5 text-3xl text-white">Plant Your Roots</h2>
-			<h4 className='font-poppins mb-4 text-[15px] text-secondary'>Create an account to start growing your knowledge</h4>
+			<h2 className="font-poppins font-semibold mb-2.5 text-3xl text-center text-white">Plant Your Roots</h2>
+			<h4 className='font-poppins mb-4 text-[15px] text-secondary text-center'>Create an account to start growing your knowledge</h4>
 
 			{/* Name Field */ }
 			<div className="mb-4 font-poppins">
@@ -98,8 +100,8 @@ const Register = ({ activeTab, setToSuccess }: RegisterProps) => {
 			<div className="mb-4 font-poppins">
 				<label htmlFor="email" className='block text-white font-bold mb-2 text-sm'>Password</label>
 				<div className='relative'>
-					<motion.input {...register("password")} variants={ focusVariant } whileFocus="animate" type="password" id='password' placeholder='Enter Your Password' className='w-full placeholder:text-slate-400 bg-white outline-none text-sm px-5 py-2 border-2 border-green-900/20 rounded-2xl' />
-					<button type='button' className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xl cursor-pointer p-1.5">👁</button>
+					<motion.input {...register("password")} variants={ focusVariant } whileFocus="animate" type={showPassword ? "text" : "password"} id='password' placeholder='Enter Your Password' className='w-full placeholder:text-slate-400 bg-white outline-none text-sm px-5 py-2 border-2 border-green-900/20 rounded-2xl' />
+					<button onClick={() => setShowPassword(!showPassword)} type='button' className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xl cursor-pointer p-1.5">👁</button>
 				</div>
 				{errors.password && (
 					<p className="text-red-500">{errors.password.message}</p>
@@ -110,8 +112,8 @@ const Register = ({ activeTab, setToSuccess }: RegisterProps) => {
 			<div className="mb-4 font-poppins">
 				<label htmlFor="password" className='block text-white font-bold mb-2 text-sm'>Confirm Password</label>
 				<div className='relative'>
-					<motion.input {...register("confirmPassword")} variants={ focusVariant } whileFocus="animate" type="password" id='password' placeholder='Confirm Your Password' className='w-full placeholder:text-slate-400 bg-white outline-none text-sm px-5 py-2 border-2 border-green-900/20 rounded-2xl' />
-					<button type='button' className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xl cursor-pointer p-1.5">👁</button>
+					<motion.input {...register("confirmPassword")} variants={ focusVariant } whileFocus="animate" type={showPassword ? "text" : "password"} id='password' placeholder='Confirm Your Password' className='w-full placeholder:text-slate-400 bg-white outline-none text-sm px-5 py-2 border-2 border-green-900/20 rounded-2xl' />
+					<button onClick={() => setShowPassword(!showPassword)} type='button' className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xl cursor-pointer p-1.5">👁</button>
 				</div>
 				{errors.confirmPassword && (
 					<p className="text-red-500">{errors.confirmPassword.message}</p>

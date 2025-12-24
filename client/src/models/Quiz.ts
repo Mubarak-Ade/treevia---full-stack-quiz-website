@@ -44,10 +44,18 @@ export interface QuizWithCategory {
     quizzes: Quiz[],
 }
 
+interface Attempts {
+    question: string,
+    selected: string,
+    correct: string,
+    isCorrect: boolean
+}
+
 export interface Result {
     totalQuestion: number,
-    correctAnswers: number,
+    // correctAnswers: number,
     userAnswers: number,
     score: number,
+    attempts: Attempts[]
     percentage: number,
 }

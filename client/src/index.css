@@ -1,7 +1,6 @@
 @import url('./font.css');
 @import 'tailwindcss';
 
-
 @theme {
 
 	/* color */
@@ -34,6 +33,10 @@
 
 	/* background image  */
 	--background-image-forest: url('./assets/images/image.jpg')
+
+	/* shadow */
+
+	--shadow-3xs: var(--sh);
 }
 
 body {

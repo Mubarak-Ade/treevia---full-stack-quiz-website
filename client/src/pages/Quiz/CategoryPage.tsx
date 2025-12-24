@@ -20,10 +20,10 @@ export const CategoryPage = () => {
 	return (
 		<div className="max-w-5xl w-full p-5 m-auto">
 			<div className="space-y-4">
-				<h1 className="text-5xl text-white font-bold font-alata">
+				<h1 className="md:text-5xl text-4xl text-white font-bold font-alata">
 					Explore <span className="text-custom">Categories</span>
 				</h1>
-				<p className="text-secondary w-3/4 text-base">
+				<p className="text-secondary max-w-xl text-base">
 					Choose from our diverse collection of quiz topics. From
 					science, art, to tech, challenge yourself and expand your
 					knowledge tree
@@ -48,7 +48,7 @@ export const CategoryPage = () => {
 					</motion.button>
 				</div>
 			</div>
-			<ul className="mt-10 gap-5 grid grid-cols-3">
+			<ul className="mt-10 gap-10 place-items-center grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 				{data.map((category, index) => (
 					<CategoriesCard key={index} name={category.name} quizCount={category.quizCount} slug={category.slug} description={category.description} tags={category.tags} />
 				))}

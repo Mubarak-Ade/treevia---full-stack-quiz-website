@@ -2,7 +2,7 @@
 const Footer = () => {
     return (
         <div className='border border-muted pt-15 px-7.5 '>
-            <div className="grid grid-cols-3 gap-10 mb-10 text-white">
+            <div className="grid  lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 mb-10 text-white">
                 <div className="">
                     <h3 className='mb-5 text-2xl font-bold'>Treevia</h3>
                     <p>Where knowledge grows naturally. Cultivate your curiosity and let your mind flourish with engaging trivia across every branch of learning.</p>

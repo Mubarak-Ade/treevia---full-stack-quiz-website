@@ -3,18 +3,18 @@ import TreeImage from "../../assets/images/transparent tree illustration.png";
 
 const Hero = () => {
 	return (
-		<div className="flex bg-primary-bg items-center gap-10 justify-center h-screen">
+		<div className="flex p-5 flex-col-reverse lg:flex-row bg-primary-bg items-center gap-10 md:justify-around justify-center">
 			<div className="max-w-xl w-full">
 				<div className="">
-					<h1 className="text-6xl text-white font-montserrat font-bold">
+					<h1 className="lg:text-6xl text-4xl md:text-5xl lg:text-start text-center text-white font-montserrat font-bold">
 						Branch Out Your <span className="text-custom">Knowledge.</span>
 					</h1>
-					<p className="mt-4 text-secondary text-xl">Join thousands of players in the ultimate trivia challenge.
+					<p className="mt-4 text-secondary text-base text-center lg:text-start md:text-xl">Join thousands of players in the ultimate trivia challenge.
 						Test your skills accross 50+ categories and grow your mind daily
 					</p>
 				</div>
 
-				<div className="flex mt-8 gap-4">
+				<div className="flex flex-col md:flex-row justify-center lg:justify-normal mt-8 gap-4">
 					<motion.button
 						whileHover={{
 							y: "-3px",

@@ -8,7 +8,7 @@ const Features = () =>
 				<h1 className='text-white  text-5xl font-extrabold font-alata'>Why Choose Treevia</h1>
 				<p className='text-secondary text-base'>Choose from a wide variety of subjects to test your trivia skills and climb the global leaderboard</p>
 			</div>
-			<div className="grid grid-cols-3 gap-10 text-center">
+			<div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 text-center">
 				<div className="bg-card text-white border border-custom px-10 py-7.5 rounded-3xl">
 					<span className='text-5xl mb-5 block'>🌱</span>
 					<h3 className='text-2xl mb-2.5 font-bold'>Organic Learning</h3>
@@ -25,10 +25,10 @@ const Features = () =>
 					<p className='text-[1.1rem] leading-[1.6]'>Connect with fellow knowledge seekers, compete in seasonal challenges, and watch your learning forest grow alongside a vibrant community.</p>
 				</div>
 			</div>
-			<div className="max-w-5xl font-alata h-50 m-auto flex items-center justify-between text-white p-15 mt-10 rounded-4xl border border-custom w-full bg-card">
+			<div className="max-w-5xl font-alata m-auto gap-4 flex md:flex-row flex-col overflow-hidden items-center justify-between text-white p-5 md:p-10 mt-10 rounded-4xl border border-custom w-full bg-card">
 				<div className="">
-					<h1 className='text-4xl font-bold'>Ready to challenge your self</h1>
-					<p className='mt-4 text-lg text-secondary w-120'>Create a free account today and start tracking your progress across all categories</p>
+					<h1 className='md:text-4xl text-3xl text-center md:text-start font-bold'>Ready to challenge your self</h1>
+					<p className='mt-4 text-lg text-center md:text-start text-secondary md:w-120'>Create a free account today and start tracking your progress across all categories</p>
 				</div>
 				<button className='px-6 py-3 bg-custom shadow-custom shadow-[0_0_15px] rounded-full text-background font-semibold cursor-pointer'>Create Account</button>
 			</div>

@@ -11,5 +11,6 @@ interface User {
     id: string,
     email: string,
     username: string,
-    role: string
+    role: string,
+    token?: string
 }

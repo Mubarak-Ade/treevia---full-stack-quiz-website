@@ -35,13 +35,13 @@ export const QuizList = () => {
 			</div>
 			<div className="border-b pb-6 border-muted">
 				<div className="mt-4 space-y-4">
-					<h1 className="text-5xl text-custom font-bold">
+					<h1 className="md:text-5xl text-3xl text-custom font-bold">
 						{category}
 					</h1>
 					<p className="w-3/4 text-secondary">
 						{description}
 					</p>
-					<ul className="flex gap-4">
+					<ul className="flex flex-wrap gap-4">
 						{tags.map((tag, index) => (
 							<li key={index} className="px-4 py-2 first:bg-custom first:text-card bg-card font-montserrat rounded-full text-xs text-secondary capitalize font-semibold">
 								{tag.name}
@@ -51,7 +51,7 @@ export const QuizList = () => {
 				</div>
 				<div className=""></div>
 			</div>
-			<div className="grid grid-cols-3 p-5 gap-10">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-5 gap-10">
 				{quizzes?.map((q) => (
 					<QuizCard
 						_id={q._id}
