@@ -30,24 +30,11 @@ export const createQuiz = async (req: Request, res: Response): Promise<void> => 
 	}
 };
 
-export const getAllQuiz = async (req: Request, res: Response): Promise<void> => {
-	try {
-		const { category } = req.query
-		const filter = category ? { categories: category } : {}
-		const quiz = await Quiz.find(filter).populate("questions");
-		res.status(200).json(quiz);
-	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-	}
-};
-
-
-
 export const getQuizzes = async (req: Request, res: Response): Promise<void> => {
 	try {
 		const { category } = req.query
 		const filter = category ? { categories: category } : {}
-		const quiz = await Quiz.find(filter).sort({ createdAt: -1 });
+		const quiz = await Quiz.find(filter).sort({ createdAt: -1 }).lean();
 		res.status(200).json(quiz);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
@@ -129,59 +116,53 @@ export const submitQuiz = async (req: AuthRequest, res: Response): Promise<void>
 
 	try {
 
-		if (!quizId || !selectedOption) {
+		if (!quizId || !Array.isArray(selectedOption)) {
 			throw createHttpError(400, "invalid submission data")
 		}
-		let score = 0;
-		let correctAnswers: number[] = [];
 		const questions = await Question.find({ quizId }).lean();
-
-		if (!questions || questions.length === 0) {
+		
+		if (!questions.length) {
 			throw createHttpError(404, "Quiz not found")
 		}
-
+		
+		let score = 0;
+		let correctAnswers: number[] = [];
 		let selectedIndex: number;
 		let correctIndex: number;
 
 		// Process answers
 		const attempts = questions.map((question, index) => {
-			correctAnswers.push(question.correctAnswer);
-			selectedIndex = selectedOption[index];
-			correctIndex = question.correctAnswer
-			if (selectedIndex === correctIndex) {
+			const selectedIndex = selectedOption[index];
+			const isCorrect = selectedIndex === question.correctAnswer;
+			
+			if (isCorrect) {
 				score += 1
 			}
 			return {
 				question: question.questionText,
 				selected: question.options[selectedIndex],
-				correct: question.options[correctIndex],
-				isCorrect: selectedIndex === correctIndex
+				correct: question.options[question.correctAnswer],
+				isCorrect
 			}
 		})
-
-		const result = await Result.findOne({ quiz: quizId, user: req.user?.id });
 
 		const totalQuestion = questions.length;
 		const percentage = (score / totalQuestion) * 100;
 
-		if (!result && req.user) {
-			await Result.create({
-				user: req.user.id,
-				quiz: quizId,
-				score,
-				correctAnswers,
-				percentage,
-			});
-		} else if (result) {
-			result.score = score;
-			result.correctAnswers = correctAnswers;
-			result.percentage = percentage;
-			await result.save();
+		if (req.user) {
+			await Result.findOneAndUpdate(
+				{ quiz: quizId, user: req.user.id },
+				{
+					score,
+					percentage,
+					correctAnswers: questions.map(q => q.correctAnswer),
+				},
+				{ upsert: true, new: true }
+			);
 		}
 
-		console.log(req.user)
 
-		res.status(200).json({ score, totalQuestion, percentage, attempts, saved: !!req.user });
+		res.status(200).json({ score, totalQuestion, percentage, attempts, saved: Boolean(req.user) });
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
 	}
