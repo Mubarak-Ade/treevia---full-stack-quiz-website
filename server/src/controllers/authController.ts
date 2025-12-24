@@ -20,8 +20,8 @@ interface Register {
 	role: 'student' | 'teacher' | 'admin';
 }
 
-const createJWT = (_id: mongoose.Types.ObjectId, email: string): string => {
-	return jwt.sign({ _id, email }, env.SECRET, { expiresIn: '1d' });
+const createJWT = (id: mongoose.Types.ObjectId, email: string): string => {
+	return jwt.sign({ id, email }, env.SECRET, { expiresIn: '1d' });
 };
 
 export const register: RequestHandler<unknown, unknown, Register, unknown> = async (req, res, next): Promise<void> => {

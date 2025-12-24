@@ -1,7 +1,7 @@
 import { Response, Request, RequestHandler } from 'express';
 import mongoose from 'mongoose';
 import Question from '../models/Question.js';
-import Quiz from '../models	/Quiz.js';
+import Quiz from '../models/Quiz.js';
 import Result from '../models/QuizResult.js';
 import User from '../models/User.js';
 import { validateQuiz } from '../utils/validator.js';
@@ -33,7 +33,7 @@ export const createQuiz = async (req: Request, res: Response): Promise<void> => 
 export const getAllQuiz = async (req: Request, res: Response): Promise<void> => {
 	try {
 		const { category } = req.query
-		const filter = category ? {categories: category} : {}
+		const filter = category ? { categories: category } : {}
 		const quiz = await Quiz.find(filter).populate("questions");
 		res.status(200).json(quiz);
 	} catch (error: any) {
@@ -46,8 +46,8 @@ export const getAllQuiz = async (req: Request, res: Response): Promise<void> => 
 export const getQuizzes = async (req: Request, res: Response): Promise<void> => {
 	try {
 		const { category } = req.query
-		const filter = category ? {categories: category} : {}
-		const quiz = await Quiz.find(filter).sort({createdAt: -1});
+		const filter = category ? { categories: category } : {}
+		const quiz = await Quiz.find(filter).sort({ createdAt: -1 });
 		res.status(200).json(quiz);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
@@ -125,7 +125,7 @@ export const updateQuiz = async (req: Request, res: Response): Promise<void> => 
 };
 
 export const submitQuiz = async (req: AuthRequest, res: Response): Promise<void> => {
-	const {quizId, selectedOption} = req.body;
+	const { quizId, selectedOption } = req.body;
 
 	try {
 
@@ -136,36 +136,52 @@ export const submitQuiz = async (req: AuthRequest, res: Response): Promise<void>
 		let correctAnswers: number[] = [];
 		const questions = await Question.find({ quizId }).lean();
 
-		if(!questions || questions.length === 0) {
+		if (!questions || questions.length === 0) {
 			throw createHttpError(404, "Quiz not found")
 		}
 
-		let userAnswer: number = -1;
+		let selectedIndex: number;
+		let correctIndex: number;
+
 		// Process answers
-		questions.forEach((question, index) => {
+		const attempts = questions.map((question, index) => {
 			correctAnswers.push(question.correctAnswer);
-			userAnswer = selectedOption[index];
-			if (userAnswer === question.correctAnswer) {
-				score += 1;
+			selectedIndex = selectedOption[index];
+			correctIndex = question.correctAnswer
+			if (selectedIndex === correctIndex) {
+				score += 1
+			}
+			return {
+				question: question.questionText,
+				selected: question.options[selectedIndex],
+				correct: question.options[correctIndex],
+				isCorrect: selectedIndex === correctIndex
 			}
 		})
+
+		const result = await Result.findOne({ quiz: quizId, user: req.user?.id });
 
 		const totalQuestion = questions.length;
 		const percentage = (score / totalQuestion) * 100;
 
-		// const result = await Result.create({
-		// 	user: req.user?._id,
-		// 	quiz: quiz._id,
-		// 	score,
-		// 	correctAnswers,
-		// 	percentage,
-		// 	submittedAt: new Date(),
-		// });
+		if (!result && req.user) {
+			await Result.create({
+				user: req.user.id,
+				quiz: quizId,
+				score,
+				correctAnswers,
+				percentage,
+			});
+		} else if (result) {
+			result.score = score;
+			result.correctAnswers = correctAnswers;
+			result.percentage = percentage;
+			await result.save();
+		}
 
-		// // await result.populate('user', 'username');
-		// await result.populate('quiz', 'title');
+		console.log(req.user)
 
-		res.status(200).json({ score, totalQuestion, userAnswer, percentage, correctAnswers });
+		res.status(200).json({ score, totalQuestion, percentage, attempts, saved: !!req.user });
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
 	}
@@ -174,7 +190,7 @@ export const submitQuiz = async (req: AuthRequest, res: Response): Promise<void>
 export const getQuestions = async (req: Request, res: Response): Promise<void> => {
 	try {
 		const quizId = req.params.quizId
-		const question = await Question.find({quizId});
+		const question = await Question.find({ quizId });
 		res.status(200).json(question);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });

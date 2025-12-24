@@ -119,7 +119,7 @@ const Result = () => {
 					</h1>
 
 					<ul className="space-y-4">
-						{attempts.map((quiz, index) => (
+						{attempts?.map((quiz, index) => (
 							<li
 								key={index}
 								className="p-6 relative bg-secondary/5 rounded-2xl border border-secondary/20"

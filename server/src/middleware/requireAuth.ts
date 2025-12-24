@@ -22,7 +22,7 @@ const requireAuth = async (req: AuthRequest, res: Response, next: NextFunction):
   const token = header.split(" ")[1]
 
   if (!token) {
-    throw createHttpError(401, "No token, authorization denied")
+    throw createHttpError(401,  "No token, authorization denied")
   }
   try {
     

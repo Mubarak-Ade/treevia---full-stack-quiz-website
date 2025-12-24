@@ -16,10 +16,11 @@ const QuizResultSchema = new Schema({
   correctAnswers: {
     type: [Number],
   },
-  submittedAt: {
-    type: Date,
-  },
-});
+  percentage: {
+    type: Number,
+  }
+
+}, { timestamps: true });
 
 type Result = InferSchemaType<typeof QuizResultSchema>
 
