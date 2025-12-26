@@ -1,5 +1,7 @@
-import { Response, Request } from 'express';
+import { Response, Request, RequestHandler, NextFunction } from 'express';
 import Result from '../models/QuizResult.js';
+import createHttpError from 'http-errors';
+import mongoose from 'mongoose';
 
 interface AuthRequest extends Request {
   user?: any;
@@ -8,24 +10,30 @@ interface AuthRequest extends Request {
   };
 }
 
-export const getResult = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getResult = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const result = await Result.find({ user: req.user?._id }).populate('user', 'username');
+    const result = await Result.find({user: req.user.id}).populate({path: 'quiz', select: 'title category', populate: {path: 'category', select: 'name'}}).sort({ createdAt: -1 });
     res.status(200).json(result);
-  } catch (error: any) {
-    res.status(400).json({ error: error.message });
+  } catch (error) {
+    next(error)
   }
 };
 
-export const getSingleResult = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getSingleResult = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const result = await Result.findOne({ user: req.user?._id, quiz: req.params.id }).populate('user', 'username');
+    const userId = req.user?.id
+    const quizId = req.params.id
+
+    const result = await Result.findOne({ user: userId, quiz: quizId }).populate("user", "username")
+    
     if (!result) {
-      res.status(404).json({ error: 'Result not found' });
-      return;
+      throw createHttpError(404, 'Result not found' );
+    }
+    if (userId !== result?.user?._id.toString()) {
+      throw createHttpError(401, "Unauthorized")
     }
     res.status(200).json(result);
-  } catch (error: any) {
-    res.status(400).json({ error: error.message });
+  } catch (error) {
+    next(error)
   }
 };

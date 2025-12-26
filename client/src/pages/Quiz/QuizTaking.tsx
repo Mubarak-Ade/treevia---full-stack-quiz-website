@@ -6,6 +6,7 @@ import { QuizTakingCard } from "@/component/quiztaking/QuizTakingCard";
 import { useFetchQuestion } from "@/features/queries/useQuiz";
 import { X } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
+import { Loader } from "@/component/Loader";
 
 export const QuizTaking = () => {
 	const { id } = useParams<{ id: string }>();
@@ -19,7 +20,7 @@ export const QuizTaking = () => {
 		Array(data?.length).fill(-1)
 	);
 	if (isLoading || !data) {
-		return <p>Loading...</p>;
+		return <Loader loading={isLoading} />
 	}
 
 	const NextIndex = currentIndex < data.length - 1;

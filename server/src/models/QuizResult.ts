@@ -4,21 +4,22 @@ const QuizResultSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+    index: true
   },
   quiz: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'Quiz',
+    index: true
   },
   score: {
     type: Number,
   },
   correctAnswers: {
     type: [Number],
+    min: 0,
+    max: 3
   },
-  percentage: {
-    type: Number,
-  }
 
 }, { timestamps: true });
 

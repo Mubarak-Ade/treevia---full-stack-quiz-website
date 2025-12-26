@@ -36,7 +36,10 @@ export const register: RequestHandler<unknown, unknown, Register, unknown> = asy
 			throw createHttpError(400, "User already exists")
 		}
 
-		user = new User({ username, email, password, role: role || 'student' });
+		const salt = await bcrypt.genSalt(10)
+		const passwordHash = await bcrypt.hash(password, salt)
+
+		user = new User({ username, email, password: passwordHash, role: role || 'student' });
 
 		await user.save()
 

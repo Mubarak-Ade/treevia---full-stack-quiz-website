@@ -5,6 +5,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router";
 import { QuizNavBtn } from "./QuizNavBtn";
 import { useSubmitAnswers } from "@/features/queries/useQuiz";
+import { Loader } from "../Loader";
 
 interface QuizTakingCardProps {
 	quiz: Question[];
@@ -28,6 +29,10 @@ export const QuizTakingCard = ({
 	const { id } = useParams();
 
 	const submit = useSubmitAnswers();
+
+	if (submit.isPending) {
+		return <Loader loading={submit.isPending} />
+	}
 
 	const { questionText, options } = quiz[currentIndex];
 

@@ -1,182 +1,174 @@
-import mongoose from "mongoose";
-import connectDB from "../config/db.js";
-import Quiz from "../models/Quiz.js";
-import env from "../env.js";
+import mongoose from 'mongoose';
+import slugify from 'slugify';
+import Question from '../models/Question.ts';
+import Quiz from '../models/Quiz.ts';
+import Category from '../models/Category.ts';
 
-const quizzes =  [
-  // Category: 69440eea2f441ea600de83cb
-  {
-    title: "HTML Basics Quiz",
-    category: "69440eea2f441ea600de83cb",
-    difficulty: "Easy",
-    timeLimit: 600,
-    description: "Test your knowledge of basic HTML concepts.",
-    questions: []
-  },
-  {
-    title: "CSS Fundamentals Quiz",
-    category: "69440eea2f441ea600de83cb",
-    difficulty: "Easy",
-    timeLimit: 600,
-    description: "A beginner-friendly quiz on CSS fundamentals.",
-    questions: []
-  },
-  {
-    title: "JavaScript Essentials Quiz",
-    category: "69440eea2f441ea600de83cb",
-    difficulty: "Medium",
-    timeLimit: 900,
-    description: "Covers core JavaScript concepts every developer should know.",
-    questions: []
-  },
+// --- CONFIG ---
 
-  // Category: 69440eea2f441ea600de83cc
-  {
-    title: "Programming Logic Quiz",
-    category: "69440eea2f441ea600de83cc",
-    difficulty: "Easy",
-    timeLimit: 600,
-    description: "Test your understanding of basic programming logic.",
-    questions: []
-  },
-  {
-    title: "Data Structures Basics Quiz",
-    category: "69440eea2f441ea600de83cc",
-    difficulty: "Medium",
-    timeLimit: 900,
-    description: "An introduction to common data structures.",
-    questions: []
-  },
-  {
-    title: "Algorithm Thinking Quiz",
-    category: "69440eea2f441ea600de83cc",
-    difficulty: "Hard",
-    timeLimit: 1200,
-    description: "Challenge your algorithmic thinking skills.",
-    questions: []
-  },
+const MONGO_URI = 'mongodb://localhost:27017/QuizApp';
+const QUESTIONS_PER_QUIZ = 10;
 
-  // Category: 69440eea2f441ea600de83cd
+// --- SAMPLE DATA ---
+const categoriesData = [
   {
-    title: "Computer Networks Quiz",
-    category: "69440eea2f441ea600de83cd",
-    difficulty: "Medium",
-    timeLimit: 900,
-    description: "Covers the fundamentals of computer networking.",
-    questions: []
+    name: 'Web Development',
+    tags: [
+      { name: 'HTML', slug: 'html' },
+      { name: 'CSS', slug: 'css' },
+      { name: 'JavaScript', slug: 'javascript' },
+      { name: 'React', slug: 'react' },
+      { name: 'Node.js', slug: 'nodejs' },
+    ],
+    description: 'Frontend & backend web development quizzes',
   },
   {
-    title: "Operating Systems Quiz",
-    category: "69440eea2f441ea600de83cd",
-    difficulty: "Medium",
-    timeLimit: 900,
-    description: "Test your knowledge of operating system concepts.",
-    questions: []
+    name: 'Databases',
+    tags: [
+      { name: 'SQL', slug: 'sql' },
+      { name: 'MongoDB', slug: 'mongodb' },
+      { name: 'PostgreSQL', slug: 'postgresql' },
+    ],
+    description: 'Database fundamentals',
   },
   {
-    title: "Databases Concepts Quiz",
-    category: "69440eea2f441ea600de83cd",
-    difficulty: "Hard",
-    timeLimit: 1200,
-    description: "Advanced quiz on database systems and concepts.",
-    questions: []
-  },
-
-  // Category: 69440eea2f441ea600de83ce
-  {
-    title: "React Basics Quiz",
-    category: "69440eea2f441ea600de83ce",
-    difficulty: "Easy",
-    timeLimit: 600,
-    description: "A beginner quiz on React fundamentals.",
-    questions: []
+    name: 'Programming Fundamentals',
+    tags: [
+      { name: 'Variables', slug: 'variables' },
+      { name: 'Loops', slug: 'loops' },
+      { name: 'Functions', slug: 'functions' },
+      { name: 'OOP', slug: 'oop' },
+      { name: 'Data Structures', slug: 'data-structures' },
+    ],
+    description: 'Core programming concepts',
   },
   {
-    title: "React Hooks Quiz",
-    category: "69440eea2f441ea600de83ce",
-    difficulty: "Medium",
-    timeLimit: 900,
-    description: "Test your understanding of React Hooks.",
-    questions: []
+    name: 'Dev Tools',
+    tags: [
+      { name: 'Git', slug: 'git' },
+      { name: 'CLI', slug: 'cli' },
+      { name: 'VSCode', slug: 'vscode' },
+    ],
+    description: 'Development tools and best practices',
   },
   {
-    title: "Advanced React Patterns Quiz",
-    category: "69440eea2f441ea600de83ce",
-    difficulty: "Hard",
-    timeLimit: 1200,
-    description: "Deep dive into advanced React patterns.",
-    questions: []
-  },
-
-  // Category: 69440eea2f441ea600de83cf
-  {
-    title: "Node.js Fundamentals Quiz",
-    category: "69440eea2f441ea600de83cf",
-    difficulty: "Easy",
-    timeLimit: 600,
-    description: "Covers the basics of Node.js.",
-    questions: []
-  },
-  {
-    title: "Express.js Quiz",
-    category: "69440eea2f441ea600de83cf",
-    difficulty: "Medium",
-    timeLimit: 900,
-    description: "Test your Express.js knowledge.",
-    questions: []
-  },
-  {
-    title: "Node.js Performance Quiz",
-    category: "69440eea2f441ea600de83cf",
-    difficulty: "Hard",
-    timeLimit: 1200,
-    description: "Advanced quiz on Node.js performance tuning.",
-    questions: []
-  },
-
-  // Category: 69440eea2f441ea600de83d0
-  {
-    title: "Software Design Principles Quiz",
-    category: "69440eea2f441ea600de83d0",
-    difficulty: "Medium",
-    timeLimit: 900,
-    description: "Test your understanding of software design principles.",
-    questions: []
-  },
-  {
-    title: "Clean Code Quiz",
-    category: "69440eea2f441ea600de83d0",
-    difficulty: "Medium",
-    timeLimit: 900,
-    description: "A quiz focused on writing clean, maintainable code.",
-    questions: []
-  },
-  {
-    title: "Design Patterns Quiz",
-    category: "69440eea2f441ea600de83d0",
-    difficulty: "Hard",
-    timeLimit: 1200,
-    description: "Advanced quiz on common software design patterns.",
-    questions: []
+    name: 'Algorithms & Data Structures',
+    tags: [
+      { name: 'Sorting', slug: 'sorting' },
+      { name: 'Searching', slug: 'searching' },
+      { name: 'Trees', slug: 'trees' },
+      { name: 'Graphs', slug: 'graphs' },
+    ],
+    description: 'Test your algorithm and data structure knowledge',
   }
 ];
 
-async function seedQuizzes() {
+const quizzesPerCategory = [
+  { titleSuffix: 'Basics', difficulty: 'Easy', timeLimit: 15 },
+  { titleSuffix: 'Intermediate', difficulty: 'Medium', timeLimit: 20 },
+  { titleSuffix: 'Advanced', difficulty: 'Hard', timeLimit: 25 },
+];
+
+// --- HELPER FUNCTIONS ---
+const generateSlug = (text: string) => slugify(text, { lower: true, strict: true });
+
+const generateQuestions = (quizId: mongoose.Types.ObjectId, topic: string) => {
+  // Example questions per category (you can expand later)
+  const sampleQuestions = [
+    {
+      questionText: `What is ${topic}?`,
+      options: ['Option A', 'Option B', 'Option C', 'Option D'],
+      correctAnswer: 0,
+      explanation: `${topic} is an important concept in this domain.`,
+      difficulty: 'Medium',
+    },
+    {
+      questionText: `Which of the following is true about ${topic}?`,
+      options: ['True A', 'True B', 'True C', 'True D'],
+      correctAnswer: 1,
+      explanation: `Correct statement about ${topic}.`,
+      difficulty: 'Medium',
+    },
+    {
+      questionText: `How does ${topic} affect development?`,
+      options: ['Option A', 'Option B', 'Option C', 'Option D'],
+      correctAnswer: 2,
+      explanation: `Explanation about ${topic} in development.`,
+      difficulty: 'Medium',
+    },
+    {
+      questionText: `Why is ${topic} important?`,
+      options: ['Option A', 'Option B', 'Option C', 'Option D'],
+      correctAnswer: 3,
+      explanation: `${topic} matters because...`,
+      difficulty: 'Medium',
+    },
+  ];
+
+  const questions = [];
+  for (let i = 0; i < QUESTIONS_PER_QUIZ; i++) {
+    const qTemplate = sampleQuestions[i % sampleQuestions.length];
+    questions.push({
+      ...qTemplate,
+      quizId,
+      questionText: `${qTemplate.questionText} (#${i + 1})`,
+    });
+  }
+  return questions;
+};
+
+// --- SEED FUNCTION ---
+const seed = async () => {
   try {
-    await mongoose.connect(env.MONGO_URI)
-    console.log("✅ MongoDB connected");
+    await mongoose.connect(MONGO_URI);
+    console.log('MongoDB connected');
 
-    await Quiz.deleteMany();
-    console.log("🗑️ Existing quizzes cleared");
+    // Clear collections
+    await Question.deleteMany({});
+    await Quiz.deleteMany({});
+    await Category.deleteMany({});
+    console.log('Old collections cleared');
 
-    await Quiz.insertMany(quizzes);
-    console.log("🎉 Quizzes seeded successfully");
+    const savedCategories: any[] = [];
 
+    // Insert categories
+    for (const cat of categoriesData) {
+      const newCat = new Category({
+        ...cat,
+        slug: generateSlug(cat.name),
+      });
+      const savedCat = await newCat.save();
+      savedCategories.push(savedCat);
+    }
+    console.log('Categories seeded');
+
+    // Insert quizzes and questions
+    for (const cat of savedCategories) {
+      for (const q of quizzesPerCategory) {
+        const quiz = new Quiz({
+          title: `${cat.name} ${q.titleSuffix}`,
+          slug: generateSlug(`${cat.name} ${q.titleSuffix}`),
+          description: `Test your knowledge of ${cat.name} (${q.titleSuffix})`,
+          category: cat._id,
+          difficulty: q.difficulty,
+          timeLimit: q.timeLimit,
+          createdBy: null,
+        });
+        const savedQuiz = await quiz.save();
+
+        const questions = generateQuestions(savedQuiz._id, `${cat.name} ${q.titleSuffix}`);
+        await Question.insertMany(questions);
+        console.log(`Quiz '${savedQuiz.title}' with questions seeded`);
+      }
+    }
+
+    console.log('Seeding complete!');
     process.exit(0);
-  } catch (error) {
-    console.error("❌ Seeding failed:", error);
+
+  } catch (err) {
+    console.error(err);
     process.exit(1);
   }
-}
+};
 
-seedQuizzes();
+seed();

@@ -6,6 +6,7 @@ const questionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Quiz',
       required: true,
+      index: true,
     },
     questionText: {
       type: String,
@@ -15,6 +16,8 @@ const questionSchema = new Schema(
       type: [String],
       required: [true, 'Options are required'],
       validate: [(arr: string[]) => arr.length === 4, 'Must provide exactly 4 options'],
+      min: 0,
+      max: 3,
     },
     correctAnswer: {
       type: Number,

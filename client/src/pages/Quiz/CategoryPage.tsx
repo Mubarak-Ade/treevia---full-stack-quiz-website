@@ -1,4 +1,5 @@
 import { CategoriesCard } from "@/component/categories/CategoriesCard";
+import { Loader } from "@/component/Loader";
 import { useFetchCategories } from "@/features/queries/useQuiz";
 import { Search } from "lucide-react";
 import { motion } from "motion/react";
@@ -7,7 +8,7 @@ export const CategoryPage = () => {
     const {data, isLoading, isError} = useFetchCategories()
 
     if (isLoading || !data) {
-        return <p>loading ...</p>
+        return <Loader loading={isLoading} />
     }
 
 	if (isError) {

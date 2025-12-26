@@ -30,7 +30,7 @@ const CategorySchema = new Schema({
         unique: true,
         lowercase: true,
     },
-    tags: [tagSchema]
+    tags: { type: [tagSchema], default: [] }
 }, { timestamps: true })
 
 type Category = InferSchemaType<typeof CategorySchema>

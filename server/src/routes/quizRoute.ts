@@ -3,7 +3,6 @@ import {
   createQuiz,
   deleteQuizById,
   editQuestions,
-  getAllQuiz,
   getQuestionById,
   getQuestions,
   getQuizById,
@@ -18,14 +17,14 @@ const router: Router = express.Router();
 
 router.get('/:quizId', getQuizById);
 router.get('/:quizId/questions', getQuestions);
-router.post('/quizzes', createQuiz);
-router.get('/', getAllQuiz);
-router.get('/quizzes', getQuizzes);
-router.get('/questions', getQuestions);
-router.delete('/:id', deleteQuizById);
-router.get('/:quizId/question/:questionId', getQuestionById);
 router.post('/submit', optionalAuth, submitQuiz);
-router.put('/:quizId/question/:questionId', editQuestions);
-router.delete('/question/:questionId', deleteQuestion);
+router.post('/quizzes', createQuiz);
+router.get('/', getQuizzes);
+// router.get('/quizzes', getQuizzes);
+// router.get('/questions', getQuestions);
+// router.delete('/:id', deleteQuizById);
+// router.get('/:quizId/question/:questionId', getQuestionById);
+// router.put('/:quizId/question/:questionId', editQuestions);
+// router.delete('/question/:questionId', deleteQuestion);
 
 export default router;

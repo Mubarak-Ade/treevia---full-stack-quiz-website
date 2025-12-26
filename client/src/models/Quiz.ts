@@ -59,3 +59,20 @@ export interface Result {
     attempts: Attempts[]
     percentage: number,
 }
+
+export interface GetResult {
+    _id: string,
+    quiz: {
+        _id: string,
+        title: string,
+        category: {
+            _id: string,
+            name: string
+        }
+    },
+    user: string,
+    correctAnswers: number[],
+    score: number,
+    createdAt: string
+    updatedAt: string,
+}

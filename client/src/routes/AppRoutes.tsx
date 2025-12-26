@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes } from 'react-router';
 import PublicRoutes from './PublicRoutes';
+import { DashboardRoutes } from './DashboardRoutes';
 
 /**
  * App Routes Component
@@ -12,6 +13,9 @@ const AppRoutes: React.FC = () => {
       <Routes>
         {/* Public Route */}
         {PublicRoutes()}
+
+        {/* Dashboard Route */}
+        {DashboardRoutes()}
 
       </Routes>
     </>
