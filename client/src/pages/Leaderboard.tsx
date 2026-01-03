@@ -9,7 +9,7 @@ export const Leaderboard = () => {
 		return <Loader loading={isLoading} />;
 	}
 
-	const maxValue = Math.max(...data?.leaderboard?.map((d) => d.totalXp));
+	const maxValue = Math.max(...data?.leaderboard.map((d: any) => d.totalXp));
 
 	console.log(maxValue);
 

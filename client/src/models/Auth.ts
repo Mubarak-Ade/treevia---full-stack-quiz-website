@@ -1,9 +1,9 @@
-interface Login {
+export interface Login {
     email:  string,
     password: string
 }
 
-interface Register extends Login {
+export interface Register extends Login {
     username: string
 }
 

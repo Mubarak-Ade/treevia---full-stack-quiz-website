@@ -1,4 +1,3 @@
-import { formatImage } from "@/utils/imageFormat";
 import { ProgressBar } from "../quiztaking/ProgressBar";
 import { ProfileAvatar } from "../share/ProfileAvatar";
 

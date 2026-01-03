@@ -1,4 +1,5 @@
 // import { Quiz } from "@/types"
+import { Leaderboard } from '@/pages/Leaderboard';
 
 interface Tag {
 	_id?: string;
@@ -52,7 +53,7 @@ interface Attempts {
 }
 
 export interface Result {
-	totalQuestion: number;
+	totalQuestions: number;
 	// correctAnswers: number,
 	userAnswers: number;
 	score: number;
@@ -61,17 +62,12 @@ export interface Result {
 }
 
 export interface GetResult {
-	_id: string;
-	quiz: {
-		_id: string;
-		title: string;
-		category: {
-			_id: string;
-			name: string;
-		};
-	};
+	_id?: string;
+	quiz?: string;
 	user: string;
 	correctAnswers: number[];
+	// quiz: string;
+	xpEarned: number;
 	score: number;
 	createdAt: string;
 	updatedAt: string;
@@ -96,5 +92,22 @@ export interface Stats {
 		xpIntoLevel: number;
 		nextTotalXp: number;
 		nextXp: number;
+	};
+}
+
+
+
+export interface Leaderboard {
+	leaderboard: {
+		_id: string;
+		profile: string;
+		user: string;
+		totalXp: number;
+	}[];
+	userRank: {
+		rank: number;
+		name: string;
+		profile: string;
+		totalXp: number;
 	};
 }

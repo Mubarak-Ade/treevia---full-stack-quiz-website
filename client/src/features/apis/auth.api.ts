@@ -1,3 +1,4 @@
+import { Login, Register } from "@/models/Auth"
 import api from "@/utils/axios"
 
 export const LoginApi = async (data: Login) => {

@@ -1,4 +1,4 @@
-import { GetResult, Stats } from "@/models/Quiz"
+import { GetResult, Leaderboard, Stats } from "@/models/Quiz"
 import api from "@/utils/axios"
 
 export const getResult = async (): Promise<GetResult[]> => {
@@ -11,7 +11,7 @@ export const getUserStats = async (): Promise<Stats> => {
     return res.data
 }
 
-export const getLeaderboard = async () => {
+export const getLeaderboard = async () : Promise<Leaderboard> => {
     const res = await api.get("/dashboard/board")
     return res.data
 }

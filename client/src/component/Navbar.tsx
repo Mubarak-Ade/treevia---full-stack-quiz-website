@@ -1,29 +1,38 @@
 // Path: client\src\component\Navbar.jsx
 import useAuthStore from "@/stores/useAuthStore";
-import { AnimatePresence, motion } from "framer-motion";
-import React, { SetStateAction, useEffect, useRef, useState } from "react";
-import * as Fa from "react-icons/fa6";
-import { Link, NavLink, useLocation } from "react-router";
+import { motion } from "framer-motion";
+import {
+	ChartNoAxesColumnIncreasingIcon,
+	Folder,
+	Info,
+	Menu,
+	X,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { NavLink, useLocation } from "react-router";
 import Logo from "../assets/logos.png";
 import {
-	HeaderVariant,
-	LinkVariant,
+	HeaderVariant
 } from "../utils/Animation/variant/IntroAnimationVariant";
-import { DoorOpen, Grid2x2, Menu, User, X } from "lucide-react";
-import { formatImage } from "@/utils/imageFormat";
-import { ProfileAvatar } from "./share/ProfileAvatar";
+import { DesktopMenu } from "./navbar/DesktopMenu";
+import { MobileMenu } from "./navbar/MobileMenu";
+import { ProfileMenu } from "./navbar/ProfileMenu";
+import { ProfileTrigger } from "./navbar/ProfileTrigger";
 
 const links = [
 	{
 		link: "/quizzes",
+		icon: <Folder />,
 		name: "Categories",
 	},
 	{
 		link: "/leaderboard",
+		icon: <ChartNoAxesColumnIncreasingIcon />,
 		name: "Leaderboard",
 	},
 	{
 		link: "/result",
+		icon: <Info />,
 		name: "About",
 	},
 	// {
@@ -31,181 +40,6 @@ const links = [
 	// 	name: "About",
 	// },
 ];
-
-interface ProfileProps {
-	user: User | null;
-	setDisplay: React.Dispatch<SetStateAction<boolean>>;
-	display: boolean;
-	logout: () => void;
-}
-
-const Profile = ({ user, setDisplay, display, logout }: ProfileProps) => {
-	return (
-		<>
-			{user ? (
-				<div className="relative lg:ml-40 flex flex-row-reverse">
-					<div className="flex items-center justify-center gap-3">
-						<ProfileAvatar username={user.username} profile={user.profile} className="size-15" />
-
-						<motion.button
-							whileTap={{ scale: 0.8 }}
-							onClick={() => setDisplay((prev) => !prev)}
-							animate={{ rotate: display ? 180 : 0 }}
-							transition={{ duration: 0.3 }}
-						>
-							<Fa.FaChevronDown className="text-teal-100 cursor-pointer" />
-						</motion.button>
-					</div>
-					<AnimatePresence>
-						{display && (
-							<motion.div
-								animate={{ opacity: 1, y: 0 }}
-								initial={{ opacity: 0, y: -20 }}
-								exit={{ opacity: 0, y: -20 }}
-								transition={{ duration: 0.3 }}
-								layout
-								className="fixed bg-card shadow-2xl text-white w-60 m-2 p-5 top-20 z-100 right-0 rounded-xl"
-							>
-								<h4 className="capitalize text-sm text-custom">
-									{user.username}
-								</h4>
-								<h6 className="text-xs font-light text-secondary mt-1">
-									{user.email}
-								</h6>
-								<ul className="mt-4 space-y-2">
-									<motion.li
-										whileTap={{ scale: 0.9 }}
-										whileHover={{
-											backgroundColor:
-												"var(--color-secondary-btn)",
-										}}
-										className="text-custom px-4 py-2 items-center rounded-xl cursor-pointer"
-									>
-										<Link
-											to="/dashboard/me"
-											className="flex gap-2 items-center"
-										>
-											<User /> Edit Profile
-										</Link>
-									</motion.li>
-									<motion.li
-										whileTap={{ scale: 0.9 }}
-										whileHover={{
-											backgroundColor:
-												"var(--color-secondary-btn)",
-										}}
-										className="text-custom px-4 py-2 items-center rounded-xl cursor-pointer"
-									>
-										<Link
-											to={
-												user.role === "admin"
-													? "admin/overview"
-													: "dashboard/overview"
-											}
-											className="flex gap-2 items-center"
-										>
-											<Grid2x2 /> Dashboard
-										</Link>
-									</motion.li>
-								</ul>
-								<hr className="mt-4 border-muted " />
-								<motion.button
-									whileTap={{ scale: 0.9 }}
-									whileHover={{
-										backgroundColor:
-											"var(--color-secondary-btn)",
-									}}
-									className="text-custom flex items-center gap-2 font-semibold text-sm rounded-xl w-full px-4 py-2 mt-2 cursor-pointer"
-									onClick={logout}
-								>
-									<DoorOpen />
-									Logout
-								</motion.button>
-							</motion.div>
-						)}
-					</AnimatePresence>
-				</div>
-			) : (
-				<motion.span
-					className="px-8 py-4 md:py-2 text-center text-background rounded-full font-semibold text-sm bg-custom"
-					variants={LinkVariant}
-					whileHover="hover"
-					whileTap="tap"
-				>
-					<NavLink to="/login">Login</NavLink>
-				</motion.span>
-			)}
-		</>
-	);
-};
-
-interface Link {
-	link: string;
-	name: string;
-}
-
-const DesktopMenu = ({ links }: { links: Link[] }) => {
-	return (
-		<>
-			<ul className="flex items-center justify-center gap-2 text-sm">
-				{links.map((item, index) => (
-					<motion.span
-						key={index}
-						className="text-white hover:text-primary px-4 py-3 transition-colors w-full rounded-full cursor-pointer"
-						variants={LinkVariant}
-						whileHover="hover"
-						whileTap="tap"
-					>
-						<NavLink
-							className={({ isActive }) =>
-								`${
-									isActive
-										? "text-custom px-5 py-3 rounded-full"
-										: ""
-								}`
-							}
-							to={`${item.link.toLowerCase()}`}
-						>
-							{item.name}
-						</NavLink>
-					</motion.span>
-				))}
-			</ul>
-		</>
-	);
-};
-
-const MobileMenu = ({ links }: { links: Link[] }) => {
-	return (
-		<>
-			<ul className="flex flex-col text-white text-2xl items-center justify-center">
-				{links.map((item, index) => (
-					<motion.span
-						key={index}
-						className="p-5 rounded-full"
-						whileHover={{
-							color: "var(--color-custom)",
-						}}
-						whileTap="tap"
-					>
-						<NavLink
-							className={({ isActive }) =>
-								`${
-									isActive
-										? "text-custom p-5 rounded-full"
-										: ""
-								}`
-							}
-							to={`${item.link.toLowerCase()}`}
-						>
-							{item.name}
-						</NavLink>
-					</motion.span>
-				))}
-			</ul>
-		</>
-	);
-};
 
 const Navbar = () => {
 	const [display, setDisplay] = useState(false);
@@ -218,6 +52,8 @@ const Navbar = () => {
 		setDisplay(false);
 		setShowNav(false);
 	}, [location]);
+
+	// const trigger 
 
 	const user = useAuthStore((s) => s.user);
 	const logout = useAuthStore((s) => s.logOut);
@@ -253,11 +89,10 @@ const Navbar = () => {
 				className={`md:flex hidden gap-5 font-semibold text-sm text-secondary rounded-full justify-center items-center font-poppins`}
 			>
 				<DesktopMenu links={links} />
-				<Profile
+				<ProfileTrigger
 					user={user}
 					display={display}
 					setDisplay={setDisplay}
-					logout={logout}
 				/>
 			</nav>
 			{showNav && (
@@ -265,16 +100,15 @@ const Navbar = () => {
 					<nav
 						className={`md:hidden gap-5 flex-col z-50 h-screen w-full absolute bg-background top-15 left-0 font-semibold text-sm text-secondary p-10 font-poppins`}
 					>
-						<MobileMenu links={links} />
+						<MobileMenu
+							user={user}
+							setDisplay={setDisplay}
+							links={links}
+						/>
 					</nav>
-					<Profile
-						user={user}
-						display={display}
-						setDisplay={setDisplay}
-						logout={logout}
-					/>
 				</>
 			)}
+			<ProfileMenu user={user} logout={logout} display={display} />
 		</motion.div>
 	);
 };

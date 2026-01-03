@@ -1,4 +1,4 @@
-import { GetResult, Stats } from "@/models/Quiz";
+import { GetResult, Leaderboard, Stats } from "@/models/Quiz";
 import { useQuery } from "@tanstack/react-query";
 import { getLeaderboard, getResult, getUserStats } from "../apis/result.api";
 
@@ -14,8 +14,8 @@ export const useFetchUserStats = () => useQuery<Stats>({
     initialData: {} as Stats
 })
 
-export const useFetchLeaderboard = () => useQuery({
+export const useFetchLeaderboard = () => useQuery<Leaderboard>({
     queryKey: ['leaderboard'],
     queryFn: getLeaderboard,
-    initialData: {leaderboard: [], userRank: {}}
+    initialData: {} as Leaderboard
 })

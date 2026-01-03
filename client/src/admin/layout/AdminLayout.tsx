@@ -2,7 +2,7 @@ import { SideBar } from '@/component/dashboard/SideBar'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { Links } from '@/models/Dashboard'
 import { ChartNoAxesColumn, CircleQuestionMark, Grid2X2, Settings, Users } from 'lucide-react'
-import React, { CSSProperties } from 'react'
+import { CSSProperties } from 'react'
 import { Outlet } from 'react-router'
 
 export const AdminLayout = () => {

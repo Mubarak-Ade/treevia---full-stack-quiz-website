@@ -32,7 +32,7 @@ const columns: ColumnDef<GetResult>[] = [
 					<span
 						className={`${color.text} ${color.gradient} px-4 py-3 rounded-full`}
 					>
-						{row.original.quiz.charAt(0)}
+						{row.original.quiz?.charAt(0)}
 					</span>
 					<p>{row.original.quiz || "N/A"}</p>
 				</div>
@@ -64,9 +64,10 @@ const columns: ColumnDef<GetResult>[] = [
 		header: "Action",
 		cell: ({ row }) => {
 			const navigate = useNavigate()
+			const id = row.original.quiz
 			const handleClick = () => {
 				// Implement refresh logic here
-				navigate(`/quizzes/${row.original.quiz._id}/questions`)
+				navigate(`/quizzes/${id}/questions`)
 
 			}
 			return (
@@ -98,7 +99,7 @@ export const DashboardTable = () => {
 			header: "Action",
 			cell: ({ row }) => {
 				const handleClick = () => {
-					navigate(`/quizzes/${row.original.quiz._id}/questions`);
+					navigate(`/quizzes/${row.original.quiz}/questions`);
 				};
 				return (
 					<Button

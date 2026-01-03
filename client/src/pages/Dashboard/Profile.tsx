@@ -22,7 +22,7 @@ export const Profile = () => {
 	}
 
 	const {stats, progress} = userStats?.data as Stats
-	const {username, profilePic: profile} = user?.data as User
+	const {username, profile: profilePic} = user?.data as User
 
 	const {totalXp, quizzesTaken, totalCorrect, totalFailed} = stats ?? {}
 	
@@ -35,7 +35,7 @@ export const Profile = () => {
 
 	return (
 		<div className="max-w-4xl w-full m-auto p-6">
-			<ProfileHeader username={username} profile={profile} level={progress?.level} nextXp={progress?.nextTotalXp} totalXp={totalXp} />
+			<ProfileHeader username={username} profile={profilePic} level={progress?.level} nextXp={progress?.nextTotalXp} totalXp={totalXp} />
 			<div className="mt-5 flex gap-4 justify-between">
 				<ProfileCard
 					icon={

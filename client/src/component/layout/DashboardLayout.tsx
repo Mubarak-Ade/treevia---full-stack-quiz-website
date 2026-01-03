@@ -1,9 +1,9 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Links } from "@/models/Dashboard";
+import { Grid2X2, Settings, Trophy, User } from "lucide-react";
 import type { CSSProperties } from "react";
 import { Outlet } from "react-router";
 import { SideBar } from "../dashboard/SideBar";
-import { Grid2X2, Settings, Shapes, Trophy, User } from "lucide-react";
 
 export const DashboardLayout = () => {
 	const links: Links[] = [

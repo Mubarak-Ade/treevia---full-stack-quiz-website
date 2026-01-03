@@ -27,7 +27,7 @@ export const Overview = () => {
 		(stats?.totalCorrect * stats?.totalFailed) / stats?.quizzesTaken
 	);
 
-	const xpToNextLevel = progress?.nextXp + progress?.xpIntoLevel
+	// const xpToNextLevel = progress?.nextXp + progress?.xpIntoLevel
 
 	const progressBar = (stats?.totalXp / progress?.nextTotalXp) * 100;
 

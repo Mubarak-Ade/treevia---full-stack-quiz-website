@@ -1,7 +1,7 @@
 import { DashboardCard } from "@/component/dashboard/DashboardCard";
 import { DashboardProfileCard } from "@/component/dashboard/DashboardProfileCard";
 import useAuthStore from "@/stores/useAuthStore";
-import { Droplet, Leaf, PlayCircle, Plus, Shapes, Trees, Users } from "lucide-react";
+import { Leaf, PlayCircle, Plus, Shapes, Users } from "lucide-react";
 
 export const Overview = () => {
     const user = useAuthStore((s) => s.user);

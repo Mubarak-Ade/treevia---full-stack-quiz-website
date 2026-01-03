@@ -1,3 +1,4 @@
+import { User } from '@/models/Auth';
 import { create } from 'zustand';
 import { persist } from "zustand/middleware"
 

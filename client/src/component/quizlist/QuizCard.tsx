@@ -5,13 +5,15 @@ import { motion } from "motion/react";
 import { Link } from "react-router";
 // import { Quiz } from "@/types";
 
+interface QuizCardProps extends Quiz {}
+
 export const QuizCard = ({
 	title,
 	timeLimit,
 	difficulty,
 	_id,
 	questionCount,
-}: Quiz) => {
+}: QuizCardProps) => {
 	const color = getColorFromString(title);
 
 	return (

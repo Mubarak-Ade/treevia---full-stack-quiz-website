@@ -38,7 +38,7 @@ const SideBarBtn = ({
 			<SidebarMenuItem className="px-4 py-2">
 				<SidebarMenuButton>
 					<Link
-						to={`${user.role === "admin" ? "admin" : "dashboard"}/${link}`}
+						to={`${user?.role === "admin" ? "admin" : "dashboard"}/${link}`}
 						className="flex gap-2 text-sm font-poppins items-center"
 					>
 						{icon} {label}

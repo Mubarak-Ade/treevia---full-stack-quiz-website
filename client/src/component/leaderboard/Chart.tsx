@@ -1,6 +1,5 @@
 import { formatImage } from "@/utils/imageFormat";
 import { ChevronUp, Crown } from "lucide-react";
-import React from "react";
 
 interface color {
 	gradient: string;

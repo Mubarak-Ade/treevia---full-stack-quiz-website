@@ -59,7 +59,7 @@ export const QuizList = () => {
 						title={q.title}
 						difficulty={q.difficulty}
 						timeLimit={q.timeLimit}
-						description={q.description}
+						// description={q.description}
 					/>
 				))}
 			</div>

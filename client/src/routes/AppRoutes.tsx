@@ -1,9 +1,8 @@
 import React from 'react';
-import { Route, Routes } from 'react-router';
-import PublicRoutes from './PublicRoutes';
-import { DashboardRoutes } from './DashboardRoutes';
+import { Routes } from 'react-router';
 import { AdminRoutes } from './AdminRoutes';
-import { Example } from '@/admin/pages/example';
+import { DashboardRoutes } from './DashboardRoutes';
+import PublicRoutes from './PublicRoutes';
 
 /**
  * App Routes Component
