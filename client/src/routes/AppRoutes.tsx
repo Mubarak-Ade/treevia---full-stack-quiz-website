@@ -1,7 +1,9 @@
 import React from 'react';
-import { Routes } from 'react-router';
+import { Route, Routes } from 'react-router';
 import PublicRoutes from './PublicRoutes';
 import { DashboardRoutes } from './DashboardRoutes';
+import { AdminRoutes } from './AdminRoutes';
+import { Example } from '@/admin/pages/example';
 
 /**
  * App Routes Component
@@ -16,6 +18,10 @@ const AppRoutes: React.FC = () => {
 
         {/* Dashboard Route */}
         {DashboardRoutes()}
+
+        {/* Admin Route */}
+        {AdminRoutes()}
+
 
       </Routes>
     </>

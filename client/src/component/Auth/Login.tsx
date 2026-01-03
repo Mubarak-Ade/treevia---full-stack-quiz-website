@@ -53,7 +53,7 @@ const Login = ({ activeTab, setTabTo }: LoginProps) => {
 					type: "manual",
 					message: error.message
 				});
-				console.log(errors.root?.message);
+				console.log(error.message);
 			},
 		});
 	};

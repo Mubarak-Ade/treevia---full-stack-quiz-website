@@ -1,4 +1,4 @@
-import { Category, Question } from "@/models/Quiz"
+import { Category, Question, Quiz } from "@/models/Quiz"
 import api from "@/utils/axios"
 
 export const fetchQuizzes  = async (params: string) => {
@@ -21,7 +21,12 @@ export const fetchQuizQuestion = async (id: string): Promise<Question[]> =>  {
     return res.data
 }
 
-export const submitQuizAnswers = async (data: {quizId: string, selectedOption: number[]}) : Promise<void> => {
+export const submitQuizAnswers = async (data: {quizId: string, selectedOptions: number[]}) : Promise<void> => {
     const res = await api.post("/quizzes/submit", data)
+    return res.data
+}
+
+export const fetchRandomQuiz = async (): Promise<Quiz[]> => {
+    const res = await api.get<Quiz[]>("/quizzes/random")
     return res.data
 }

@@ -1,12 +1,14 @@
-import { Response, Request, RequestHandler } from 'express';
-import mongoose from 'mongoose';
-import Question from '../models/Question.js';
-import Quiz from '../models/Quiz.js';
-import Result from '../models/QuizResult.js';
-import User from '../models/User.js';
-import { validateQuiz } from '../utils/validator.js';
-import createHttpError from 'http-errors';
-import Category from '../models/Category.js';
+import { Response, Request, RequestHandler, NextFunction } from "express";
+import mongoose from "mongoose";
+import Question from "../models/Question.js";
+import Quiz from "../models/Quiz.js";
+import Result from "../models/QuizResult.js";
+import User from "../models/User.js";
+import { validateQuiz } from "../utils/validator.js";
+import createHttpError from "http-errors";
+import Category from "../models/Category.js";
+import UserStats from "../models/UserStats.js";
+import { calculateLevelFromXp } from "../utils/xp_level_calculator.js";
 
 interface AuthRequest extends Request {
 	user?: any;
@@ -17,181 +19,162 @@ interface AuthRequest extends Request {
 	};
 }
 
-export const createQuiz = async (req: Request, res: Response): Promise<void> => {
-	const { title, category, difficulty, timeLimit } = req.body;
-
+export const getQuizzes = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<void> => {
 	try {
-		validateQuiz(title, category, timeLimit);
-		const quiz = new Quiz({ title, category, difficulty, timeLimit });
-		await quiz.save();
-		res.status(200).json({ message: 'Quiz Created Successfully', quiz: quiz.id, quizTitle: title });
-	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-	}
-};
-
-export const getQuizzes = async (req: Request, res: Response): Promise<void> => {
-	try {
-		const { category } = req.query
-		const filter = category ? { categories: category } : {}
+		const { category } = req.query;
+		const filter = category ? { categories: category } : {};
 		const quiz = await Quiz.find(filter).sort({ createdAt: -1 }).lean();
-		res.status(200).json(quiz);
+		res.json(quiz);
 	} catch (error: any) {
-		res.status(400).json({ error: error.message });
+		next(error)
 	}
 };
 
-export const getQuizById = async (req: Request, res: Response): Promise<void> => {
-	const { quizId } = req.params;
+export const submitQuiz = async (
+	req: AuthRequest,
+	res: Response,
+	next: NextFunction
+): Promise<void> => {
+	const { quizId, selectedOptions } = req.body;
 
 	try {
-		const [quiz] = await Quiz.aggregate([
+		if (!quizId || !Array.isArray(selectedOptions)) {
+			throw createHttpError(400, "invalid submission data");
+		}
+		const questions = await Question.find({ quizId }).lean();
+
+		if (!questions.length) {
+			throw createHttpError(404, "Quiz not found");
+		}
+
+		let correctCount = 0;
+		// Process answers
+		const attempts = questions.map((question, index) => {
+			const selectedIndex = selectedOptions[index];
+			const isCorrect =
+				typeof selectedIndex === "number" &&
+				selectedIndex === question.correctAnswer;
+
+			if (isCorrect) correctCount++;
+			return {
+				question: question.questionText,
+				selected: question.options[selectedIndex] ?? null,
+				correct: question.options[question.correctAnswer],
+				isCorrect,
+			};
+		});
+
+		const totalQuestions = questions.length;
+		const score = correctCount;
+		const xpEarned = correctCount * 10;
+
+		if (req.user) {
+			await Result.create({
+				user: req.user.id,
+				quiz: quizId,
+				score,
+				xpEarned,
+				correctAnswers: questions.map((q) => q.correctAnswer),
+			});
+			await UserStats.findOneAndUpdate(
+				{ user: req.user?.id },
+				{
+					$inc: {
+						quizzesTaken: 1,
+						// highestScore: score,
+						totalCorrect: correctCount,
+						totalFailed: totalQuestions - correctCount,
+						totalXp: xpEarned,
+					},
+					$max: {highestScore: score},
+					$set: { lastQuizDate: Date.now() },
+				},
+				{ upsert: true }
+			);
+		}
+
+		const stats = req.user
+			? await UserStats.findOne({ user: req.user?.id }).populate(
+					"user",
+					"username"
+			  )
+			: null;
+
+		res.json({
+			score,
+			stats,
+			totalQuestions,
+			accuracy: (score / totalQuestions) * 100,
+			xpEarned,
+			attempts,
+			saved: Boolean(req.user),
+		});
+	} catch (error: any) {
+		next(error)
+	}
+};
+
+export const getQuestions = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<void> => {
+	try {
+		const quizId = req.params.quizId;
+		const question = await Question.find({ quizId });
+		res.json(question);
+	} catch (error: any) {
+		next(error)
+	}
+};
+
+export const getRandomQuiz = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<void> => {
+	try {
+		const randomQuiz = await Quiz.aggregate([
+			{ $sample: { size: 3 } },
 			{
-				$match: {
-					_id: new mongoose.Types.ObjectId(quizId),
+				$lookup: {
+					from: "categories",
+					localField: "category",
+					foreignField: "_id",
+					as: "category",
 				},
 			},
 			{
 				$lookup: {
-					from: 'questions',
-					localField: '_id',
-					foreignField: 'quizId',
-					as: 'questions',
-				},
+					from: "questions",
+					localField: "_id",
+					foreignField: "quizId",
+					as: "questions"
+				}
 			},
+			{
+				$project: {
+					_id: 1,
+					title: 1,
+					category: "$category.name",
+					difficulty: 1,
+					timeLimit: 1,
+					createdAt: 1,
+					updatedAt: 1,
+					questionCount: {$size: "$questions"}
+				}
+			},
+			{$unwind: "$category"}
 		]);
-		res.status(200).json(quiz);
-	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-	}
-};
-
-export const deleteQuizById = async (req: Request, res: Response): Promise<void> => {
-	const { id } = req.params;
-	try {
-		const quiz = await Quiz.findByIdAndDelete(id);
-
-		if (!quiz) {
-			res.status(404).json({ message: 'Quiz not found' });
-			return;
+		if (randomQuiz.length === 0) {
+			throw createHttpError(404, "No quizzes available");
 		}
-		res.status(200).json({ message: 'Quiz successfully deleted', quiz });
-	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-	}
-};
-
-export const getQuestionById = async (req: Request, res: Response): Promise<void> => {
-	const { quizId, questionId } = req.params;
-
-	try {
-		const quiz = await Quiz.findById(quizId);
-
-		if (!quiz) {
-			res.status(404).json({ message: 'Question not found in any quiz' });
-			return;
-		}
-
-		const question = await Question.findById(questionId);
-
-		if (!question) {
-			res.status(404).json({ message: 'Question not found' });
-			return;
-		}
-
-		res.status(200).json(question);
-	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-	}
-};
-
-export const updateQuiz = async (req: Request, res: Response): Promise<void> => {
-	const { quizId } = req.params;
-	const { } = req.body;
-	// Implementation pending
-};
-
-export const submitQuiz = async (req: AuthRequest, res: Response): Promise<void> => {
-	const { quizId, selectedOption } = req.body;
-
-	try {
-
-		if (!quizId || !Array.isArray(selectedOption)) {
-			throw createHttpError(400, "invalid submission data")
-		}
-		const questions = await Question.find({ quizId }).lean();
-		
-		if (!questions.length) {
-			throw createHttpError(404, "Quiz not found")
-		}
-		
-		let score = 0;
-		let correctAnswers: number[] = [];
-		let selectedIndex: number;
-		let correctIndex: number;
-
-		// Process answers
-		const attempts = questions.map((question, index) => {
-			const selectedIndex = selectedOption[index];
-			const isCorrect = selectedIndex === question.correctAnswer;
-			
-			if (isCorrect) {
-				score += 1
-			}
-			return {
-				question: question.questionText,
-				selected: question.options[selectedIndex],
-				correct: question.options[question.correctAnswer],
-				isCorrect
-			}
-		})
-
-		const totalQuestion = questions.length;
-		const percentage = (score / totalQuestion) * 100;
-
-		if (req.user) {
-			await Result.findOneAndUpdate(
-				{ quiz: quizId, user: req.user.id },
-				{
-					score,
-					percentage,
-					correctAnswers: questions.map(q => q.correctAnswer),
-				},
-				{ upsert: true, new: true }
-			);
-		}
-
-
-		res.status(200).json({ score, totalQuestion, percentage, attempts, saved: Boolean(req.user) });
-	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-	}
-};
-
-export const getQuestions = async (req: Request, res: Response): Promise<void> => {
-	try {
-		const quizId = req.params.quizId
-		const question = await Question.find({ quizId });
-		res.status(200).json(question);
-	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-	}
-};
-
-export const editQuestions = async (req: Request, res: Response): Promise<void> => {
-	const { quizId, questionId } = req.params;
-	const updated = req.body;
-
-	try {
-		const question = await Question.findByIdAndUpdate(questionId, updated, { new: true });
-
-		if (!question) {
-			res.status(404).json({ error: 'Question not found' });
-			return;
-		}
-
-		res.status(200).json(question);
-	} catch (error: any) {
-		res.status(400).json({ error: error.message });
+		res.json(randomQuiz);
+	} catch (error: unknown) {
+		next(error)
 	}
 };

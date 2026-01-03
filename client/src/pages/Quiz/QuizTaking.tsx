@@ -16,7 +16,7 @@ export const QuizTaking = () => {
 	const navigate = useNavigate()
 	const { data, isLoading } = useFetchQuestion(id);
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const [selectedOption, setSelectedOption] = useState(
+	const [selectedOptions, setSelectedOptions] = useState(
 		Array(data?.length).fill(-1)
 	);
 	if (isLoading || !data) {
@@ -56,8 +56,8 @@ export const QuizTaking = () => {
 					<ProgressBar progress={progress} />
 				</div>
 				<QuizTakingCard
-					selectedOption={selectedOption}
-					setSelectedOption={setSelectedOption}
+					selectedOptions={selectedOptions}
+					setSelectedOptions={setSelectedOptions}
 					quiz={data}
 					currentIndex={currentIndex}
 					goToPrevQuestion={handlePrevQuestion}

@@ -15,12 +15,19 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['student', 'teacher', 'admin'],
-    default: 'student',
+    enum: ['user', 'admin'],
+    default: 'user',
   },
   isOnline: {
     type: Boolean,
     default: false,
+  },
+  profilePic: {
+    type: String,
+  },
+  bio: {
+    type: String,
+    default: ""
   },
   createdAt: {
     type: Date,

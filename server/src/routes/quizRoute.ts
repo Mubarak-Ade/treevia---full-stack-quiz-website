@@ -1,24 +1,19 @@
 import express, { Router } from 'express';
 import {
-  createQuiz,
-  deleteQuizById,
-  editQuestions,
-  getQuestionById,
   getQuestions,
-  getQuizById,
   getQuizzes,
-  submitQuiz,
+  getRandomQuiz,
+  submitQuiz
 } from '../controllers/quizController.js';
-import requireAuth from '../middleware/requireAuth.js';
-import { createQuestion, deleteQuestion } from '../controllers/questionController.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 
 const router: Router = express.Router();
 
-router.get('/:quizId', getQuizById);
+// router.get('/:quizId', getQuizById);
 router.get('/:quizId/questions', getQuestions);
 router.post('/submit', optionalAuth, submitQuiz);
-router.post('/quizzes', createQuiz);
+router.get('/random', getRandomQuiz);
+// router.post('/quizzes', createQuiz);
 router.get('/', getQuizzes);
 // router.get('/quizzes', getQuizzes);
 // router.get('/questions', getQuestions);

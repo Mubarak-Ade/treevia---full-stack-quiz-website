@@ -1,20 +1,10 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import env from '../env.js';
-
-interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-  };
-}
+import { AuthUser } from '../types/express.js';
 
 
-interface DecodedToken extends JwtPayload {
-  userId: string;
-}
-
-const optionalAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
+const optionalAuth: RequestHandler = (req, res, next) => {
   const header = req.header("Authorization");
 
   if (!header?.startsWith("Bearer ")) {
@@ -24,15 +14,9 @@ const optionalAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
   const token = header.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, env.SECRET) as JwtPayload & {
-      id: string;
-      email: string;
-    };
+    const decoded = jwt.verify(token, env.SECRET) as AuthUser;
 
-    req.user = {
-      id: decoded.id,
-      email: decoded.email,
-    };
+    req.user = decoded;
 
     next();
   } catch {

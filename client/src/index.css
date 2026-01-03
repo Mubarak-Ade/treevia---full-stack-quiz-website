@@ -8,11 +8,11 @@
 
 	/* color */
 	--color-background: #0f1c12;
-	--color-secondary-bg: #0b2e16;
+	--color-secondary-bg: #134b24;
 	--color-card: #14251a;
 	--color-custom: #00ff66;
 	--color-muted: #1f3928;
-	--color-primary: #ffffff;
+	--color-primary: #4a815b;
 	--color-primary-btn: #00ff66;
 	--color-secondary-btn: #2f4a3a;
 	--color-secondary: #a3b0a1;
@@ -45,6 +45,7 @@
 body {
 	margin: 0;
 	padding: 0;
+	/* color: #4a815b; */
 	background-color: var(--color-background);
 }
 

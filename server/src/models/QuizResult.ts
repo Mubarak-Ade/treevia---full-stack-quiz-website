@@ -4,6 +4,7 @@ const QuizResultSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
     index: true
   },
   quiz: {
@@ -14,12 +15,17 @@ const QuizResultSchema = new Schema({
   },
   score: {
     type: Number,
+    required: true
   },
   correctAnswers: {
     type: [Number],
     min: 0,
     max: 3
   },
+  xpEarned: {
+    type: Number,
+    required: true
+  }
 
 }, { timestamps: true });
 

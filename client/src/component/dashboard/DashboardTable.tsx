@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { useFetchResult } from "@/features/queries/useResult";
 import { GetResult } from "@/models/Quiz";
-import { getColorFromString } from "@/utils/colorFormat";
+import { getColorFromString, getScoreColor } from "@/utils/colorFormat";
 import {
 	ColumnDef,
 	flexRender,
@@ -26,21 +26,21 @@ const columns: ColumnDef<GetResult>[] = [
 	{
 		header: "Quiz Name",
 		cell: ({ row }) => {
-			const color = getColorFromString(row.original.quiz.category.name);
+			const color = getColorFromString(row.original.quiz);
 			return (
 				<div className="flex items-center gap-4">
 					<span
-						className={`${color.text} ${color.bg} px-4 py-3 rounded-full`}
+						className={`${color.text} ${color.gradient} px-4 py-3 rounded-full`}
 					>
-						{row.original.quiz?.category.name.charAt(0)}
+						{row.original.quiz.charAt(0)}
 					</span>
-					<p>{row.original.quiz?.title || "N/A"}</p>
+					<p>{row.original.quiz || "N/A"}</p>
 				</div>
 			);
 		},
 	},
 	{
-		accessorFn: (row) => row.quiz?.category.name || "N/A",
+		accessorFn: (row) => row.quiz || "N/A",
 		header: "Category",
 	},
 	{
@@ -50,6 +50,14 @@ const columns: ColumnDef<GetResult>[] = [
 	{
 		accessorKey: "score",
 		header: "Score",
+		cell: ({ row }) => {
+			const color = getScoreColor(row.original.score);
+			return (
+				<span className={`${color} px-2 py-1 text-xs rounded-full`}>
+					{row.original.score} / 10
+				</span>
+			);
+		},
 	},
 	{
 		id: "action",
@@ -76,13 +84,39 @@ const columns: ColumnDef<GetResult>[] = [
 ];
 
 export const DashboardTable = () => {
+	const navigate = useNavigate();
 	const { data, isLoading } = useFetchResult();
 
+	if (isLoading) {
+		return <Loader loading={isLoading} />
+	}
 
-	
+	const tableColumns: ColumnDef<GetResult>[] = [
+		...columns.slice(0, -1),
+		{
+			id: "action",
+			header: "Action",
+			cell: ({ row }) => {
+				const handleClick = () => {
+					navigate(`/quizzes/${row.original.quiz._id}/questions`);
+				};
+				return (
+					<Button
+						size={"icon"}
+						variant={"ghost"}
+						className="cursor-pointer"
+						onClick={handleClick}
+					>
+						<RefreshCcw />
+					</Button>
+				);
+			},
+		},
+	];
+
 	const table = useReactTable({
-		data,
-		columns,
+		data: data ?? [],
+		columns: tableColumns,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 	});

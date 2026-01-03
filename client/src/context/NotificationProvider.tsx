@@ -58,7 +58,7 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
 	return (
 		<NotificationContext.Provider value={{ showNotification }}>
 			{children}
-			<div className="fixed top-5 right-5 space-y-2 z-50">
+			<div className="fixed top-15 flex-col p-10 left-0 flex items-center justify-center w-full space-y-2 z-50">
 				{toasts.map((toast) => (
 					<Notification
 						key={toast.id}

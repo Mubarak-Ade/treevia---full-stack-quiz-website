@@ -19,7 +19,7 @@ const Result = () => {
 
 	const result = location.state.data;
 
-	const { totalQuestion, score, percentage, attempts } =
+	const { totalQuestions, score, accuracy, attempts } =
 		result as ResultModel;
 
 		
@@ -71,10 +71,10 @@ const Result = () => {
 						You have completed your quiz
 					</p>
 					<h2 className="text-5xl font-bold text-white">
-						{percentage}%
+						{accuracy}%
 					</h2>
 					<span className="py-2 px-3 bg-muted rounded-full text-xs text-white font-poppins font-semibold">
-						{score} out of {totalQuestion} is correct
+						{score} out of {totalQuestions} is correct
 					</span>
 					<div className="flex flex-col md:flex-row gap-10 my-6">
 						<div className="bg-muted/50 text-custom rounded-xl w-50 h-25 flex items-center justify-center flex-col">
@@ -88,7 +88,7 @@ const Result = () => {
 							</p>
 						</div>
 						<div className="bg-muted/50 text-red-500 rounded-xl w-50 h-25 flex items-center justify-center flex-col">
-							<h6 className="text-xl">{totalQuestion - score}</h6>
+							<h6 className="text-xl">{totalQuestions - score}</h6>
 							<p className="flex font-poppins text-sm items-center gap-1">
 								<CircleX
 									size={15}
@@ -106,10 +106,10 @@ const Result = () => {
 							<Undo2 /> Retake Quiz
 						</button>
 						<button
-							onClick={() => navigate("/quizzes")}
+							onClick={() => navigate("/dashboard/overview")}
 							className="flex cursor-pointer bg-muted text-white gap-2 px-6 py-2 rounded-full"
 						>
-							<Grid2X2 /> Other Categories
+							<Grid2X2 /> Go To Dashboard
 						</button>
 					</div>
 				</div>

@@ -44,3 +44,6 @@ dist/
 !**/dist/**
 
 # Misc
+
+/server/seeds/*.ts
+/server/seedAdmin/

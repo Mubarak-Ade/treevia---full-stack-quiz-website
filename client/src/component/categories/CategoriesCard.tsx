@@ -31,7 +31,7 @@ export const CategoriesCard: React.FC<Category> = ({slug, name, tags, descriptio
 			onClick={handleCategoryClick}
 			className="max-w-3xs border border-custom/50 w-full cursor-pointer rounded-4xl overflow-hidden bg-card"
 		>
-			<div className={`h-30 relative ${color.bg}`}>
+			<div className={`h-30 relative ${color.gradient}`}>
 				<span className="text-xs bg-secondary-btn/20  px-2 py-1 absolute right-0 m-3 text-secondary rounded-full">
 					{quizCount} quizzes
 				</span>

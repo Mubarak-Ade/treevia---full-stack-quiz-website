@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import User from '../models/User.js';
 import env from '../env.js';
 import createHttpError from 'http-errors';
+import { AuthUser } from '../types/express.js';
 
 interface AuthRequest extends Request {
   user?: any;
@@ -26,13 +27,13 @@ const requireAuth = async (req: AuthRequest, res: Response, next: NextFunction):
   }
   try {
     
-    const decode = jwt.verify(token, env.SECRET!) as DecodedToken;
+    const decode = jwt.verify(token, env.SECRET!) as AuthUser;
 
     req.user = decode;
     next();
   } catch (error) {
     console.log(error);
-    res.status(401).json({ error: 'Request is not authorized' });
+    throw createHttpError(401, 'Request is not authorized');
   }
 };
 

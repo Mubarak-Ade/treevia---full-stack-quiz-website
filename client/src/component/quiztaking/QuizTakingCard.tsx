@@ -12,16 +12,16 @@ interface QuizTakingCardProps {
 	goToNextQuestion: () => void;
 	goToPrevQuestion: () => void;
 	currentIndex: number;
-	selectedOption: number[];
-	setSelectedOption: React.Dispatch<React.SetStateAction<number[]>>;
+	selectedOptions: number[];
+	setSelectedOptions: React.Dispatch<React.SetStateAction<number[]>>;
 }
 export const QuizTakingCard = ({
 	quiz,
 	goToNextQuestion,
 	goToPrevQuestion,
 	currentIndex,
-	selectedOption,
-	setSelectedOption,
+	selectedOptions,
+	setSelectedOptions,
 }: QuizTakingCardProps) => {
 	// console.log(questionText);
 
@@ -39,16 +39,16 @@ export const QuizTakingCard = ({
 	const isFirstQuestion = currentIndex === 0;
 	const isLastQuestion = currentIndex === quiz.length - 1;
 
-	const selectedIndex = selectedOption[currentIndex];
+	const selectedIndex = selectedOptions[currentIndex];
 
 	const hasAnsweredQuestion = selectedIndex !== -1;
 
-	const allIsAnswered = selectedOption.every((opt) => opt !== -1);
+	const allIsAnswered = selectedOptions.every((opt) => opt !== -1);
 
-	const handleSelectedOption = (index: number) => {
-		const updateSelection = [...selectedOption];
+	const handleSelectedOptions = (index: number) => {
+		const updateSelection = [...selectedOptions];
 		updateSelection[currentIndex] = index;
-		setSelectedOption(updateSelection);
+		setSelectedOptions(updateSelection);
 	};
 
 	const handleNext = () => {
@@ -67,7 +67,7 @@ export const QuizTakingCard = ({
 		submit.mutate(
 			{
 				quizId: id as string,
-				selectedOption: selectedOption,
+				selectedOptions: selectedOptions,
 			},
 			{
 				onSuccess: (data) => {
@@ -97,7 +97,7 @@ export const QuizTakingCard = ({
 				<ul className="px-8 space-y-4">
 					{options.map((opt, index) => (
 						<motion.li
-							onClick={() => handleSelectedOption(index)}
+							onClick={() => handleSelectedOptions(index)}
 							whileHover={{
 								scale: 1.05,
 							}}

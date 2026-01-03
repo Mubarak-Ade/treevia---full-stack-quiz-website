@@ -8,6 +8,7 @@ import { QuizList } from "@/pages/Quiz/QuizList";
 import { QuizTaking } from "@/pages/Quiz/QuizTaking";
 import Result from "@/pages/Quiz/Result";
 import { JSX } from "react";
+import { Leaderboard } from "@/pages/Leaderboard";
 
 const PublicRoutes = (): JSX.Element[] => [
 	<Route
@@ -18,7 +19,6 @@ const PublicRoutes = (): JSX.Element[] => [
 		path="/result"
 		element={<Result />}
 	/>,
-
 	<Route
 		key="layout"
 		element={<Layout />}
@@ -27,6 +27,7 @@ const PublicRoutes = (): JSX.Element[] => [
 			path="/"
 			element={<Home />}
 		/>
+
 		<Route
 			path="/login"
 			element={<AuthPage />}
@@ -38,6 +39,10 @@ const PublicRoutes = (): JSX.Element[] => [
 		<Route
 			path="/quizzes"
 			element={<CategoryPage />}
+		/>
+		<Route
+			path="/leaderboard"
+			element={<Leaderboard />}
 		/>
 		<Route
 			path="/quizzes/:slug"

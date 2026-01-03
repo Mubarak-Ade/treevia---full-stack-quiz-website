@@ -10,6 +10,8 @@ import {
 	LinkVariant,
 } from "../utils/Animation/variant/IntroAnimationVariant";
 import { DoorOpen, Grid2x2, Menu, User, X } from "lucide-react";
+import { formatImage } from "@/utils/imageFormat";
+import { ProfileAvatar } from "./share/ProfileAvatar";
 
 const links = [
 	{
@@ -41,14 +43,10 @@ const Profile = ({ user, setDisplay, display, logout }: ProfileProps) => {
 	return (
 		<>
 			{user ? (
-				<div className="relative ml-40 flex flex-row-reverse">
+				<div className="relative lg:ml-40 flex flex-row-reverse">
 					<div className="flex items-center justify-center gap-3">
-						<span className="flex justify-center text-2xl rounded-full text-teal-100 items-center bg-card p-3">
-							<Fa.FaUser />
-						</span>
-						<h6 className="capitalize text-sm text-custom">
-							{user.username}
-						</h6>
+						<ProfileAvatar username={user.username} profile={user.profile} className="size-15" />
+
 						<motion.button
 							whileTap={{ scale: 0.8 }}
 							onClick={() => setDisplay((prev) => !prev)}
@@ -60,12 +58,14 @@ const Profile = ({ user, setDisplay, display, logout }: ProfileProps) => {
 					</div>
 					<AnimatePresence>
 						{display && (
-							<motion.div 
-							animate={{ opacity: 1, y: 0 }}
-							initial={{ opacity: 0, y: -20 }}
-							exit={{ opacity: 0, y: -20 }}
-							transition={{ duration: 0.3 }}
-							layout className="fixed bg-card shadow-2xl text-white w-60 m-2 p-5 top-20 z-10 right-0 rounded-xl">
+							<motion.div
+								animate={{ opacity: 1, y: 0 }}
+								initial={{ opacity: 0, y: -20 }}
+								exit={{ opacity: 0, y: -20 }}
+								transition={{ duration: 0.3 }}
+								layout
+								className="fixed bg-card shadow-2xl text-white w-60 m-2 p-5 top-20 z-100 right-0 rounded-xl"
+							>
 								<h4 className="capitalize text-sm text-custom">
 									{user.username}
 								</h4>
@@ -82,7 +82,7 @@ const Profile = ({ user, setDisplay, display, logout }: ProfileProps) => {
 										className="text-custom px-4 py-2 items-center rounded-xl cursor-pointer"
 									>
 										<Link
-											to="#"
+											to="/dashboard/me"
 											className="flex gap-2 items-center"
 										>
 											<User /> Edit Profile
@@ -97,7 +97,11 @@ const Profile = ({ user, setDisplay, display, logout }: ProfileProps) => {
 										className="text-custom px-4 py-2 items-center rounded-xl cursor-pointer"
 									>
 										<Link
-											to="dashboard/overview"
+											to={
+												user.role === "admin"
+													? "admin/overview"
+													: "dashboard/overview"
+											}
 											className="flex gap-2 items-center"
 										>
 											<Grid2x2 /> Dashboard
@@ -225,8 +229,14 @@ const Navbar = () => {
 			animate="animate"
 			ref={isHome}
 			transition={{ duration: 1 }}
-			className={`flex items-center sticky z-50 top-0 bg-background justify-between md:justify-around p-4 border-b border-muted`}
+			className={`flex md:flex-row flex-row-reverse items-center w-full sticky z-50 top-0 bg-background justify-between md:justify-around p-4 border-b border-muted`}
 		>
+			<button
+				onClick={() => setShowNav(!showNav)}
+				className="cursor-pointer block md:hidden"
+			>
+				{showNav ? <X color="#fff" /> : <Menu color="#fff" />}
+			</button>
 			<NavLink to="/">
 				<div className="flex gap-4 items-center">
 					<img
@@ -251,24 +261,20 @@ const Navbar = () => {
 				/>
 			</nav>
 			{showNav && (
-				<nav
-					className={`flex md:hidden gap-5 flex-col z-50 h-screen w-full absolute bg-background top-15 left-0 font-semibold text-sm text-secondary p-10 font-poppins`}
-				>
-					<MobileMenu links={links} />
+				<>
+					<nav
+						className={`md:hidden gap-5 flex-col z-50 h-screen w-full absolute bg-background top-15 left-0 font-semibold text-sm text-secondary p-10 font-poppins`}
+					>
+						<MobileMenu links={links} />
+					</nav>
 					<Profile
 						user={user}
 						display={display}
 						setDisplay={setDisplay}
 						logout={logout}
 					/>
-				</nav>
+				</>
 			)}
-			<button
-				onClick={() => setShowNav(!showNav)}
-				className="cursor-pointer block md:hidden"
-			>
-				{showNav ? <X color="#fff" /> : <Menu color="#fff" />}
-			</button>
 		</motion.div>
 	);
 };

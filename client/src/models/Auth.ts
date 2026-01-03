@@ -7,10 +7,11 @@ interface Register extends Login {
     username: string
 }
 
-interface User {
+export interface User {
     id: string,
     email: string,
     username: string,
     role: string,
     token?: string
+    profile?: string
 }

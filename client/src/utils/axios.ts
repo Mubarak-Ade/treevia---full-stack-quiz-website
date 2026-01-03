@@ -16,8 +16,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message = error.response?.data?.error || error.message || "An unexpected error occurred"
+    const message = error.response?.data?.message || error.message || "An unexpected error occurred"
+    console.error('API Error:', message);
     throw new Error(message)
+
   }
 )
 

@@ -51,10 +51,10 @@ const Notification: React.FC<NotificationProps> = ({type, message, onClose }) =>
 
 	return (
 		<motion.div
-			initial={{ opacity: 0, x: 100 }}
-			animate={{ opacity: 1, x: 0 }}
-			exit={{ opacity: 0, x: 100 }}
-			className={`flex items-center gap-3 p-4 rounded-lg border ${getBgColor()} backdrop-blur-sm`}
+			initial={{ opacity: 0, y: -100 }}
+			animate={{ opacity: 1, y: 0 }}
+			exit={{ opacity: 0, y: 100 }}
+			className={`flex items-center max-w-xl w-full gap-3 p-4 rounded-lg border ${getBgColor()} backdrop-blur-sm`}
 		>
 			<span className={getTextColor()}>{getIcon()}</span>
 			<p className="text-sm text-white flex-1">{message}</p>

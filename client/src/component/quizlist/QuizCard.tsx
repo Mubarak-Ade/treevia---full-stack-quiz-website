@@ -7,7 +7,6 @@ import { Link } from "react-router";
 
 export const QuizCard = ({
 	title,
-	description,
 	timeLimit,
 	difficulty,
 	_id,
@@ -19,7 +18,7 @@ export const QuizCard = ({
 		<Link to={`/quizzes/${_id}/questions`}>
 
 		<motion.div className=" border border-custom/50 w-full cursor-pointer rounded-4xl overflow-hidden bg-card">
-			<div className={`h-30 relative ${color.bg}`}>
+			<div className={`h-30 relative ${color.gradient}`}>
 				<span className="text-xs bg-secondary-btn/20  px-2 py-1 absolute right-0 m-3 text-secondary rounded-full">
 					{difficulty}
 				</span>
@@ -27,15 +26,12 @@ export const QuizCard = ({
 					className={`bg-background ${color.text} absolute bottom-0 border m-4 rounded-full  size-10 flex items-center justify-center font-bold text-xl text-center`}
 				>
 					{title.charAt(0)}
-				</span>
+			</span>
 			</div>
 			<div className="p-5">
 				<h4 className="font-bold text-lg line-clamp-1 text-white">
 					{title}
 				</h4>
-				<p className="text-sm mt-4 text-secondary line-clamp-2">
-					{description}
-				</p>
 				<div className="flex items-center gap-5 mt-10 text-secondary font-semibold">
 					<div className="flex items-center gap-1">
 						<ListOrdered size={15} />
