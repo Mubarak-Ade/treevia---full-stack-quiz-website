@@ -1,4 +1,4 @@
-import Notification from "@/component/Notification";
+import Notification from "@/components/feature/Notification";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface Toast {

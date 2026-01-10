@@ -1,7 +1,6 @@
-import AuthFrame from '../component/Auth/AuthFrame'
+import AuthFrame from "@/components/feature/Auth/AuthFrame"
 
-const AuthPage = () =>
-{
+const AuthPage = () => {
 	return (
 		<div className='flex py-10 px-5 justify-center items-center'>
 			<AuthFrame />

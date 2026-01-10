@@ -1,15 +1,13 @@
-import BreadCrumbs from "@/component/BreadCrumbs";
-import { QuizCard } from "@/component/quizlist/QuizCard";
-import {
-	useFetchQuizzes
-} from "@/features/queries/useQuiz";
+import BreadCrumbs from "@/components/feature/BreadCrumbs";
+import { QuizCard } from "@/components/feature/quizlist/QuizCard";
+import { useFetchQuizzesByCategory } from "@/features/quiz/hooks";
 import { Leaf } from "lucide-react";
 import { useParams } from "react-router";
-import type { CategoryWithQuizzes } from "../../models/Quiz";
+import type { CategoryWithQuizzes } from "../../features/quiz/types";
 
 export const QuizList = () => {
 	const { slug } = useParams();
-	const { data, isLoading } = useFetchQuizzes(slug as string);
+	const { data, isLoading } = useFetchQuizzesByCategory(slug as string);
 
 	if (isLoading || !data) {
 		return <p>loading...</p>;
@@ -21,8 +19,6 @@ export const QuizList = () => {
 		tags,
 		quizzes,
 	} = data as CategoryWithQuizzes;
-
-	console.log(data);
 
 	return (
 		<div className="p-5 max-w-5xl w-full m-auto">
@@ -42,7 +38,7 @@ export const QuizList = () => {
 						{description}
 					</p>
 					<ul className="flex flex-wrap gap-4">
-						{tags.map((tag, index) => (
+						{tags.map((tag: any, index) => (
 							<li key={index} className="px-4 py-2 first:bg-custom first:text-card bg-card font-montserrat rounded-full text-xs text-secondary capitalize font-semibold">
 								{tag.name}
 							</li>
@@ -55,11 +51,12 @@ export const QuizList = () => {
 				{quizzes?.map((q) => (
 					<QuizCard
 						_id={q._id}
+						key={q._id}
 						questionCount={q.questionCount}
 						title={q.title}
 						difficulty={q.difficulty}
 						timeLimit={q.timeLimit}
-						// description={q.description}
+					// description={q.description}
 					/>
 				))}
 			</div>

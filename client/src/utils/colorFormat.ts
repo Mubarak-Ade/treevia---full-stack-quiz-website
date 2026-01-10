@@ -44,11 +44,12 @@ export const getColorFromString = (value: string | any) => {
 	return COLORS[Math.abs(hash) % COLORS.length];
 };
 
-export const getScoreColor = (score: number) => {
+export const getScoreColor = (score: number, total: number) => {
 	let color;
-	if (score >= 8) {
+
+	if (score > Math.round(total / 2)) {
 		color = "text-green-500 bg-green-500/20";
-	} else if (score >= 5) {
+	} else if (score > Math.round(total / 4)) {
 		color = "text-yellow-500 bg-yellow-500/20";
 	} else {
 		color = "text-red-500 bg-red-500/20";

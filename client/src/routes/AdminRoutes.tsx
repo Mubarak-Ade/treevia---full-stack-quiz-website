@@ -1,8 +1,10 @@
-import { AdminLayout } from "@/admin/layout/AdminLayout";
-import { Overview } from "@/admin/pages/Overview";
-import { QuizManagement } from "@/admin/pages/QuizManagement";
-import { UserManagement } from "@/admin/pages/UserManagement";
-import AdminRoute from "@/route/AdminRoute";
+import { AdminLayout } from "@/components/layout/AdminLayout";
+import { CategoryManagement } from "@/pages/Admin/CategoryManagement";
+import { CreateQuiz } from "@/pages/Admin/CreateQuiz";
+import { Overview } from "@/pages/Admin/Overview";
+import { QuizManagement } from "@/pages/Admin/QuizManagement";
+import { UserManagement } from "@/pages/Admin/UserManagement";
+import AdminRoute from "@/routes/protected/AdminRoute";
 import { Route } from "react-router";
 
 export const AdminRoutes = () => [
@@ -25,6 +27,14 @@ export const AdminRoutes = () => [
 		<Route
 			path="/admin/quizzes"
 			element={<QuizManagement />}
+		/>
+		<Route
+			path="/admin/quizzes/create"
+			element={<CreateQuiz />}
+		/>
+		<Route
+			path="/admin/category"
+			element={<CategoryManagement />}
 		/>
 	</Route>,
 ];

@@ -1,23 +1,23 @@
-import { CategoriesCard } from "@/component/categories/CategoriesCard";
-import { Loader } from "@/component/Loader";
-import { useFetchCategories } from "@/features/queries/useQuiz";
-import { Search } from "lucide-react";
+import { CategoriesCard } from "@/components/feature/categories/CategoriesCard";
+import { QuizLoader } from "@/components/feature/QuizLoader";
+import { useFetchCategories } from "@/features/quiz/hooks";
+import {Search } from "lucide-react";
 import { motion } from "motion/react";
 
 export const CategoryPage = () => {
-    const {data, isLoading, isError} = useFetchCategories()
+	const { data, isLoading, isError } = useFetchCategories()
 
-    if (isLoading || !data) {
-        return <Loader loading={isLoading} />
-    }
+	if (isLoading || !data) {
+		return <QuizLoader loading={isLoading} />
+	}
 
 	if (isError) {
 		return <p>error loading categories</p>;
-	}    
+	}
 
 	console.log(data);
-	
-    
+
+
 	return (
 		<div className="max-w-5xl w-full p-5 m-auto">
 			<div className="space-y-4">

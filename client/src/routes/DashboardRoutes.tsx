@@ -1,7 +1,7 @@
-import { DashboardLayout } from "@/component/layout/DashboardLayout";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Overview } from "@/pages/Dashboard/Overview";
 import { Profile } from "@/pages/Dashboard/Profile";
-import PrivateRoute from "@/route/PrivateRoute";
+import PrivateRoute from "@/routes/protected/PrivateRoute";
 import { Route } from "react-router";
 
 export const DashboardRoutes = () => [

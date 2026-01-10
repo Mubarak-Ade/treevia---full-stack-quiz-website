@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-import { QuizHeader } from "@/component/quiztaking/Header";
-import { ProgressBar } from "@/component/quiztaking/ProgressBar";
-import { QuizTakingCard } from "@/component/quiztaking/QuizTakingCard";
-import { useFetchQuestion } from "@/features/queries/useQuiz";
+import { QuizLoader } from "@/components/feature/QuizLoader";
+import { QuizHeader } from "@/components/feature/quiztaking/Header";
+import { ProgressBar } from "@/components/feature/quiztaking/ProgressBar";
+import { QuizTakingCard } from "@/components/feature/quiztaking/QuizTakingCard";
+import { useFetchQuestion } from "@/features/quiz/hooks";
 import { X } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
-import { Loader } from "@/component/Loader";
 
 export const QuizTaking = () => {
 	const { id } = useParams<{ id: string }>();
@@ -20,7 +20,7 @@ export const QuizTaking = () => {
 		Array(data?.length).fill(-1)
 	);
 	if (isLoading || !data) {
-		return <Loader loading={isLoading} />
+		return <QuizLoader loading={isLoading} />
 	}
 
 	const NextIndex = currentIndex < data.length - 1;
@@ -37,8 +37,6 @@ export const QuizTaking = () => {
 			setCurrentIndex((prev) => prev - 1);
 		}
 	};
-
-	console.log(data);
 
 	const progress = ((currentIndex + 1) / data.length) * 100;
 	return (

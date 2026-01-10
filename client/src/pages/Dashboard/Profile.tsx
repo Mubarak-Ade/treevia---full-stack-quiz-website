@@ -1,41 +1,37 @@
-import { Loader } from "@/component/Loader";
-import { ProfileCard } from "@/component/profile/ProfileCard";
-import { ProfileHeader } from "@/component/profile/ProfileHeader";
-import { useFetchResult, useFetchUserStats } from "@/features/queries/useResult";
-import { useFetchUser } from "@/features/queries/useUser";
-import { User } from "@/models/Auth";
-import { Stats } from "@/models/Quiz";
+import { ProfileCard } from "@/components/feature/profile/ProfileCard";
+import { ProfileHeader } from "@/components/feature/profile/ProfileHeader";
+import { QuizLoader } from "@/components/feature/QuizLoader";
+import { User } from "@/features/auth/type";
+import { Stats } from "@/features/quiz/types";
+import { useFetchResult, useFetchUserStats } from "@/features/result/hooks";
+import { useFetchUser } from "@/features/user/hooks";
 import { AlertTriangleIcon, ChartColumn, Globe, ThumbsUp, Trophy } from "lucide-react";
 import { Link } from "react-router";
 
 export const Profile = () => {
 	const userStats = useFetchUserStats()
 	const result = useFetchResult();
-	
+
 	const user = useFetchUser()
 
 	const isLoading = userStats.isLoading || user.isLoading || result.isLoading
 	const exist = userStats.data || user.data || result.data
 
 	if (isLoading || !exist) {
-		<Loader loading={isLoading} />
+		<QuizLoader loading={isLoading} />
 	}
 
-	const {stats, progress} = userStats?.data as Stats
-	const {username, profile: profilePic} = user?.data as User
+	const stats = userStats?.data as Stats
+	const { username, profile: profilePic } = user?.data as User
 
-	const {totalXp, quizzesTaken, totalCorrect, totalFailed} = stats ?? {}
-	
+	const { totalXp, quizzesTaken, totalCorrect, totalFailed, level, xpForNextLevel } = stats ?? {}
+
 	console.log(stats);
-	
-	const accuracy = Math.round(
-		(totalCorrect / quizzesTaken) * 10
-	);
 
 
 	return (
 		<div className="max-w-4xl w-full m-auto p-6">
-			<ProfileHeader username={username} profile={profilePic} level={progress?.level} nextXp={progress?.nextTotalXp} totalXp={totalXp} />
+			<ProfileHeader username={username} profile={profilePic} level={level} nextXp={xpForNextLevel} totalXp={totalXp} />
 			<div className="mt-5 flex gap-4 justify-between">
 				<ProfileCard
 					icon={
@@ -75,7 +71,7 @@ export const Profile = () => {
 						/>
 					}
 					title="Accuracy"
-					value={accuracy}
+					value={Math.round(stats.accuracy)}
 				/>
 			</div>
 			<div className="mt-2 p-2">

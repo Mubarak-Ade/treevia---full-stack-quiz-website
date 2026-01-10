@@ -1,5 +1,6 @@
-import { QuizHeader } from "@/component/quiztaking/Header";
-import { Result as ResultModel } from "@/models/Quiz";
+import { QuizHeader } from "@/components/feature/quiztaking/Header";
+import useAuthStore from "@/features/auth/store";
+import { Result as ResultModel } from "@/features/quiz/types";
 import {
 	Check,
 	CircleCheck,
@@ -9,9 +10,8 @@ import {
 	Undo2,
 	X,
 } from "lucide-react";
-import { useLocation, useNavigate } from "react-router";
 import { motion } from "motion/react";
-import useAuthStore from "@/stores/useAuthStore";
+import { useLocation, useNavigate } from "react-router";
 
 const Result = () => {
 	const navigate = useNavigate();
@@ -22,9 +22,8 @@ const Result = () => {
 	const { totalQuestions, score, accuracy, attempts } =
 		result as ResultModel;
 
-		
-		const user = useAuthStore((state) => state.user);
-		console.log(user);
+
+	const user = useAuthStore((state) => state.user);
 
 	return (
 		<div className="h-full bg-background w-full top-0 left-0">
@@ -152,11 +151,10 @@ const Result = () => {
 									</div>
 								)}
 								<div
-									className={`p-2 absolute top-0 right-0 m-4 rounded-full ${
-										quiz.isCorrect
-											? "bg-custom/20"
-											: "bg-red-500/20"
-									}`}
+									className={`p-2 absolute top-0 right-0 m-4 rounded-full ${quiz.isCorrect
+										? "bg-custom/20"
+										: "bg-red-500/20"
+										}`}
 								>
 									{quiz.isCorrect ? (
 										<Check color="var(--color-custom)" />

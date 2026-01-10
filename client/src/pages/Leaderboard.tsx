@@ -1,17 +1,22 @@
-import { Chart } from "@/component/leaderboard/Chart";
-import { Loader } from "@/component/Loader";
-import { ProfileAvatar } from "@/component/share/ProfileAvatar";
-import { useFetchLeaderboard } from "@/features/queries/useResult";
+import { Chart } from "@/components/feature/leaderboard/Chart";
+import { QuizLoader } from "@/components/feature/QuizLoader";
+import { ProfileAvatar } from "@/components/feature/share/ProfileAvatar";
+import { useFetchLeaderboard } from "@/features/result/hooks";
+import { useMemo } from "react";
+import { Navigate } from "react-router";
 
 export const Leaderboard = () => {
 	const { data, isLoading } = useFetchLeaderboard();
+
+	if (!data || data.leaderboard.length === 0) return <Navigate to="/empty/board" replace />
+	const maxValue = useMemo(() => data?.leaderboard.reduce((m, d) => Math.max(m, d.totalXp), 0) ?? 0, [data]);
 	if (isLoading) {
-		return <Loader loading={isLoading} />;
+		return <QuizLoader loading />;
 	}
 
-	const maxValue = Math.max(...data?.leaderboard.map((d: any) => d.totalXp));
+	console.log(data);
+	
 
-	console.log(maxValue);
 
 	return (
 		<div className="max-w-4xl m-auto p-5">
@@ -50,7 +55,7 @@ export const Leaderboard = () => {
 					{data.leaderboard.map((rank, index) => {
 
 						return (
-							<li className="flex rounded-xl text-white font-bold items-center gap-10 px-5 py-5 bg-card">
+							<li key={index} className="flex rounded-xl text-white font-bold items-center gap-10 px-5 py-5 bg-card">
 								<span className="">{index + 1}</span>
 								<div className="flex-1 flex items-center gap-4">
 									<ProfileAvatar username={rank.user} profile={rank.profile} className="size-10" />
