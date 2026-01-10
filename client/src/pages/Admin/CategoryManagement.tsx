@@ -21,7 +21,11 @@ const columns: ColumnDef<Category>[] = [
 	},
 	{
 		header: "Last Updated",
-		accessorFn: (row) => format(row.updatedAt as string, "PP") || "N/A"
+		accessorFn: (row) => {
+			if (!row.updatedAt) return "N/A"
+			const date = new Date(row.updatedAt)
+			return isNaN(date.getTime()) ? "N/A" : format(date, "PPpp") 
+		}
 	},
 	{
 		header: "Quiz Count",

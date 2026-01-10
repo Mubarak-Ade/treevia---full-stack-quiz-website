@@ -1,7 +1,7 @@
 import { QuizLoader } from "@/components/feature/QuizLoader";
 import { DashboardHeader } from "@/components/feature/share/DashboardHeader";
-import { Button } from "@/components/ui/button";
 import { useNotification } from "@/context/NotificationProvider";
+import { Button } from "@/components/ui/button";
 import { useDeleteQuiz, useFetchQuizzes } from "@/features/admin/quiz/hooks";
 import { useFetchQuestion } from "@/features/quiz/hooks";
 import { useQuizStore } from "@/features/quiz/store";
@@ -34,7 +34,11 @@ const columns: ColumnDef<Quiz>[] = [
 	},
 	{
 		header: "Last Modified",
-		accessorFn: (row) => format(row.updatedAt, "PPpp") || "N/A"
+		accessorFn: (row) => {
+			if (!row.updatedAt) return "N/A"
+			const date = new Date(row.updatedAt)
+			return isNaN(date.getTime()) ? "N/A" : format(date, "PPpp") 
+		}
 	},
 	{
 		header: "Questions",
@@ -48,12 +52,12 @@ const columns: ColumnDef<Quiz>[] = [
 			const deleteQuiz = useDeleteQuiz()
 			const { setEdit } = useQuizStore()
 			const questions = useFetchQuestion(row.original._id)
+			const { showNotification } = useNotification()
 
 			if (deleteQuiz.isPending || questions.isLoading) {
-				<QuizLoader loading />
+				return <QuizLoader loading />
 			}
 
-			const { showNotification } = useNotification()
 
 			const id = row.original._id
 
