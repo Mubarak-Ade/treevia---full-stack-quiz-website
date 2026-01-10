@@ -81,7 +81,7 @@ export const Chart = ({
 					>
 						{!profile ? (
 							<span className={`text-6xl p-4 text-white`}>
-								{username.charAt(0)}
+								{username?.charAt(0)}
 							</span>
 						) : (
 							<div className="size-full overflow-hidden rounded-full">

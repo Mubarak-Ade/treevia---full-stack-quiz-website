@@ -8,7 +8,7 @@ import { useQuizStore } from "@/features/quiz/store";
 import { Quiz } from "@/features/quiz/types";
 import { getColorFromString } from "@/utils/colorFormat";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { format, formatDistance } from "date-fns";
 import { Eye, PenBox, Plus, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { ReusableTable as QuizTable } from "../../components/feature/admin/quiz/QuizTable";
@@ -34,7 +34,7 @@ const columns: ColumnDef<Quiz>[] = [
 	},
 	{
 		header: "Last Modified",
-		accessorFn: (row) => format(row.updatedAt!, "PP") || "N/A"
+		accessorFn: (row) => format(row.updatedAt, "PPpp") || "N/A"
 	},
 	{
 		header: "Questions",

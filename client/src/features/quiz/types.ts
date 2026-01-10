@@ -36,7 +36,7 @@ export interface Quiz
 		name: string
 	}
 	timeLimit: number;
-	updatedAt?: string,
+	updatedAt: string,
 	// description: string;
 	questionCount?: number;
 	questions?: Question[]
