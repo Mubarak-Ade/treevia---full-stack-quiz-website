@@ -32,7 +32,6 @@ const requireAuth = async (req: AuthRequest, res: Response, next: NextFunction):
     req.user = decode;
     next();
   } catch (error) {
-    console.log(error);
     throw createHttpError(401, 'Request is not authorized');
   }
 };

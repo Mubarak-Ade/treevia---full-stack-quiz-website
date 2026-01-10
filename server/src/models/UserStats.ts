@@ -33,17 +33,9 @@ const UserStatsSchema = new Schema({
         type: Number,
         default: 0
     },
-    accuracy: {
-        type: Number,
-        default: 0
-    },
     highestScore: {
         type: Number,
         default: 0
-    },
-    level: {
-        type: Number,
-        default: 1,
     },
     lastQuizDate: {
         type: Date

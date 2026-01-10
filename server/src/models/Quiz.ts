@@ -7,6 +7,9 @@ const quizSchema = new Schema(
       unique: true,
       required: [true, 'Quiz title is required'],
     },
+    description: {
+      type: String
+    },
     category: {
       type: mongoose.Types.ObjectId,
       ref: "Category",

@@ -14,13 +14,13 @@ export const calculateLevelFromXp = (totalXp: number) => {
 		if (xpRemaining < xpForNext) {
 			return {
 				level,
-				xpIntoLevel: xpRemaining,
+				xpIntoLevel: xpForNext - xpRemaining,
 				xpForNextLevel: xpForNext,
-				totalXpForNextLevel: xpSpent + xpForNext,
+				// totalXpForNextLevel: xpSpent + xpForNext,
 			};
 		}
 
-		xpRemaining -= xpForNext;
+		// xpRemaining -= xpForNext;
 		xpSpent += xpForNext;
 		level++;
 	}

@@ -10,7 +10,6 @@ const authorizeRoles = (
 	res: Response,
 	next: NextFunction
 ): void => {
-    console.log(req.user)
     if (!req.user) {
         throw createHttpError(401, "Unauthorized")
     }

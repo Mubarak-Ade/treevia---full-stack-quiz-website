@@ -15,6 +15,7 @@ import requireAuth from "./middleware/requireAuth.js";
 import authorizeRoles from "./middleware/authorizeRoles.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import { uptime } from "process";
 
 const app = express();
 
@@ -48,5 +49,12 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     res.status(statusCode).json({message: errorMessage})
 });
 
+app.get("/health", (_req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: uptime(),
+    timestamp: Date.now(),
+  });
+});
 
 export default app;

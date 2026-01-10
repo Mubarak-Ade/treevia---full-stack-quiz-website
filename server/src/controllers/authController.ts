@@ -5,6 +5,7 @@ import createHttpError from "http-errors";
 import mongoose from "mongoose";
 import env from "../env.js";
 import bcrypt from "bcryptjs";
+import UserStats from "../models/UserStats.js";
 
 interface AuthRequest extends Request {
 	params: {
@@ -49,8 +50,10 @@ export const register: RequestHandler<
 			password: passwordHash,
 		});
 
+		
 		await user.save();
-
+		await UserStats.create({user: user._id})
+		
 		const token = createJWT(user._id, user.role);
 		res.status(201).json({
 			user: {

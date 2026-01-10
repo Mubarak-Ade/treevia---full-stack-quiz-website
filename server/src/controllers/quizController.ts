@@ -160,6 +160,7 @@ export const getRandomQuiz = async (
 				$project: {
 					_id: 1,
 					title: 1,
+					description: 1,
 					category: "$category.name",
 					difficulty: 1,
 					timeLimit: 1,

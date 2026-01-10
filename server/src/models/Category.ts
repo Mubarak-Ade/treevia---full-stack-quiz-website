@@ -1,6 +1,7 @@
+import slugify from "@sindresorhus/slugify";
 import { InferSchemaType, model, Schema } from "mongoose";
 
-const tagSchema = new Schema({
+const tagSchema = new Schema( {
     name: {
         type: String,
         required: true,
@@ -8,13 +9,13 @@ const tagSchema = new Schema({
     },
     slug: {
         type: String,
-        required: true,
+        index: true,
         lowercase: true
     },
 
-}, { _id: false })
+}, { _id: false } )
 
-const CategorySchema = new Schema({
+const CategorySchema = new Schema( {
     name: {
         type: String,
         unique: true,
@@ -26,15 +27,64 @@ const CategorySchema = new Schema({
     },
     slug: {
         type: String,
-        required: true,
         unique: true,
-        lowercase: true,
+        index: true
     },
-    tags: { type: [tagSchema], default: [] }
-}, { timestamps: true })
+    tags: { type: [ tagSchema ], default: [] }
+}, { timestamps: true } )
 
-type Category = InferSchemaType<typeof CategorySchema>
+export type CategoryModel = InferSchemaType<typeof CategorySchema>
 
-const Category = model<Category>("Category", CategorySchema)
+
+CategorySchema.pre( 'save', function ( next )
+{
+    // Generate slug for category name
+    if ( this.isModified( 'name' ) || this.isNew )
+    {
+        this.slug = slugify( this.name, {
+            lowercase: true,
+        } );
+    }
+
+    // Generate slugs for tags
+    if ( this.tags )
+    {
+        this.tags.forEach( tag =>
+        {
+            if ( !tag.slug && tag.name )
+            {
+                tag.slug = slugify( tag.name, { lowercase: true } );
+            }
+        } );
+    }
+
+    next();
+} )
+
+CategorySchema.pre( 'findOneAndUpdate', function ( next )
+{
+    // Generate slug for category name
+    const update = this.getUpdate() as any
+    if ( update.name )
+    {
+        update.slug = slugify( update.name, {
+            lowercase: true,
+        } );
+    }
+
+    // Generate slugs for tags
+    if ( update.tags )
+    {
+        update.tags = update.tags.map( ( tag: any ) => ( {
+            name: tag.name,
+            slug: slugify( tag.name, { lowercase: true } )
+        } ) );
+
+    }
+    next();
+} )
+
+
+const Category = model<CategoryModel>( "Category", CategorySchema )
 
 export default Category
