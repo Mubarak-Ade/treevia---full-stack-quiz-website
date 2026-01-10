@@ -1,3 +1,4 @@
+import { Link } from "react-router"
 
 const Features = () =>
 {
@@ -30,7 +31,7 @@ const Features = () =>
 					<h1 className='md:text-4xl text-3xl text-center md:text-start font-bold'>Ready to challenge your self</h1>
 					<p className='mt-4 text-lg text-center md:text-start text-secondary md:w-120'>Create a free account today and start tracking your progress across all categories</p>
 				</div>
-				<button className='px-6 py-3 bg-custom shadow-custom shadow-[0_0_15px] rounded-full text-background font-semibold cursor-pointer'>Create Account</button>
+				<Link to="/login"><button className='px-6 py-3 bg-custom shadow-custom shadow-[0_0_15px] rounded-full text-background font-semibold cursor-pointer'>Create Account</button></Link>
 			</div>
 		</div>
 	)

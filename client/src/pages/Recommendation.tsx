@@ -32,7 +32,7 @@ export const Recommendation = () => {
 				</div>
 				<ul className='grid grid-cols-3 gap-10'>
 					{quiz.data.map((q) => (
-						<QuizCard title={q.title} key={q._id} _id={q._id} difficulty={q.difficulty} questionCount={q.questionCount} timeLimit={q.timeLimit} />
+						<QuizCard updatedAt={q.updatedAt} title={q.title} key={q._id} _id={q._id} difficulty={q.difficulty} questionCount={q.questionCount} timeLimit={q.timeLimit} />
 					))}
 				</ul>
 			</div>

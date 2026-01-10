@@ -145,6 +145,7 @@ export const Overview = () =>
 				<ul className="grid grid-cols-3 p-5 gap-10">
 					{ randomQuiz.data.map( ( q ) => (
 						<QuizCard
+							updatedAt={q.updatedAt}
 							_id={ q._id }
 							title={ q.title }
 							difficulty={ q.difficulty }
