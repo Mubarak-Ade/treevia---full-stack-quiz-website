@@ -1,4 +1,4 @@
-import { BrowserRouter } from "react-router";
+import { HashRouter } from "react-router";
 import "./App.css";
 import AppRoutes from "./routes/AppRoutes";
 
