@@ -45,5 +45,7 @@ dist/
 
 # Misc
 
+refactor
+quizzes.json
 /server/seeds/*.ts
 /server/seedAdmin/

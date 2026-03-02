@@ -17,7 +17,7 @@ export const QuizCard = ({
 	const color = getColorFromString(title);
 
 	return (
-		<Link to={`/quizzes/${_id}/questions`}>
+		<Link to={`/quizzes/${_id}/questions`} state={timeLimit}>
 
 			<motion.div className=" border border-custom/50 w-full cursor-pointer rounded-4xl overflow-hidden bg-card">
 				<div className={`h-30 relative ${color.gradient}`}>

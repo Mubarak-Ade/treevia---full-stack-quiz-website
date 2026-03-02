@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model, Types, InferSchemaType, model } from 'mongoose';
 
-const QuizResultSchema = new Schema({
+const QuizResultSchema = new Schema( {
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -18,19 +18,32 @@ const QuizResultSchema = new Schema({
     required: true
   },
   correctAnswers: {
-    type: [Number],
+    type: [ Number ],
     min: 0,
     max: 3
   },
   xpEarned: {
     type: Number,
     required: true
+  },
+
+  startedAt: {
+    type: Date,
+    required: true
+  },
+
+  submittedAt: {
+    type: Date
+  },
+
+  timeTaken: {
+    type: Number
   }
 
-}, { timestamps: true });
+}, { timestamps: true } );
 
 type Result = InferSchemaType<typeof QuizResultSchema>
 
-const Result = model<Result>('Result', QuizResultSchema);
+const Result = model<Result>( 'Result', QuizResultSchema );
 
 export default Result;

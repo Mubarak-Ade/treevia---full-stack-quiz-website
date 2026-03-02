@@ -1,20 +1,21 @@
 import "dotenv/config"
 import express, { Express, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
-import authRoutes from './routes/authRoute.js';
-import quizRoutes from './routes/quizRoute.js';
-import categoryRoute from './routes/categoryRoute.js';
-import resultRoute from './routes/resultRoute.js';
-import dashboardRoute from "./routes/dashboardRoutes.js"
-import AdminRoutes from "./admin.route.js"
-import userRoute from "./routes/userRoute.js"
+import authRoutes from '../src/routes/authRoute.js';
+import quizRoutes from '../src/routes/quizRoute.js';
+import categoryRoute from '../src/routes/categoryRoute.js';
+import resultRoute from '../src/routes/resultRoute.js';
+import dashboardRoute from "../src/routes/dashboardRoutes.js"
+import AdminRoutes from "../src/admin.route.js"
+import userRoute from "../src/routes/userRoute.js"
 import morgan from "morgan"
 import createHttpError, {isHttpError} from "http-errors"
-import requireAuth from "./middleware/requireAuth.js";
-import authorizeRoles from "./middleware/authorizeRoles.js";
+import requireAuth from "../src/middleware/requireAuth.js";
+import authorizeRoles from "../src/middleware/authorizeRoles.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { uptime } from "process";
+import { connectDB } from "../src/config/db.js";
 
 const app = express();
 
@@ -22,6 +23,19 @@ const app = express();
 app.use(morgan("dev"))
 app.use(express.json());
 app.use(cors());
+
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error('Database connection failed:', error);
+        res.status(503).json({ 
+            error: 'Database connection failed',
+            message: 'Service temporarily unavailable'
+        });
+    }
+});
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

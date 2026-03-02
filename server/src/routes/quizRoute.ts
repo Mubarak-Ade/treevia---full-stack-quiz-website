@@ -10,7 +10,7 @@ import optionalAuth from '../middleware/optionalAuth.js';
 const router: Router = express.Router();
 
 // router.get('/:quizId', getQuizById);
-router.get('/:quizId/questions', getQuestions);
+router.get('/:quizId/questions', optionalAuth, getQuestions);
 router.post('/submit', optionalAuth, submitQuiz);
 router.get('/random', getRandomQuiz);
 // router.post('/quizzes', createQuiz);

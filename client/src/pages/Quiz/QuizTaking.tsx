@@ -1,30 +1,116 @@
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { QuizLoader } from "@/components/feature/QuizLoader";
 import { QuizHeader } from "@/components/feature/quiztaking/Header";
 import { ProgressBar } from "@/components/feature/quiztaking/ProgressBar";
 import { QuizTakingCard } from "@/components/feature/quiztaking/QuizTakingCard";
-import { useFetchQuestion } from "@/features/quiz/hooks";
+import { useNotification } from "@/context/NotificationProvider";
+import { useFetchQuestion, useSubmitAnswers } from "@/features/quiz/hooks";
 import { X } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 export const QuizTaking = () => {
 	const { id } = useParams<{ id: string }>();
 	if (!id) {
 		return <p>No quiz id provided</p>;
 	}
-	const navigate = useNavigate()
+	const navigate = useNavigate();
+	const location = useLocation();
+	const { showNotification } = useNotification();
+	const submit = useSubmitAnswers();
 	const { data, isLoading } = useFetchQuestion(id);
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const [selectedOptions, setSelectedOptions] = useState(
-		Array(data?.length).fill(-1)
+	const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+	const initialTimeLimit = useMemo(
+		() =>
+			typeof location.state === "number" && Number.isFinite(location.state)
+				? location.state
+				: 60,
+		[location.state]
 	);
-	if (isLoading || !data) {
-		return <QuizLoader loading={isLoading} />
-	}
+	const [timeLeft, setTimeLeft] = useState(initialTimeLimit);
+	const [hasAutoSubmitted, setHasAutoSubmitted] = useState(false);
+	const questions = data ?? [];
+	const hasQuestions = questions.length > 0;
+	const currentQuestion = hasQuestions ? questions[currentIndex] : undefined;
+	const questionText = currentQuestion?.questionText ?? "";
+	const options = currentQuestion?.options ?? [];
 
-	const NextIndex = currentIndex < data.length - 1;
+	const isFirstQuestion = currentIndex === 0;
+	const isLastQuestion = hasQuestions ? currentIndex === questions.length - 1 : false;
+
+	const selectedIndex = selectedOptions[currentIndex] ?? -1;
+
+	const hasAnsweredQuestion = selectedIndex !== -1;
+	const NextIndex = hasQuestions ? currentIndex < questions.length - 1 : false;
 	const PrevIndex = currentIndex > 0;
+	const allIsAnswered = hasQuestions && selectedOptions.every((opt) => opt !== -1);
+
+	useEffect(() => {
+		if (hasQuestions && selectedOptions.length !== questions.length) {
+			setSelectedOptions(Array(questions.length).fill(-1));
+		}
+	}, [hasQuestions, questions.length, selectedOptions.length]);
+
+	useEffect(() => {
+		if (!hasQuestions) return;
+		if (currentIndex >= questions.length) {
+			setCurrentIndex(questions.length - 1);
+		}
+	}, [currentIndex, hasQuestions, questions.length]);
+
+	const handleSendResults = useCallback(() => {
+		if (!hasQuestions || submit.isPending) return;
+		submit.mutate(
+			{
+				quizId: id,
+				selectedOptions,
+			},
+			{
+				onSuccess: (responseData) => {
+					navigate("/result", {
+						state: { data: responseData, quiz: { questionText, options } },
+					});
+				},
+				onError: (error) => {
+					setHasAutoSubmitted(false);
+					showNotification("error", error.message);
+				},
+			}
+		);
+	}, [
+		id,
+		hasQuestions,
+		navigate,
+		options,
+		questionText,
+		selectedOptions,
+		showNotification,
+		submit,
+	]);
+
+	useEffect(() => {
+		if (!hasQuestions || submit.isPending || hasAutoSubmitted) return;
+		if (timeLeft <= 0) {
+			setHasAutoSubmitted(true);
+			handleSendResults();
+			return;
+		}
+
+		const timer = window.setTimeout(() => {
+			setTimeLeft((prev) => Math.max(prev - 1, 0));
+		}, 1000);
+		return () => window.clearTimeout(timer);
+	}, [hasQuestions, handleSendResults, hasAutoSubmitted, submit.isPending, timeLeft]);
+
+	useEffect(() => {
+		if (typeof location.state !== "number") {
+			showNotification(
+				"warning",
+				"Timer value was missing. Quiz started with a 60-second timer."
+			);
+		}
+	}, [location.state, showNotification]);
 
 	const handleNextQuestion = () => {
 		if (NextIndex) {
@@ -38,10 +124,36 @@ export const QuizTaking = () => {
 		}
 	};
 
-	const progress = ((currentIndex + 1) / data.length) * 100;
+	const handleSelectedOptions = (index: number) => {
+		const updateSelection = [...selectedOptions];
+		updateSelection[currentIndex] = index;
+		setSelectedOptions(updateSelection);
+	};
+
+	const handleNext = () => {
+		if (!hasAnsweredQuestion) return;
+		if (!isLastQuestion) handleNextQuestion();
+	};
+
+	const handlePrev = () => {
+		if (isFirstQuestion) return;
+		handlePrevQuestion();
+	};
+
+	const progress = hasQuestions ? ((currentIndex + 1) / questions.length) * 100 : 0;
+
+	if (isLoading || !data || submit.isPending) {
+		return <QuizLoader loading />;
+	}
+
 	return (
 		<div>
-			<QuizHeader label="Quit Quiz" icon={<X size={20} />} onClick={() => navigate(-1)} />
+			<QuizHeader
+				label="Quit Quiz"
+				icon={<X size={20} />}
+				timeLimit={timeLeft}
+				onClick={() => navigate(-1)}
+			/>
 
 			<div className="p-4 max-w-2xl flex flex-col items-center justify-center w-full m-auto">
 				<div className="w-full">
@@ -54,12 +166,19 @@ export const QuizTaking = () => {
 					<ProgressBar progress={progress} />
 				</div>
 				<QuizTakingCard
-					selectedOptions={selectedOptions}
-					setSelectedOptions={setSelectedOptions}
-					quiz={data}
+					allIsAnswered={allIsAnswered}
+					handleSelectedOptions={handleSelectedOptions}
+					handleSendResults={handleSendResults}
+					hasAnsweredQuestion={hasAnsweredQuestion}
+					isFirstQuestion={isFirstQuestion}
+					isLastQuestion={isLastQuestion}
+					options={options}
+					questionText={questionText}
+					selectedIndex={selectedIndex}
+					key={selectedIndex}
 					currentIndex={currentIndex}
-					goToPrevQuestion={handlePrevQuestion}
-					goToNextQuestion={handleNextQuestion}
+					goToPrevQuestion={handlePrev}
+					goToNextQuestion={handleNext}
 				/>
 			</div>
 		</div>

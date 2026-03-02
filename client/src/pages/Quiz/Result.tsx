@@ -17,7 +17,21 @@ const Result = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	const result = location.state.data;
+	const result = location.state?.data;
+
+	if (!result) {
+		return (
+			<div className="p-5">
+				<p className="text-white mb-4">No quiz result available.</p>
+				<button
+					onClick={() => navigate("/quizzes")}
+					className="bg-custom text-background px-4 py-2 rounded-full cursor-pointer"
+				>
+					Back To Categories
+				</button>
+			</div>
+		);
+	}
 
 	const { totalQuestions, score, accuracy, attempts } =
 		result as ResultModel;
