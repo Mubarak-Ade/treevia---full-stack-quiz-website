@@ -3,6 +3,7 @@ import { QuizCard } from "@/components/feature/quizlist/QuizCard";
 import { useFetchQuizzesByCategory } from "@/features/quiz/hooks";
 import { Leaf } from "lucide-react";
 import { useParams } from "react-router";
+import {QuizLoader} from "@/components/feature/QuizLoader"
 import type { CategoryWithQuizzes } from "../../features/quiz/types";
 
 export const QuizList = () => {
@@ -10,7 +11,7 @@ export const QuizList = () => {
 	const { data, isLoading } = useFetchQuizzesByCategory(slug as string);
 
 	if (isLoading || !data) {
-		return <p>loading...</p>;
+		return <QuizLoader loading />;
 	}
 
 	const {
