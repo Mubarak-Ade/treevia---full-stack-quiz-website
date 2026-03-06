@@ -1,5 +1,5 @@
-import { useQuizStore } from "@/features/quiz/store";
-import { Category } from "@/features/quiz/types";
+import { useQuizStore } from "@/modules/quiz/store/quiz.store";
+import { Category } from "@/modules/quiz/types/quiz.types";
 import { getColorFromString } from "@/utils/colorFormat";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";

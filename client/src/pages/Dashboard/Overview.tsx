@@ -4,10 +4,10 @@ import { DashboardProfileCard } from "@/components/feature/dashboard/DashboardPr
 import { QuizCard } from "@/components/feature/quizlist/QuizCard";
 import { QuizLoader } from "@/components/feature/QuizLoader";
 import { Button } from "@/components/ui/button";
-import useAuthStore from "@/features/auth/store";
-import { useFetchRandomQuiz } from "@/features/quiz/hooks";
-import { GetResult, Stats } from "@/features/quiz/types";
-import { useFetchResult, useFetchUserStats } from "@/features/result/hooks";
+import useAuthStore from "@/modules/auth/store/auth.store";
+import { useFetchRandomQuiz } from "@/modules/quiz/controllers/quiz.controller";
+import { GetResult, Stats } from "@/modules/quiz/types/quiz.types";
+import { useFetchResult, useFetchUserStats } from "@/modules/result/controllers/result.controller";
 import { getColorFromString, getScoreColor } from "@/utils/colorFormat";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";

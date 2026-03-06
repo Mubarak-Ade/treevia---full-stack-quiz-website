@@ -1,4 +1,4 @@
-import { User } from "@/features/auth/type";
+import { User } from "@/modules/auth/types/auth.types";
 import { DoorOpen, Grid2x2, User2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Dispatch, SetStateAction } from "react";

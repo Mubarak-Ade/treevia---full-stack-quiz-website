@@ -1,4 +1,4 @@
-import useAuthStore from '@/features/auth/store';
+import useAuthStore from '@/modules/auth/store/auth.store';
 import axios, { AxiosInstance } from 'axios';
 
 const api: AxiosInstance = axios.create({

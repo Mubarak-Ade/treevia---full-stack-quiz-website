@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { getCategories, getQuizByCategory } from '../controllers/categoryController.js';
+import { getCategories, getQuizByCategory } from '../modules/category/category.controller.js';
 
 const router: Router = express.Router();
 

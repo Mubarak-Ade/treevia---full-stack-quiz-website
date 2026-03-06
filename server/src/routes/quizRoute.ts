@@ -4,7 +4,7 @@ import {
   getQuizzes,
   getRandomQuiz,
   submitQuiz
-} from '../controllers/quizController.js';
+} from '../modules/quiz/quiz.controller.js';
 import optionalAuth from '../middleware/optionalAuth.js';
 
 const router: Router = express.Router();

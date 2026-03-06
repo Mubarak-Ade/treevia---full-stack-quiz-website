@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { useQuizStore } from '@/features/quiz/store'
+import { useQuizStore } from '@/modules/quiz/store/quiz.store'
 import { X } from 'lucide-react'
 import { CategoryForm } from './category/CategoryForm'
 import { QuizForm } from './quiz/QuizForm'

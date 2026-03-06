@@ -1,6 +1,6 @@
 import { DashboardCard } from "@/components/feature/dashboard/DashboardCard";
 import { DashboardProfileCard } from "@/components/feature/dashboard/DashboardProfileCard";
-import useAuthStore from "@/features/auth/store";
+import useAuthStore from "@/modules/auth/store/auth.store";
 import { Leaf, PlayCircle, Plus, Shapes, Users } from "lucide-react";
 
 export const Overview = () => {

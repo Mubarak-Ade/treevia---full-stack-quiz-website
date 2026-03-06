@@ -5,7 +5,7 @@ import { QuizHeader } from "@/components/feature/quiztaking/Header";
 import { ProgressBar } from "@/components/feature/quiztaking/ProgressBar";
 import { QuizTakingCard } from "@/components/feature/quiztaking/QuizTakingCard";
 import { useNotification } from "@/context/NotificationProvider";
-import { useFetchQuestion, useSubmitAnswers } from "@/features/quiz/hooks";
+import { useFetchQuestion, useSubmitAnswers } from "@/modules/quiz/controllers/quiz.controller";
 import { X } from "lucide-react";
 import { useLocation, useNavigate, useParams } from "react-router";
 

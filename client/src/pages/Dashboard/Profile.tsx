@@ -1,10 +1,10 @@
 import { ProfileCard } from "@/components/feature/profile/ProfileCard";
 import { ProfileHeader } from "@/components/feature/profile/ProfileHeader";
 import { QuizLoader } from "@/components/feature/QuizLoader";
-import { User } from "@/features/auth/type";
-import { Stats } from "@/features/quiz/types";
-import { useFetchResult, useFetchUserStats } from "@/features/result/hooks";
-import { useFetchUser } from "@/features/user/hooks";
+import { User } from "@/modules/auth/types/auth.types";
+import { Stats } from "@/modules/quiz/types/quiz.types";
+import { useFetchResult, useFetchUserStats } from "@/modules/result/controllers/result.controller";
+import { useFetchUser } from "@/modules/user/controllers/user.controller";
 import { AlertTriangleIcon, ChartColumn, Globe, ThumbsUp, Trophy } from "lucide-react";
 import { Link } from "react-router";
 

@@ -1,5 +1,5 @@
 import { useNotification } from '@/context/NotificationProvider'
-import { useRegister } from '@/features/auth/hooks'
+import { useRegister } from '@/modules/auth/controllers/auth.controller'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from "framer-motion"
 import { Dispatch, SetStateAction, useState } from 'react'

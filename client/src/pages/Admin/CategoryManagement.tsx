@@ -2,10 +2,10 @@ import { ReusableTable as CategoryTable } from "@/components/feature/admin/quiz/
 import { QuizLoader } from "@/components/feature/QuizLoader";
 import { DashboardHeader } from "@/components/feature/share/DashboardHeader";
 import { Button } from "@/components/ui/button";
-import { useDeleteCategory } from "@/features/admin/category/hooks";
-import { useFetchCategories } from '@/features/quiz/hooks';
-import { useQuizStore } from '@/features/quiz/store';
-import { Category } from '@/features/quiz/types';
+import { useDeleteCategory } from "@/modules/admin/category/controllers/admin-category.controller";
+import { useFetchCategories } from '@/modules/quiz/controllers/quiz.controller';
+import { useQuizStore } from '@/modules/quiz/store/quiz.store';
+import { Category } from '@/modules/quiz/types/quiz.types';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { Eye, PenBox, Plus, Trash2 } from 'lucide-react';

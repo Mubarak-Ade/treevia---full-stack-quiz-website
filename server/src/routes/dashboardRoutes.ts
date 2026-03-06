@@ -1,5 +1,5 @@
 import express from "express"
-import { getLeaderBoard, getUserStats } from "../controllers/dashboardController.js"
+import { getLeaderBoard, getUserStats } from "../modules/dashboard/dashboard.controller.js"
 import requireAuth from "../middleware/requireAuth.js"
 import optionalAuth from "../middleware/optionalAuth.js"
 

@@ -1,4 +1,4 @@
-import useAuthStore from "@/features/auth/store";
+import useAuthStore from "@/modules/auth/store/auth.store";
 import React from "react";
 import { Navigate } from "react-router";
 

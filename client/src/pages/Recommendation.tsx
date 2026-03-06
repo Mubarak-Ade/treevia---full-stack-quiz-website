@@ -1,6 +1,6 @@
 import { QuizCard } from '@/components/feature/quizlist/QuizCard'
 import { QuizLoader } from '@/components/feature/QuizLoader'
-import { useFetchCategories, useFetchRandomQuiz } from '@/features/quiz/hooks'
+import { useFetchCategories, useFetchRandomQuiz } from '@/modules/quiz/controllers/quiz.controller'
 import { Link } from 'react-router'
 
 export const Recommendation = () => {

@@ -1,6 +1,6 @@
 import { CategoriesCard } from "@/components/feature/categories/CategoriesCard";
 import { QuizLoader } from "@/components/feature/QuizLoader";
-import { useFetchCategories } from "@/features/quiz/hooks";
+import { useFetchCategories } from "@/modules/quiz/controllers/quiz.controller";
 import {Search } from "lucide-react";
 import { motion } from "motion/react";
 

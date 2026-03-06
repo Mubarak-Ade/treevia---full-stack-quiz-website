@@ -27,7 +27,7 @@ const questionSchema = new Schema(
   { timestamps: true }
 );
 
-type Question = InferSchemaType<typeof questionSchema>
+export type Question = InferSchemaType<typeof questionSchema>
 
 const Question = model<Question>('Question', questionSchema);
 

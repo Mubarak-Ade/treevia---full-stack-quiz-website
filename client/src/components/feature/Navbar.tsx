@@ -1,5 +1,5 @@
 // Path: client\src\component\Navbar.jsx
-import useAuthStore from "@/features/auth/store";
+import useAuthStore from "@/modules/auth/store/auth.store";
 import { motion } from "framer-motion";
 import {
 	ChartNoAxesColumnIncreasingIcon,

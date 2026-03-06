@@ -1,3 +1,6 @@
+import createHttpError from "http-errors";
+import { ZodSchema, ZodType } from "zod";
+
 export function validateQuiz (
 	title: string,
 	category: string,
@@ -37,3 +40,13 @@ export function validateQuestion (
 	}
 	return null;
 }
+
+
+export const zodValidator = <T>(schema: ZodType<T>, data: T) => {
+	const parsed = schema.safeParse(data);
+
+	if (!parsed.success) {
+		throw createHttpError(400, parsed.error.format());
+	}
+	return parsed.data
+};

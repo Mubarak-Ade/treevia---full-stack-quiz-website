@@ -1,10 +1,10 @@
 import BreadCrumbs from "@/components/feature/BreadCrumbs";
 import { QuizCard } from "@/components/feature/quizlist/QuizCard";
-import { useFetchQuizzesByCategory } from "@/features/quiz/hooks";
+import { useFetchQuizzesByCategory } from "@/modules/quiz/controllers/quiz.controller";
 import { Leaf } from "lucide-react";
 import { useParams } from "react-router";
 import {QuizLoader} from "@/components/feature/QuizLoader"
-import type { CategoryWithQuizzes } from "../../features/quiz/types";
+import type { CategoryWithQuizzes, Category, Quiz } from "@/modules/quiz/types/quiz.types";
 
 export const QuizList = () => {
 	const { slug } = useParams();
@@ -15,11 +15,14 @@ export const QuizList = () => {
 	}
 
 	const {
-		category,
+		name,
 		description,
 		tags,
 		quizzes,
 	} = data as CategoryWithQuizzes;
+
+	console.log(data);
+	
 
 	return (
 		<div className="p-5 max-w-5xl w-full m-auto">
@@ -33,15 +36,15 @@ export const QuizList = () => {
 			<div className="border-b pb-6 border-muted">
 				<div className="mt-4 space-y-4">
 					<h1 className="md:text-5xl text-3xl text-custom font-bold">
-						{category}
+						{name}
 					</h1>
 					<p className="w-3/4 text-secondary">
 						{description}
 					</p>
 					<ul className="flex flex-wrap gap-4">
-						{tags.map((tag: any, index) => (
+						{tags.map((tag: Category["tags"][number], index: number) => (
 							<li key={index} className="px-4 py-2 first:bg-custom first:text-card bg-card font-montserrat rounded-full text-xs text-secondary capitalize font-semibold">
-								{tag.name}
+								{typeof tag === "string" ? tag : tag.name}
 							</li>
 						))}
 					</ul>
@@ -49,7 +52,7 @@ export const QuizList = () => {
 				<div className=""></div>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-5 gap-10">
-				{quizzes?.map((q) => (
+				{quizzes?.map((q: Quiz) => (
 					<QuizCard
 						updatedAt={q.updatedAt}
 						_id={q._id}

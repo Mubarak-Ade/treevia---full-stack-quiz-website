@@ -6,7 +6,7 @@ import {
 } from "../../../utils/Animation/variant/authVariant";
 
 import { useNotification } from "@/context/NotificationProvider";
-import { useLogin } from "@/features/auth/hooks";
+import { useLogin } from "@/modules/auth/controllers/auth.controller";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";

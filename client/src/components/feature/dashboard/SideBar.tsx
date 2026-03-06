@@ -9,7 +9,7 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Links } from "@/models/Dashboard";
-import useAuthStore from "@/features/auth/store";
+import useAuthStore from "@/modules/auth/store/auth.store";
 import { LogOut } from "lucide-react";
 import { motion } from "motion/react";
 import { Link } from "react-router";

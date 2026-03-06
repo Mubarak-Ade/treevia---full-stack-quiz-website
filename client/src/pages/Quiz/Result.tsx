@@ -1,6 +1,6 @@
 import { QuizHeader } from "@/components/feature/quiztaking/Header";
-import useAuthStore from "@/features/auth/store";
-import { Result as ResultModel } from "@/features/quiz/types";
+import useAuthStore from "@/modules/auth/store/auth.store";
+import { Result as ResultModel } from "@/modules/quiz/types/quiz.types";
 import {
 	Check,
 	CircleCheck,

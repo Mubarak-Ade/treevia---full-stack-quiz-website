@@ -1,4 +1,4 @@
-import { Quiz } from "@/features/quiz/types";
+import { Quiz } from "@/modules/quiz/types/quiz.types";
 import { getColorFromString } from "@/utils/colorFormat";
 import { Clock, ListOrdered, Play } from "lucide-react";
 import { motion } from "motion/react";

@@ -1,4 +1,4 @@
-import { User } from "@/features/auth/type";
+import { User } from "@/modules/auth/types/auth.types";
 import { ProfileAvatar } from "../share/ProfileAvatar";
 import { SetStateAction } from "react";
 import { motion } from 'motion/react';

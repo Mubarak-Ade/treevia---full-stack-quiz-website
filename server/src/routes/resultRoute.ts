@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { getResult, getSingleResult } from '../controllers/resultController.js';
+import { getResult, getSingleResult } from '../modules/result/result.controller.js';
 import requireAuth from '../middleware/requireAuth.js';
 
 const router: Router = express.Router();

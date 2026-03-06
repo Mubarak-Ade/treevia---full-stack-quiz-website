@@ -1,7 +1,7 @@
 import { Chart } from "@/components/feature/leaderboard/Chart";
 import { QuizLoader } from "@/components/feature/QuizLoader";
 import { ProfileAvatar } from "@/components/feature/share/ProfileAvatar";
-import { useFetchLeaderboard } from "@/features/result/hooks";
+import { useFetchLeaderboard } from "@/modules/result/controllers/result.controller";
 import { useMemo } from "react";
 import { Navigate } from "react-router";
 
