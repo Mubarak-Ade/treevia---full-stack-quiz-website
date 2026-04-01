@@ -84,7 +84,7 @@ const Result = () => {
 						You have completed your quiz
 					</p>
 					<h2 className="text-5xl font-bold text-white">
-						{accuracy}%
+						{Math.floor(accuracy)}%
 					</h2>
 					<span className="py-2 px-3 bg-muted rounded-full text-xs text-white font-poppins font-semibold">
 						{score} out of {totalQuestions} is correct

@@ -1,22 +1,28 @@
-import { Request, Response, NextFunction } from "express";
-import createHttpError from "http-errors";
+import { Request, Response, NextFunction } from 'express';
+import createHttpError from 'http-errors';
+import User from '../models/User.js';
 
 interface AuthRequest extends Request {
-	user?: any;
+    user?: any;
 }
 
-const authorizeRoles = (
-	req: AuthRequest,
-	res: Response,
-	next: NextFunction
-): void => {
-    if (!req.user) {
-        throw createHttpError(401, "Unauthorized")
+const authorizeRoles = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    const userId = req.user;
+    if (!userId) {
+        throw createHttpError(401, 'Unauthorized');
     }
-	if (req.user.role !== "admin") {
-        throw createHttpError(403, "Access Denied");
-	}
-	next();
+    const user = await User.findById(userId);
+    if (!user) {
+        throw createHttpError(404, 'User Not Found');
+    }
+    if (user.role !== 'admin') {
+        throw createHttpError(403, 'Access Denied');
+    }
+    next();
 };
 
 export default authorizeRoles;

@@ -161,7 +161,7 @@ export const QuizTaking = () => {
 						<h2 className="">
 							Question {currentIndex + 1} of {data.length}
 						</h2>
-						<h4>{progress}% Completed</h4>
+						<h4>{Math.floor(progress)}% Completed</h4>
 					</div>
 					<ProgressBar progress={progress} />
 				</div>

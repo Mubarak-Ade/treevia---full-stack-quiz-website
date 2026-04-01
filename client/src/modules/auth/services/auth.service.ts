@@ -10,3 +10,8 @@ export const RegisterApi = async (data: Register) => {
     const res = await api.post("auth/register", data)
     return res.data
 }
+
+export const logoutApi = async () => {
+    const res = await api.post("auth/logout")
+    return res.data
+}

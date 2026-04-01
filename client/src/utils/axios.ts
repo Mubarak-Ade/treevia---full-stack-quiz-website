@@ -1,26 +1,30 @@
-import useAuthStore from '@/modules/auth/store/auth.store';
 import axios, { AxiosInstance } from 'axios';
 
-const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL as string,
-});
+const client_url = import.meta.env.VITE_API_BASE_URL as string
 
-api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+const api: AxiosInstance = axios.create({
+    baseURL: client_url,
+    withCredentials: true,
 });
 
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const message = error.response?.data?.message || error.message || "An unexpected error occurred"
-    console.error('API Error:', message);
-    throw new Error(message)
-
-  }
-)
+    response => response,
+    async (error) => {
+        const original = error.config;        
+        if (error.response?.status === 401 && !original._retry) {
+            original._retry = true;
+            try {
+              await axios.post(`${client_url}/auth/refresh`, {}, {withCredentials: true})
+              return api(original)
+            } catch (err) {
+              window.location.href = '/login'
+            }
+        }
+        const message =
+            error.response?.data?.message || error.message || 'An unexpected error occurred';
+        console.error('API Error:', message);
+        throw new Error(message);
+    }
+);
 
 export default api;

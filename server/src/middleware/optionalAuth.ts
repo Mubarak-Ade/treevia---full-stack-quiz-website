@@ -1,28 +1,27 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import env from '../env.js';
-import { AuthUser } from '../types/express.js';
 
+interface AuthUser {
+    id: string;
+}
 
 const optionalAuth: RequestHandler = (req, res, next) => {
-  const header = req.header("Authorization");
+    const token = req.cookies.accessToken as string;
 
-  if (!header?.startsWith("Bearer ")) {
-    return next();
-  }
+    if (!token) {
+        return next();
+    }
 
-  const token = header.split(" ")[1];
+    try {
+        const decoded = jwt.verify(token, env.ACCESS_SECRET) as AuthUser;
 
-  try {
-    const decoded = jwt.verify(token, env.SECRET) as AuthUser;
+        req.user = decoded.id;
 
-    req.user = decoded;
-
-    next();
-  } catch {
-    next();
-  }
+        next();
+    } catch {
+        next();
+    }
 };
-
 
 export default optionalAuth;

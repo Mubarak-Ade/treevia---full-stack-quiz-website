@@ -49,7 +49,7 @@ const Register = ({ activeTab, setTabTo }: RegisterProps) => {
 				);
 			},
 			onError: (error) => {
-				showNotification("error", error.message)
+				showNotification("error", JSON.stringify(error.message))
 				setError("root", {
 					type: "manual",
 					message: error.message

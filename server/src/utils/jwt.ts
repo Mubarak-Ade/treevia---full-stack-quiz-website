@@ -1,7 +1,11 @@
-import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
-import env from "../env.js";
+import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import env from '../env.js';
 
-export const createJWT = (id: mongoose.Types.ObjectId, role: string): string => {
-	return jwt.sign({ id, role }, env.SECRET, { expiresIn: "1d" });
+export const createAccessToken = (id: string): string => {
+    return jwt.sign({ id }, env.ACCESS_SECRET, { expiresIn: '15m' });
+};
+
+export const createRefreshToken = (id: string): string => {
+    return jwt.sign({ id }, env.REFRESH_SECRET, { expiresIn: '7d' });
 };

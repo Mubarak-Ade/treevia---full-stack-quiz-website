@@ -15,11 +15,11 @@ export const getResult = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    if (!req.user?.id) {
+    if (!req.user) {
       throw createHttpError(401, "Unauthorized");
     }
 
-    const result = await ResultService.getResult(req.user.id);
+    const result = await ResultService.getResult(req.user);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -28,11 +28,11 @@ export const getResult = async (
 
 export const getSingleResult: RequestHandler = async (req, res, next): Promise<void> => {
   try {
-    if (!req.user?.id) {
+    if (!req.user) {
       throw createHttpError(401, "Unauthorized");
     }
 
-    const userId = req.user.id;
+    const userId = req.user;
     const quizId = req.params.id;
     const result = await ResultService.getSingleResult(userId, quizId);
     res.status(200).json(result);

@@ -1,5 +1,7 @@
+import { Response } from "express";
 import createHttpError from "http-errors";
 import { ZodSchema, ZodType } from "zod";
+
 
 export function validateQuiz (
 	title: string,
@@ -42,11 +44,13 @@ export function validateQuestion (
 }
 
 
-export const zodValidator = <T>(schema: ZodType<T>, data: T) => {
+export const zodValidator = <T>(schema: ZodType<T>, data: T, res: Response) => {
 	const parsed = schema.safeParse(data);
 
+	const errors = parsed.error?.flatten().fieldErrors
+
 	if (!parsed.success) {
-		throw createHttpError(400, parsed.error.format());
+		res.status(400).json({message: errors})
 	}
 	return parsed.data
 };

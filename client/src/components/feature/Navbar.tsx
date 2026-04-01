@@ -53,10 +53,9 @@ const Navbar = () => {
 		setShowNav(false);
 	}, [location]);
 
-	// const trigger 
 
 	const user = useAuthStore((s) => s.user);
-	const logout = useAuthStore((s) => s.logOut);
+	const logout = useAuthStore((s) => s.logOut);	
 
 	return (
 		<motion.div
