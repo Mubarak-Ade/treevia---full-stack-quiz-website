@@ -1,0 +1,49 @@
+import { User } from "@/modules/auth/types/auth.types";
+import { ProfileAvatar } from "../share/ProfileAvatar";
+import { SetStateAction } from "react";
+import { motion } from 'motion/react';
+import { ChevronDown } from "lucide-react";
+import { LinkVariant } from "@/utils/Animation/variant/IntroAnimationVariant";
+import { NavLink } from "react-router";
+
+interface ProfileProps {
+    user: User | null;
+    setDisplay: React.Dispatch<SetStateAction<boolean>>;
+    display: boolean;
+}
+
+export const ProfileTrigger = ({ user, setDisplay, display }: ProfileProps) => {
+    return (
+        <>
+            {user ? (
+                <div className="relative lg:ml-10 flex flex-row-reverse">
+                    <div className="leaf-card-strong flex items-center justify-center gap-3 px-3 py-2">
+                        <ProfileAvatar
+                            username={user.username}
+                            profile={user.profile}
+                            className="size-12"
+                        />
+
+                        <motion.button
+                            whileTap={{ scale: 0.8 }}
+                            onClick={() => setDisplay((prev) => !prev)}
+                            animate={{ rotate: display ? 180 : 0 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <ChevronDown className="text-foreground/70 cursor-pointer" />
+                        </motion.button>
+                    </div>
+                </div>
+            ) : (
+                <motion.span
+                    className="bg-brand text-on-brand px-8 py-4 md:py-2 text-center rounded-full font-semibold text-sm"
+                    variants={LinkVariant}
+                    whileHover="hover"
+                    whileTap="tap"
+                >
+                    <NavLink to="/login">Login</NavLink>
+                </motion.span>
+            )}
+        </>
+    );
+};

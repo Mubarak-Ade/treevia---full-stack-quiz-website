@@ -1,0 +1,9 @@
+@font-face {
+    font-family: BeVietnam;
+    src: url('./assets/font/Be_Vietnam_Pro/BeVietnamPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: Jakarta;
+    src: url('./assets/font/Plus_Jakarta_Sans/PlusJakartaSans-VariableFont_wght.ttf');
+}

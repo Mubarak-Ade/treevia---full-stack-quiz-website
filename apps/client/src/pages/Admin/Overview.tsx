@@ -1,0 +1,40 @@
+import { DashboardCard } from '@/components/feature/dashboard/DashboardCard';
+import { DashboardProfileCard } from '@/components/feature/dashboard/DashboardProfileCard';
+import { useFetchUser } from '@/modules/user/controllers/user.controller';
+import { Leaf, PlayCircle, Plus, Shapes, Users } from 'lucide-react';
+
+export const Overview = () => {
+    const { data: fetchUser } = useFetchUser();
+    if (!fetchUser) return null;
+
+    const { data: user } = fetchUser;
+
+    return (
+        <div className="py-5 px-10 overflow-hidden h-screen">
+            <div className="flex items-center justify-between">
+                <div className="">
+                    <h1 className="text-4xl font-bold text-primary flex gap-2 items-center">
+                        Dashboard Overview <Leaf color="var(--color-custom)" />
+                    </h1>
+                    <p className="text-secondary p-1">Ready to plant some more trees today?</p>
+                </div>
+                <button className="flex gap-2 bg-brand text-on-brand px-4 py-3 rounded-full shadow-[0_0_10px] shadow-brand font-bold cursor-pointer items-center">
+                    <Plus /> Create New Quiz
+                </button>
+            </div>
+            <div className="mt-5 flex gap-5">
+                <DashboardProfileCard
+                    progress={(5 / 12) * 100}
+                    tag="Admin"
+                    progressInfo={`5/12`}
+                    extraInfo="create dashboard"
+                    name={user?.username}
+                    subtitle="Super Administrator"
+                />
+                <DashboardCard icon={<Users />} title="Total Users" value={0} id="total" />
+                <DashboardCard icon={<Shapes />} title="Active Quizzes" value={0} id="quizzes taken" />
+                <DashboardCard icon={<PlayCircle />} title="Total Plays" value={0} id="quiz_play" />
+            </div>{' '}
+        </div>
+    );
+};

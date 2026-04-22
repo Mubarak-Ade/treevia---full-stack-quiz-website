@@ -1,0 +1,34 @@
+{
+    "name": "treevia",
+    "version": "1.0.0",
+    "description": "Overview",
+    "private": true,
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Mubarak-Ade/treevia---full-stack-quiz-website.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Mubarak-Ade/treevia---full-stack-quiz-website/issues"
+    },
+    "scripts": {
+        "dev": "npm run dev -w @treevia/server & npm run dev -w @treevia/client",
+        "build": "npm run build -w @treevia/client & npm run build -w @treevia/server",
+        "dev:client": "npm run dev -w @treevia/client",
+        "dev:server": "npm run dev -w @treevia/server",
+        "lint": "npm run lint --workspaces",
+        "typecheck": "npm run typecheck --workspaces"
+    },
+    "dependencies": {
+        "zod": "^4.3.6"
+    },
+    "devDependencies": {
+        "typescript": "^6.0.3"
+    }
+}

@@ -1,0 +1,77 @@
+import { Quiz } from "@/modules/quiz/types/quiz.types";
+import { getColorFromString } from "@/utils/colorFormat";
+import { Clock, ListOrdered, Play } from "lucide-react";
+import { motion } from "motion/react";
+import { Link } from "react-router";
+// import { Quiz } from "@/types";
+
+interface QuizCardProps extends Quiz { }
+
+export const QuizCard = ({
+	title,
+	timeLimit,
+	timeLimitPerQuestion,
+	difficulty,
+	_id,
+	questionCount,
+}: QuizCardProps) => {
+	const color = getColorFromString(title);
+	const displayDifficulty = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+	const displayTime = timeLimitPerQuestion ?? timeLimit ?? 60;
+
+	return (
+		<Link to={`/quizzes/${_id}/questions`} state={displayTime}>
+
+			<motion.div className=" border-default border w-full cursor-pointer shadow-[0_-10px_-25px] p-5 shadow-light-surface dark:shadow-secondary rounded-4xl overflow-hidden bg-base">
+				<div className={`h-40 relative ${color.gradient} rounded-4xl`}>
+					<span className="text-xs bg-secondary-btn/20  px-2 py-1 absolute right-0 m-3 text-primary rounded-full">
+						{displayDifficulty}
+					</span>
+					<span
+						className={`bg-background ${color.text} absolute bottom-0 border m-4 rounded-full  size-10 flex items-center justify-center font-bold text-xl text-center`}
+					>
+						{title.charAt(0)}
+					</span>
+				</div>
+				<div className="mt-4">
+					<h4 className="font-bold text-xl line-clamp-1 text-primary">
+						{title}
+					</h4>
+					<div className="flex items-center gap-5 mt-10 text-secondary font-semibold">
+						<div className="flex items-center gap-1">
+							<ListOrdered size={15} />
+							<span className="text-xs">
+								{questionCount} Questions
+							</span>
+						</div>
+						<div className="flex items-center gap-1">
+							<Clock size={15} />
+							<span className="text-xs">{displayTime}s</span>
+						</div>
+					</div>
+					<motion.button
+						whileTap={{
+							scale: 0.8,
+						}}
+						whileHover={{
+							scale: 1.1,
+						}}
+						className={`flex items-center w-full hover:text-white px-4 cursor-pointer py-2 ${color.bg} rounded-full mt-5 text-sm text-center text-white justify-center gap-2`}
+					>
+						Start Quiz <Play size={15} />
+					</motion.button>
+				</div>
+				{/* <div className="p-4 border-t flex items-center gap-2 text-secondary/50 border-muted">
+				<h6 className="font-bold text-sm">Popular: </h6>
+				<ul className="flex items-center gap-2">
+					{tags.map((tag, index) => (
+						<li className="bg-muted px-3 py-0.5 rounded-md text-xs">
+							{tag}
+						</li>
+					))}
+				</ul>
+			</div> */}
+			</motion.div>
+		</Link>
+	);
+};

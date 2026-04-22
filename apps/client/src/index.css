@@ -1,0 +1,233 @@
+@import url('./font.css');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import url('./theme.css');
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    /* ============================================
+     TREEVIA — TAILWIND V4 THEME
+     Supports light + dark mode via .dark class
+  ============================================ */
+
+    /* ---------- Primitive color ramps ---------- */
+
+    --color-forest-50: #e6f5ec;
+    --color-forest-100: #b8dfc8;
+    --color-forest-200: #7aad8e;
+    --color-forest-300: #4d9970;
+    --color-forest-400: #2da050;
+    --color-forest-500: #1a7a3c;
+    --color-forest-600: #145f2e;
+    --color-forest-700: #0e4521;
+    --color-forest-800: #092e15;
+    --color-forest-900: #041a0b;
+
+    /* Neon accent — dark mode only */
+    --color-glow-400: #39ff8a;
+    --color-glow-500: #00e676;
+    --color-glow-600: #00c060;
+
+    /* Neutral (warm sage-tinted) */
+    --color-sage-50: #f4f7f2;
+    --color-sage-100: #eef5ea;
+    --color-sage-200: #dde8d8;
+    --color-sage-300: #c4d9bc;
+    --color-sage-400: #9bbfa8;
+    --color-sage-500: #6b8c77;
+    --color-sage-600: #3a5443;
+    --color-sage-700: #1e3328;
+    --color-sage-800: #111a13;
+    --color-sage-900: #0a0f0b;
+
+    /* ---------- Semantic tokens — Light mode (default) ---------- */
+
+    /* Backgrounds */
+    --color-bg-base: var(--color-sage-50);
+    --color-bg-surface: #ffffff;
+    --color-bg-surface-alt: var(--color-sage-100);
+    --color-bg-overlay: var(--color-forest-50);
+
+    /* Text */
+    --color-text-primary: #0f1f13;
+    --color-text-secondary: var(--color-sage-600);
+    --color-text-muted: var(--color-sage-500);
+    --color-text-inverse: #ffffff;
+    --color-text-on-brand: #ffffff;
+
+    /* Brand */
+    --color-brand: var(--color-forest-500);
+    --color-brand-hover: var(--color-forest-400);
+    --color-brand-active: var(--color-forest-600);
+    --color-brand-subtle: var(--color-forest-50);
+    --color-brand-subtle-border: var(--color-forest-100);
+
+    /* Borders */
+    --color-border-default: rgba(30, 80, 50, 0.12);
+    --color-border-strong: rgba(30, 80, 50, 0.28);
+    --color-border-focus: var(--color-forest-500);
+
+    /* Stat band (full-bleed section) */
+    --color-band-bg: var(--color-forest-500);
+    --color-band-text: #ffffff;
+    --color-band-label: rgba(255, 255, 255, 0.7);
+
+    /* CTA section */
+    --color-cta-bg: var(--color-forest-50);
+    --color-cta-border: var(--color-forest-100);
+
+    /* ---------- Typography ---------- */
+
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+
+    /* ---------- Border radius ---------- */
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-pill: 9999px;
+
+    /* background image  */
+    --background-image-forest: url('./assets/images/image.jpg') /* shadow */ --shadow-3xs: var(--sh);
+}
+
+/* ============================================
+   DARK MODE OVERRIDES
+   Add class="dark" to <html>
+============================================ */
+
+.dark {
+    /* Backgrounds */
+    --color-bg-base: var(--color-sage-900);
+    --color-bg-surface: var(--color-sage-800);
+    --color-bg-surface-alt: #162b1c;
+    --color-bg-overlay: #0d2e18;
+
+    /* Text */
+    --color-text-primary: #e8f5ec;
+    --color-text-secondary: #7ab890;
+    --color-text-muted: #4a7a5a;
+    --color-text-inverse: var(--color-sage-900);
+    --color-text-on-brand: var(--color-sage-900);
+
+    /* Brand — shifts to neon on dark */
+    --color-brand: var(--color-glow-500);
+    --color-brand-hover: var(--color-glow-400);
+    --color-brand-active: var(--color-glow-600);
+    --color-brand-subtle: #0d2e18;
+    --color-brand-subtle-border: #1a5c30;
+
+    /* Borders */
+    --color-border-default: rgba(0, 230, 118, 0.1);
+    --color-border-strong: rgba(0, 230, 118, 0.22);
+    --color-border-focus: var(--color-glow-500);
+
+    /* Stat band */
+    --color-band-bg: #0d2e18;
+    --color-band-text: var(--color-glow-500);
+    --color-band-label: rgba(255, 255, 255, 0.55);
+
+    /* CTA section */
+    --color-cta-bg: #0a1a0e;
+    --color-cta-border: #1a5c30;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   These map semantic tokens to Tailwind-style
+   utilities so you can write bg-surface,
+   text-primary, border-default etc.
+============================================ */
+
+@layer utilities {
+    /* Backgrounds */
+    .bg-base {
+        background-color: var(--color-bg-base);
+    }
+    .bg-surface {
+        background-color: var(--color-bg-surface);
+    }
+    .bg-surface-alt {
+        background-color: var(--color-bg-surface-alt);
+    }
+    .bg-overlay {
+        background-color: var(--color-bg-overlay);
+    }
+    .bg-brand {
+        background-color: var(--color-brand);
+    }
+    .bg-brand-subtle {
+        background-color: var(--color-brand-subtle);
+    }
+    .bg-band {
+        background-color: var(--color-band-bg);
+    }
+    .bg-cta {
+        background-color: var(--color-cta-bg);
+    }
+
+    /* Text */
+    .text-primary {
+        color: var(--color-text-primary);
+    }
+    .text-secondary {
+        color: var(--color-text-secondary);
+    }
+    .text-muted {
+        color: var(--color-text-muted);
+    }
+    .text-inverse {
+        color: var(--color-text-inverse);
+    }
+    .text-on-brand {
+        color: var(--color-text-on-brand);
+    }
+    .text-brand {
+        color: var(--color-brand);
+    }
+    .text-band {
+        color: var(--color-band-text);
+    }
+    .text-band-label {
+        color: var(--color-band-label);
+    }
+
+    /* Borders */
+    .border-default {
+        border-color: var(--color-border-default);
+    }
+    .border-strong {
+        border-color: var(--color-border-strong);
+    }
+    .border-focus {
+        border-color: var(--color-border-focus);
+    }
+    .border-brand-subtle {
+        border-color: var(--color-brand-subtle-border);
+    }
+    .border-cta {
+        border-color: var(--color-cta-border);
+    }
+
+    /* Ring (focus) */
+    .ring-brand {
+        --tw-ring-color: var(--color-border-focus);
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-display);
+}
+
+label,
+p {
+    font-family: var(--font-sans);
+}
