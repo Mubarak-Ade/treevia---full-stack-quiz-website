@@ -18,18 +18,18 @@ export const QuizNavBtn = ({
 }: QuizNavBtnProps) => {
 	const nextButtonState = disable
 		? {
-				bg: "var(--color-muted)",
-				color: "var(--color-background)",
+				bg: "var(--color-brand-subtle)",
+				color: "var(--color-on-brand)",
 				cursor: "default",
 				opacity: 0.5,
 				border: "none"
 		  }
 		: {
-				bg: "var(--color-primary)",
-				color: "var(--color-secondary)",
+				bg: "var(--color-brand)",
+				color: "var(--color-on-brand)",
 				cursor: "pointer",
 				opacity: 1,
-				border: "1px solid var(--color-primary)",
+				border: "1px solid var(--color-default)",
 		  };
 
 	return (
@@ -45,7 +45,7 @@ export const QuizNavBtn = ({
 				!disable
 					? {
 							scale: 1.1,
-							background: "var(--color-primary-btn)",
+							background: "var(--color-brand-hover)",
 							color: "var(--color-secondary-btn)",
 					  }
 					: undefined

@@ -162,7 +162,7 @@ export const QuizTaking = () => {
 	}
 
 	return (
-		<div>
+		<div className="bg-base">
 			<QuizHeader
 				label="Quit Quiz"
 				icon={<X size={20} />}
@@ -172,7 +172,7 @@ export const QuizTaking = () => {
 
 			<div className="p-4 max-w-2xl flex flex-col items-center justify-center w-full m-auto">
 				<div className="w-full">
-					<div className="flex text-custom text-xs md:text-sm justify-between items-center mb-2">
+					<div className="flex text-secondary text-xs md:text-sm justify-between items-center mb-2">
 						<h2 className="">
 							Question {currentIndex + 1} of {questions.length}
 						</h2>

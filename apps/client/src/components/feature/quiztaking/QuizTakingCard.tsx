@@ -38,9 +38,9 @@ export const QuizTakingCard = ( {
 					duration: 1,
 				} }
 				key={ currentIndex }
-				className="w-full overflow-hidden relative mt-4 rounded-4xl dark:bg-card bg-lignt-surface shadow-lg"
+				className="w-full overflow-hidden relative mt-4 rounded-4xl bg-surface shadow-lg"
 			>
-				<div className="text-muted dark:text-white text-center font-ubuntu dark:bg-muted/50 bg-white/50 text-base p-4 md:text-xl h-50 flex items-center justify-center rounded-b-[50%] ">
+				<div className="text-muted dark:text-white text-center font-ubuntu bg-surface-alt text-base p-4 md:text-xl h-50 flex items-center justify-center rounded-b-[50%] ">
 					<span></span>
 					<h2>{ questionText }</h2>
 				</div>
@@ -61,8 +61,8 @@ export const QuizTakingCard = ( {
 								stiffness: 100,
 							} }
 							className={ `px-6 py-4 cursor-pointer flex items-center justify-between font-ubuntu rounded-full ${ selectedIndex === index
-								? "bg-custom text-muted"
-								: "dark:bg-muted bg-light-surface/50 dark:text-white text-muted/80"
+								? "bg-brand text-on-brand"
+								: "bg-band dark:text-white text-muted/80"
 								}` }
 						>
 							<div className="flex items-center">
