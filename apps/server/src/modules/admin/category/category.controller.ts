@@ -18,10 +18,7 @@ export const deleteCategory = async (req: Request, res: Response): Promise<Respo
     return successResponse(res, 'Deleted Category Successfully', category);
 };
 
-export const updateCategory = async (
-    req: Request,
-    res: Response
-): Promise<Response> => {
+export const updateCategory = async (req: Request, res: Response): Promise<Response> => {
     const category = await CategoryService.updateCategory(
         req.params.id,
         req.body as UpdateCategoryDTO

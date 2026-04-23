@@ -131,7 +131,7 @@
     --color-band-label: rgba(255, 255, 255, 0.55);
 
     /* CTA section */
-    --color-cta-bg: #0a1a0e;
+    --color-cta-bg: rgb(23, 42, 31);
     --color-cta-border: #1a5c30;
 }
 

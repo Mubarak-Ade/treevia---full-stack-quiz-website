@@ -1,13 +1,11 @@
 import { User } from '@/modules/auth/types/auth.types';
-import { SetStateAction } from 'react';
-import { motion } from 'motion/react';
-import { NavLink } from 'react-router';
-import { ChevronRight } from 'lucide-react';
-import { MoonStar, SunMedium } from 'lucide-react';
-import { ProfileAvatar } from '../share/ProfileAvatar';
-import { Link } from '@/types';
-import { LinkVariant } from '@/utils/Animation/variant/IntroAnimationVariant';
 import type { ThemeMode } from '@/stores/useThemeStore';
+import { Link } from '@/types';
+import { ChevronRight, MoonStar, SunMedium } from 'lucide-react';
+import { motion } from 'motion/react';
+import { SetStateAction } from 'react';
+import { NavLink } from 'react-router';
+import { ProfileAvatar } from '../share/ProfileAvatar';
 
 export const MobileMenu = ({
     links,
@@ -39,7 +37,7 @@ export const MobileMenu = ({
                 {links.map((item, index) => (
                     <motion.button
                         key={index}
-                        className="leaf-card p-5 flex items-center justify-between rounded-[2rem]"
+                        className="leaf-card p-5 flex items-center justify-between rounded-4xl"
                         whileHover={{
                             color: 'var(--color-custom)',
                         }}
@@ -70,7 +68,7 @@ export const MobileMenu = ({
                             color: 'var(--color-custom)',
                         }}
                         onClick={() => setDisplay(prev => !prev)}
-                        className="bg-transparent border border-primary flex p-4 rounded-[2rem] items-center gap-4"
+                        className="bg-transparent border border-primary flex p-4 rounded-4xl items-center gap-4"
                     >
                         <ProfileAvatar
                             username={user?.username}

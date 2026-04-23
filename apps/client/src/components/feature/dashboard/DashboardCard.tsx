@@ -3,7 +3,7 @@ import { getColorFromString } from "@/utils/colorFormat";
 interface Props {
 	icon: React.ReactNode;
 	title: string;
-	value: number;
+	value: number | string;
 	id: string;
 }
 

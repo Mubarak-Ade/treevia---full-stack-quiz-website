@@ -1,6 +1,5 @@
 import { Field, FieldLabel } from '@/components/ui/field';
 import { UploadCloud } from 'lucide-react';
-import React from 'react';
 
 export const ImageUpload = () => {
     return (

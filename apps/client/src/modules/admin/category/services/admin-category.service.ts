@@ -2,17 +2,17 @@ import { Category } from "@/modules/quiz/types/quiz.types";
 import api from "@/utils/axios";
 
 export const getCategories = async () : Promise<Category[]> => {
-    const res = await api.get<Category[]>("/admin/category")
+    const res = await api.get<Category[]>("/admin/categories")
     return res.data
 }
 
 export const deleteCategory = async (id: string) : Promise<void> => {
-    const res = await api.delete(`/admin/category/${id}`)
+    const res = await api.delete(`/admin/categories/${id}`)
     return res.data
 }
 
 export const createCategory = async (data: Category) => {
-    const res = await api.post('/admin/category', data)
+    const res = await api.post('/admin/categories', data)
     return res.data
 }
 
@@ -23,6 +23,6 @@ interface EditState {
 
 export const editCategory = async ({data, id}: EditState) => {
     // const 
-    const res = await api.patch(`/admin/category/${id}`, data)
+    const res = await api.patch(`/admin/categories/${id}`, data)
     return res.data
 }

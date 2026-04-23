@@ -12,27 +12,27 @@ export const Profile = () => {
 	const userStats = useFetchUserStats()
 	const result = useFetchResult();
 
-	const user = useFetchUser()
+	const {data: userData} = useFetchUser()
 
-	const isLoading = userStats.isLoading || user.isLoading || result.isLoading
-	const exist = userStats.data || user.data || result.data
+	const isLoading = userStats.isLoading || userData === undefined || result.isLoading
+	const exist = userStats.data || userData || result.data
 
 	if (isLoading || !exist) {
 		<QuizLoader loading={isLoading} />
 	}
 
 	const stats = userStats?.data as Stats
-	const { username, profile: profilePic } = user?.data as User
+	const { username, profile: profilePic } = userData?.data as User
 
 	const { totalXp, quizzesTaken, totalCorrect, totalFailed, level, xpForNextLevel } = stats ?? {}
 
-	(stats);
+	console.log(userData);
 
 
 	return (
 		<div className="max-w-4xl w-full m-auto p-6">
 			<ProfileHeader username={username} profile={profilePic} level={level} nextXp={xpForNextLevel} totalXp={totalXp} />
-			<div className="mt-5 flex gap-4 justify-between">
+			<div className="mt-5 grid grid-cols-4 gap-4 justify-between">
 				<ProfileCard
 					icon={
 						<Trophy

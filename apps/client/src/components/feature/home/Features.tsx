@@ -1,30 +1,27 @@
-import { FaUsers } from 'react-icons/fa';
-import { GiFlowerPot } from 'react-icons/gi';
-import { FaLeaf } from 'react-icons/fa';
-import { Flower2, Leaf, Sparkles, Users } from 'lucide-react';
-import { Link } from 'react-router';
 import { motion } from 'motion/react';
+import { FaLeaf } from 'react-icons/fa';
+import { Link } from 'react-router';
 
-const features = [
-    {
-        icon: FaLeaf,
-        title: 'Organic Learning',
-        description:
-            "Questions that evolve with you. Our adaptive engine ensures you're always challenged at the right level.",
-    },
-    {
-        icon: GiFlowerPot,
-        title: 'Fresh Content',
-        description:
-            'New trivia seeds are planted daily across science, arts, history, and pop culture to keep things fresh.',
-    },
-    {
-        icon: FaUsers,
-        title: 'Flourish Together',
-        description:
-            'Join trivia groves with friends or compete globally. Knowledge is better shared with the community.',
-    },
-];
+// const features = [
+//     {
+//         icon: FaLeaf,
+//         title: 'Organic Learning',
+//         description:
+//             "Questions that evolve with you. Our adaptive engine ensures you're always challenged at the right level.",
+//     },
+//     {
+//         icon: GiFlowerPot,
+//         title: 'Fresh Content',
+//         description:
+//             'New trivia seeds are planted daily across science, arts, history, and pop culture to keep things fresh.',
+//     },
+//     {
+//         icon: FaUsers,
+//         title: 'Flourish Together',
+//         description:
+//             'Join trivia groves with friends or compete globally. Knowledge is better shared with the community.',
+//     },
+// ];
 
 const Features = () => {
     return (

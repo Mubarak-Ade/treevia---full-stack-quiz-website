@@ -1,8 +1,6 @@
 interface HeaderProps {
     handleSaveDraft: () => void;
-    handleDiscardDraft: () => void;
     handleCancel: () => void;
-    handlePublish: () => void;
     isEditing: boolean;
     isSubmitting: boolean;
     saveStatus: 'idle' | 'saving' | 'saved' | 'local' | 'error';
@@ -11,9 +9,7 @@ interface HeaderProps {
 
 export const Header = ({
     handleSaveDraft,
-    handleDiscardDraft,
     handleCancel,
-    handlePublish,
     isEditing,
     isSubmitting,
     saveStatus,
@@ -47,14 +43,7 @@ export const Header = ({
                 >
                     Cancel
                 </button>
-                <button
-                    type="button"
-                    onClick={handleDiscardDraft}
-                    disabled={isSubmitting}
-                    className="border border-default bg-surface-alt text-primary px-6 py-3 rounded-md hover:bg-red-500/10 transition-colors font-semibold"
-                >
-                    Discard Draft
-                </button>
+                
                 <button
                     type="button"
                     onClick={handleSaveDraft}
@@ -63,14 +52,7 @@ export const Header = ({
                 >
                     {isEditing ? 'Save Changes' : 'Save Draft'}
                 </button>
-                <button
-                    type="button"
-                    onClick={handlePublish}
-                    disabled={isSubmitting}
-                    className="bg-brand  cursor-pointer rounded-md font-bold px-6 py-3 transition-colors text-on-brand"
-                >
-                    {isSubmitting ? 'Saving...' : 'Publish Quiz'}
-                </button>
+                
             </div>
         </div>
     );

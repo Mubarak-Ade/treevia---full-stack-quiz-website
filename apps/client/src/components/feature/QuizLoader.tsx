@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 
 export const QuizLoader = ({loading = false} : {loading: boolean}) => {
   return loading && (
-    <div className="w-full h-screen bg-background fixed z-50 flex flex-col items-center justify-center top-0 overflow-hidden">
+    <div className="w-full h-screen bg-surface-alt fixed z-50 flex flex-col items-center justify-center top-0 overflow-hidden">
       {/* Falling leaves background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {Array.from({length: 50}, (_, i) => (
@@ -40,8 +40,8 @@ export const QuizLoader = ({loading = false} : {loading: boolean}) => {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center gap-4">
-        <RingLoader color='var(--color-primary-btn)' size={100} />
-        <p className="text-primary-btn text-lg font-semibold">Loading...</p>
+        <RingLoader color='var(--color-brand)' size={100} />
+        <p className="text-brand text-lg font-semibold">Loading...</p>
       </div>
     </div>
   )

@@ -9,7 +9,6 @@ import { MotionWrap } from '../Motion';
 export const CategoriesCard: React.FC<Category> = ({
     slug,
     name,
-    tags,
     description,
     quizCount,
 }: Category) => {

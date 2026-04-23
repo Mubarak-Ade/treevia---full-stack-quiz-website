@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import createHttpError from "http-errors";
 import DashboardService from "./dashboard.service.js";
+import { AppError } from "../../utils/error-handler.js";
 
 export const getUserStats: RequestHandler = async (req, res, next): Promise<void> => {
   try {

@@ -34,7 +34,7 @@ export const DashboardLayout = () => {
 			style={{ ["--sidebar-width"]: "18rem" } as CSSProperties}
 		>
 			<SideBar links={links} />
-			<main className="bg-background/70 overflow-hidden w-full min-h-screen">
+			<main className="bg-surface overflow-hidden w-full min-h-screen">
 				<Outlet />
 			</main>
 		</SidebarProvider>

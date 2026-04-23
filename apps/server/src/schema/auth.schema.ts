@@ -9,5 +9,5 @@ export const AuthSchema = {
 
 export const LoginSchema = {body: AuthSchema.body.omit({ username: true })}
 
-export type Register = z.infer<typeof AuthSchema>;
-export type Login = z.infer<typeof LoginSchema>;
+export type Register = z.infer<typeof AuthSchema.body>;
+export type Login = z.infer<typeof LoginSchema.body>;

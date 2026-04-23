@@ -15,12 +15,12 @@ export const ProfileHeader = ({username, bio, profile, level, nextXp, totalXp} :
     const progress = (totalXp / nextXp) * 100
 
 	return (
-		<div className="p-5 bg-card rounded-xl grid grid-cols-[150px_1fr] border border-muted shadow-[0_5px_12px] shadow-background">
+		<div className="p-5 bg-surface-alt rounded-xl grid grid-cols-[150px_1fr] border border-default">
 			<div className="relative size-30 row-span-2">
 				<ProfileAvatar
 					username={username}
                     profile={profile}
-					className="border-2 size-full absolute border-custom text-6xl"
+					className="border-2 size-full absolute border-default text-6xl"
 				/>
 				<button className="absolute cursor-pointer text-custom bottom-0 bg-muted rounded-full p-2 right-0">
 					<Pen size={20} />
@@ -28,7 +28,7 @@ export const ProfileHeader = ({username, bio, profile, level, nextXp, totalXp} :
 			</div>
 			<div className="flex justify-between capitalize w-full items-center">
 				<div className="">
-					<h1 className="text-4xl font-bold text-white">
+					<h1 className="text-4xl font-bold text-primary">
 						{username}
 					</h1>
 					<h6 className="text-sm text-secondary">
@@ -36,10 +36,10 @@ export const ProfileHeader = ({username, bio, profile, level, nextXp, totalXp} :
 					</h6>
 				</div>
 				<div className="flex gap-2">
-					<button className="flex gap-2 text-white rounded-md bg-secondary-btn px-4 py-2">
+					<button className="flex gap-2 text-primary rounded-md border border-default bg-brand-subtle px-4 py-2">
 						<Settings /> Settings
 					</button>
-					<button className="flex gap-2 bg-primary-btn p-2 rounded-md text-secondary-btn">
+					<button className="flex gap-2 bg-brand p-2 rounded-md text-on-brand">
 						<Share2 /> Share Profile
 					</button>
 				</div>
@@ -49,7 +49,7 @@ export const ProfileHeader = ({username, bio, profile, level, nextXp, totalXp} :
 					<h6 className="text-secondary font-semibold">
 						Level {level}
 					</h6>
-					<span className="text-custom text-xs font-bold">XP: {totalXp} / {nextXp}</span>
+					<span className="text-brand text-xs font-bold">XP: {totalXp} / {nextXp}</span>
 				</div>
 				<ProgressBar progress={progress} />
 			</div>

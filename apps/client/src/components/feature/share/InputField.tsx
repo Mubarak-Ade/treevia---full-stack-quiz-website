@@ -1,6 +1,6 @@
 import { focusVariant } from '@/utils/Animation/variant/authVariant';
 import { motion } from 'motion/react';
-import React, { PropsWithChildren, useState } from 'react';
+import { useState } from 'react';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 
 interface InputFieldProps {

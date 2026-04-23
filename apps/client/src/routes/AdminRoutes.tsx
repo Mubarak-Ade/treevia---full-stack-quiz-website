@@ -1,6 +1,6 @@
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { CategoryManagement } from "@/pages/Admin/CategoryManagement";
-import { CreateQuiz } from "@/pages/Admin/CreateQuiz";
+import { QuizEditor } from "@/pages/Admin/QuizEditor";
 import { Overview } from "@/pages/Admin/Overview";
 import { QuizManagement } from "@/pages/Admin/QuizManagement";
 import { UserManagement } from "@/pages/Admin/UserManagement";
@@ -30,7 +30,7 @@ export const AdminRoutes = () => [
 		/>
 		<Route
 			path="/admin/quizzes/create"
-			element={<CreateQuiz />}
+			element={<QuizEditor />}
 		/>
 		<Route
 			path="/admin/category"

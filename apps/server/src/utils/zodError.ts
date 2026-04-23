@@ -28,7 +28,7 @@ export const zodValidator = (schema: SchemaBundle) => {
 
         if (schema.params) {
             const result = schema.params.safeParse(req.params)
-            if (result.success) req.params = result.data
+            if (result.success) req.params = result.data as any
             else {
                 issues.push(
                     ...result.error.issues.map(issue => ({
@@ -42,7 +42,7 @@ export const zodValidator = (schema: SchemaBundle) => {
 
         if (schema.query) {
             const result = schema.query.safeParse(req.query);
-            if (result.success) req.query = result.data;
+            if (result.success) req.query = result.data as any;
             else {
                 issues.push(
                     ...result.error.issues.map(issue => ({

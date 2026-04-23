@@ -2,14 +2,13 @@ import { useNotification } from '@/context/NotificationProvider';
 import { useRegister } from '@/modules/auth/controllers/auth.controller';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { Dispatch, SetStateAction, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import z from 'zod';
-import { focusVariant, submitVariant } from '../../../utils/Animation/variant/authVariant';
-import { InputField } from '../share/InputField';
 import { FcGoogle } from 'react-icons/fc';
 import { RiFacebookCircleFill } from 'react-icons/ri';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import z from 'zod';
+import { submitVariant } from '../../../utils/Animation/variant/authVariant';
+import { InputField } from '../share/InputField';
 
 const schema = z
     .object({
@@ -27,10 +26,8 @@ type FormData = z.infer<typeof schema>;
 
 const Register = () => {
     const { showNotification } = useNotification();
-
-    const [showPassword, setShowPassword] = useState(false);
-
     const signup = useRegister();
+    const navigate = useNavigate()
 
     const {
         register,
@@ -48,6 +45,8 @@ const Register = () => {
                     'success',
                     'Successfully Sign up, redirecting to your dashboard...'
                 );
+                navigate("/quizzes")
+
             },
             onError: error => {
                 showNotification('error', JSON.stringify(error.message));

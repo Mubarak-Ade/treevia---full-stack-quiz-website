@@ -20,9 +20,9 @@ export const Modal = () => {
 	}
 
 	return (
-		<div className="fixed w-full blur-in-3xl flex items-center justify-center bg-background/50 h-screen top-0 z-100">
-			<Card className='max-w-xl w-full overflow-hidden rounded-xl bg-card border border-muted'>
-				<CardHeader className="text-white text-xl border-b border-muted font-bold flex justify-between items-center">
+		<div className="fixed w-full blur-in-3xl flex items-center justify-center h-screen top-0 z-100">
+			<Card className='max-w-xl w-full overflow-hidden rounded-xl bg-surface border border-default'>
+				<CardHeader className="text-primary text-xl border-b border-default font-bold flex justify-between items-center">
 					<h2>
 						{type === "quiz"
 							? "Add New Quiz"
@@ -49,11 +49,11 @@ export const Modal = () => {
 						type={type === "quiz" ? "button" : "submit"}
 						form={type === "quiz" ? undefined : "category-form"}
 						onClick={handlePrimaryAction}
-						className='bg-custom cursor-pointer'
+						className='bg-brand cursor-pointer text-on-brand'
 					>
 						{type === "quiz" ? "Open Quiz Editor" : edit ? "Save Category" : "Create Category"}
 					</Button>
-					<Button type="button" onClick={hideModal} variant={"outline"} className='text-white border-muted cursor-pointer'>
+					<Button type="button" onClick={hideModal} variant={"outline"} className='text-primary border-default bg-brand-subtle cursor-pointer'>
 						Cancel
 					</Button>
 				</CardFooter>

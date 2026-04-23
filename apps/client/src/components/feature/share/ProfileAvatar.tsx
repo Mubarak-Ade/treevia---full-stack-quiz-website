@@ -27,7 +27,7 @@ export const ProfileAvatar = ({profile, username, className} : Props) => {
 					/>
 				</div>
 			) : (
-				<span className={`text-2xl capitalize text-white`}>
+				<span className={`text-4xl font-bold font-display capitalize text-primary`}>
 					{username?.charAt(0)}
 				</span>
 			)}

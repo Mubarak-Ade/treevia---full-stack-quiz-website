@@ -18,10 +18,8 @@ export const AdminQuestionService = {
         if (correctCount !== 1) {
             throw new AppError(400, 'A question must have exactly one correct answer.');
         }
-        const count = 0;
-        const order = dto.order ?? count;
         const difficulty = dto.difficulty ?? 'easy';
-        const questions = await Question.create({ ...dto, order, difficulty });
+        const questions = await Question.create({ ...dto, difficulty });
         return questions;
     },
     async addQuestionToQuiz(quizId: string, questionId: string, userId: string) {

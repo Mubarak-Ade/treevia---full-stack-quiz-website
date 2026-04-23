@@ -103,7 +103,7 @@ export const Overview = () =>
 		<div className="py-5 px-10">
 			<div className="flex items-center justify-between">
 				<div className="">
-					<h1 className="text-4xl font-bold text-white flex gap-2 items-center">
+					<h1 className="text-4xl font-bold text-primary flex gap-2 items-center">
 						Welcome back, { user?.username }{ " " }
 						<Leaf color="var(--color-custom)" />
 					</h1>
@@ -111,7 +111,7 @@ export const Overview = () =>
 						Ready to plant some more trees today?
 					</p>
 				</div>
-				<button className="flex gap-2 bg-custom px-4 py-3 rounded-full shadow-[0_0_10px] shadow-custom font-bold cursor-pointer items-center">
+				<button className="flex gap-2 bg-brand px-4 py-3 rounded-full text-on-brand font-bold cursor-pointer items-center">
 					<Shuffle /> Start Random Quiz
 				</button>
 			</div>
@@ -137,10 +137,16 @@ export const Overview = () =>
 					value={ Math.round(stats.accuracy) }
 					id="accuracy"
 				/>
+				<DashboardCard
+					icon={ <Droplet /> }
+					title="Global Rank"
+					value={ `#${Math.round(stats.accuracy)}` }
+					id="accuracy"
+				/>
 			</div>
 			<div className="">
-				<h1 className="text-xl mt-4 p-4 text-white font-bold flex items-center gap-2">
-					<ThumbsUp color="var(--color-custom)" /> Recommended For You
+				<h1 className="text-xl mt-4 p-4 text-primary font-bold flex items-center gap-2">
+					<ThumbsUp color="var(--color-brand)" /> Recommended For You
 				</h1>
 				<ul className="grid grid-cols-3 p-5 gap-10">
 					{ randomQuiz.data.map( ( q ) => (
@@ -156,8 +162,8 @@ export const Overview = () =>
 				</ul>
 			</div>
 			<div className="p-4">
-				<h1 className="text-xl mb-4 text-white font-bold flex items-center gap-2">
-					<History color="var(--color-custom)" /> Recent Harvest
+				<h1 className="text-xl mb-4 text-primary font-bold flex items-center gap-2">
+					<History color="var(--color-brand)" /> Recent Harvest
 				</h1>
 				<OverviewTable columns={ columns } data={ quiz.data } />
 			</div>

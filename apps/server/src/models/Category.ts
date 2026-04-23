@@ -61,28 +61,27 @@ CategorySchema.pre( 'save', function ( next )
     next();
 } )
 
-CategorySchema.pre( 'findOneAndUpdate', function ( next )
-{
+CategorySchema.pre('findOneAndUpdate', function (next) {
+    const update = this.getUpdate() as any;
+
+    // The actual fields could be at the top level OR nested under $set
+    const fields = update.$set || update;
+
     // Generate slug for category name
-    const update = this.getUpdate() as any
-    if ( update.name )
-    {
-        update.slug = slugify( update.name, {
-            lowercase: true,
-        } );
+    if (fields.name) {
+        fields.slug = slugify(fields.name, { lowercase: true });
     }
 
     // Generate slugs for tags
-    if ( update.tags )
-    {
-        update.tags = update.tags.map( ( tag: any ) => ( {
+    if (fields.tags) {
+        fields.tags = fields.tags.map((tag: any) => ({
             name: tag.name,
-            slug: slugify( tag.name, { lowercase: true } )
-        } ) );
-
+            slug: slugify(tag.name, { lowercase: true }),
+        }));
     }
+
     next();
-} )
+});
 
 CategorySchema.virtual("quizCount", {
     ref: "Quiz",

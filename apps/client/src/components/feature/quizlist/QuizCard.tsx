@@ -22,9 +22,9 @@ export const QuizCard = ({
 	return (
 		<Link to={`/quizzes/${_id}/questions`} state={displayTime}>
 
-			<motion.div className=" border-default border w-full cursor-pointer shadow-[0_-10px_-25px] p-5 shadow-light-surface dark:shadow-secondary rounded-4xl overflow-hidden bg-base">
+			<motion.div className=" border-default border w-full cursor-pointer shadow-[0_-10px_-25px] p-5 shadow-light-surface dark:shadow-secondary rounded-4xl overflow-hidden bg-surface-alt">
 				<div className={`h-40 relative ${color.gradient} rounded-4xl`}>
-					<span className="text-xs bg-secondary-btn/20  px-2 py-1 absolute right-0 m-3 text-primary rounded-full">
+					<span className="text-xs bg-brand-subtle  px-2 py-1 absolute right-0 m-3 text-primary rounded-full">
 						{displayDifficulty}
 					</span>
 					<span

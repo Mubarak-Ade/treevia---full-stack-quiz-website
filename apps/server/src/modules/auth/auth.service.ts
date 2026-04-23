@@ -142,7 +142,7 @@ export const refresh = async (token: string) => {
 export const getAllSession = async () => {
     const session = await Session.find({}).lean();
     return session;
-}
+};
 
 export const logout = async (token: string) => {
     const decoded = verifyRefreshToken(token);

@@ -8,13 +8,14 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { useNotification } from '@/context/NotificationProvider';
 import { Links } from '@/models/Dashboard';
 import { useLogout } from '@/modules/auth/controllers/auth.controller';
 import useAuthStore from '@/modules/auth/store/auth.store';
 import useThemeStore from '@/stores/useThemeStore';
 import { LogOut, MoonStar, SunMedium } from 'lucide-react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const SideBarBtn = ({
     label,
@@ -52,12 +53,24 @@ const SideBarBtn = ({
 };
 
 export const SideBar = ({ links }: { links: Links[] }) => {
-    const logout = useLogout();
+    const logoutMutation = useLogout();
     const theme = useThemeStore(s => s.theme);
+    const navigate = useNavigate()
     const toggleTheme = useThemeStore(s => s.toggleTheme);
 
+    const {showNotification} = useNotification()
+
+    const handleLogout = () => {
+        logoutMutation.mutate(undefined, {
+            onSuccess: () => {
+                showNotification('success', 'Log out successfull...');
+                navigate('/login', { replace: true });
+            },
+        });
+    };
+
     return (
-        <div className="bg-surface-alt">
+        <div className="bg-surface">
             <Sidebar className="border-default">
                 <SidebarHeader className="flex flex-row gap-3 p-5 items-center border-b border-default">
                     <div className="size-14 rounded-full flex items-center justify-center shadow-lg ring-2 ring-custom">
@@ -90,13 +103,13 @@ export const SideBar = ({ links }: { links: Links[] }) => {
                 <SidebarFooter>
                     <motion.button
                         whileHover={{
-                            backgroundColor: '#00ff6d33',
-                            color: '#00ff6d',
+                            backgroundColor: '#ff000020',
+                            color: '#ff0000',
                         }}
                         whileTap={{
                             scale: 0.8,
                         }}
-                        onClick={() => logout.mutate()}
+                        onClick={handleLogout}
                         className="flex items-center gap-4 px-5 py-2.5 rounded-md text-secondary font-medium cursor-pointer"
                     >
                         <LogOut />

@@ -1,7 +1,7 @@
-import createHttpError from "http-errors";
 import UserStats from "../../models/UserStats.js";
-import { calculateLevelFromXp } from "../../utils/xp_level_calculator.js";
 import { calculateAccuracy, calcuteTotalQuestion, matchStage } from "../../pipelines/stats.js";
+import { AppError } from "../../utils/error-handler.js";
+import { calculateLevelFromXp } from "../../utils/xp_level_calculator.js";
 
 const getUserStats = async (userId: string) => {
   if (!userId) {

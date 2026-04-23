@@ -2,10 +2,9 @@ import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router';
 import './App.css';
 import useAuthStore from './modules/auth/store/auth.store';
-import { getUserInfo } from './modules/user/services/user.service';
+import { useFetchUser } from './modules/user/controllers/user.controller';
 import AppRoutes from './routes/AppRoutes';
 import useThemeStore from './stores/useThemeStore';
-import { useFetchUser } from './modules/user/controllers/user.controller';
 
 function App() {
     const setAuth = useAuthStore(s => s.setAuth);

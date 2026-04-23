@@ -9,7 +9,7 @@ import { useNotification } from '@/context/NotificationProvider';
 import { useLogin } from '@/modules/auth/controllers/auth.controller';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { InputField } from '../share/InputField';
 
 const schema = z.object({
@@ -22,6 +22,7 @@ type FormData = z.infer<typeof schema>;
 const Login = () => {
     const { showNotification } = useNotification();
     const login = useLogin();
+    const navigate = useNavigate()
 
     const {
         register,
@@ -36,6 +37,7 @@ const Login = () => {
         login.mutate(data, {
             onSuccess: () => {
                 showNotification('success', 'Successfully login, redirecting to your dashboard...');
+                navigate("/quizzes")
             },
             onError: error => {
                 showNotification('error', error.message);

@@ -38,7 +38,7 @@ export const CategoryService = {
         const update = {
             ...(name ? { name } : {}),
             ...(description ? { description } : {}),
-            ...(tags && Array.isArray(tags) ? { tags: tags } : {}),
+            ...(tags && Array.isArray(tags) ? { tags: tags.map(t => ({ name: t })) } : {}),
         };
 
         const category = await CategoryRepostory.update(categoryId, update);

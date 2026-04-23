@@ -1,8 +1,5 @@
-import createHttpError from 'http-errors';
-import mongoose from 'mongoose';
 import Result from '../../models/QuizResult.js';
-
-
+import { AppError } from '../../utils/error-handler.js';
 
 const getResult = async (userId: string) => {
     const results = await Result.find({ user: userId })
@@ -17,9 +14,9 @@ const getResult = async (userId: string) => {
         })
         .lean();
 
-    return results.map(result => ({
+    return results.map((result:any) => ({
         ...result,
-        quiz: result.quiz.title,
+        quiz: result.quiz.title ,
         category: result.quiz.category.name,
     }));
 };

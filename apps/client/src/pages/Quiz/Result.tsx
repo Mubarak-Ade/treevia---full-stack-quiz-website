@@ -40,7 +40,7 @@ const Result = () => {
 	const user = useAuthStore((state) => state.user);
 
 	return (
-		<div className="h-full bg-background w-full top-0 left-0">
+		<div className="h-full bg-base w-full top-0 left-0">
 			<QuizHeader
 				onClick={() => navigate("/quizzes")}
 				label="Back To Categories"
@@ -69,7 +69,7 @@ const Result = () => {
 				</div>
 			)}
 
-			<div className="max-w-3xl overflow-hidden h-full w-full m-auto p-5">
+			<div className="max-w-3xl bg-surface-alt overflow-hidden h-full w-full m-auto p-5">
 				<div className="bg-card h-full overflow-hidden font-ubuntu p-10 rounded-4xl flex gap-4 items-center flex-col justify-center">
 					<div className="p-4 rounded-full inline-block bg-custom/80 shadow-[0_0_25px] shadow-custom">
 						<Trophy

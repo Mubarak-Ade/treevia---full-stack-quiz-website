@@ -33,8 +33,9 @@ import {
     mergeDraftWithDefaults,
     QuizDraftFormData,
 } from '@/components/feature/admin/quiz/quiz-draft.utils';
+import { Stars } from 'lucide-react';
 
-export const CreateQuiz = () => {
+export const QuizEditor = () => {
     const [searchParams] = useSearchParams();
     const quizId = searchParams.get('quizId') ?? undefined;
     const isEditing = Boolean(quizId);
@@ -67,7 +68,8 @@ export const CreateQuiz = () => {
     const addQuestionToQuizMutation = useAddQuestionToQuiz();
     const removeQuestionFromQuizMutation = useRemoveQuestionFromQuiz();
 
-    const getDraftStorageKey = (targetQuizId?: string) => `treevia-quiz-draft:${targetQuizId ?? 'new'}`;
+    const getDraftStorageKey = (targetQuizId?: string) =>
+        `treevia-quiz-draft:${targetQuizId ?? 'new'}`;
     const parseStoredDraft = (value: string | null): QuizDraftFormData | null => {
         if (!value) {
             return null;
@@ -116,7 +118,10 @@ export const CreateQuiz = () => {
         }
 
         for (const question of completeQuestions) {
-            const payload = buildQuestionPayload(question, data.difficulty as QuizFormData['difficulty']);
+            const payload = buildQuestionPayload(
+                question,
+                data.difficulty as QuizFormData['difficulty']
+            );
 
             if (question.id) {
                 retainedQuestionIds.add(question.id);
@@ -167,13 +172,12 @@ export const CreateQuiz = () => {
                 setSaveStatus('saving');
             }
 
-            const savedQuiz =
-                currentQuizIdRef.current
-                    ? await updateQuizMutation.mutateAsync({
-                          id: currentQuizIdRef.current,
-                          data: partialQuizPayload,
-                      })
-                    : await createQuizMutation.mutateAsync(partialQuizPayload);
+            const savedQuiz = currentQuizIdRef.current
+                ? await updateQuizMutation.mutateAsync({
+                      id: currentQuizIdRef.current,
+                      data: partialQuizPayload,
+                  })
+                : await createQuizMutation.mutateAsync(partialQuizPayload);
 
             const savedQuizId = savedQuiz.data._id;
             const previousDraftKey = getDraftStorageKey(currentQuizIdRef.current);
@@ -226,7 +230,9 @@ export const CreateQuiz = () => {
         }
 
         const serverDraft = mapQuizToForm(quizResponse.data);
-        const localDraft = parseStoredDraft(localStorage.getItem(getDraftStorageKey(quizResponse.data._id)));
+        const localDraft = parseStoredDraft(
+            localStorage.getItem(getDraftStorageKey(quizResponse.data._id))
+        );
         const mergedDraft = localDraft
             ? mergeDraftWithDefaults(serverDraft, localDraft)
             : serverDraft;
@@ -264,7 +270,7 @@ export const CreateQuiz = () => {
         }
 
         autosaveTimerRef.current = window.setTimeout(() => {
-            void syncDraft(watchedValues, 'autosave');
+            void syncDraft(watchedValues as QuizDraftFormData, 'autosave');
         }, 5000);
 
         return () => {
@@ -282,7 +288,10 @@ export const CreateQuiz = () => {
 
         try {
             setSaveStatus('saving');
-            const result = await syncDraft(data, submitIntent === 'published' ? 'publish' : 'manual');
+            const result = await syncDraft(
+                data,
+                submitIntent === 'published' ? 'publish' : 'manual'
+            );
 
             if (!result.savedToServer || !result.quizId) {
                 showNotification(
@@ -359,6 +368,14 @@ export const CreateQuiz = () => {
         return <QuizLoader loading />;
     }
 
+    const statusLabel = {
+        idle: 'No changes saved yet',
+        saving: 'Saving draft...',
+        saved: lastSavedAt ? `Saved to server at ${lastSavedAt}` : 'Saved to server',
+        local: lastSavedAt ? `Saved locally at ${lastSavedAt}` : 'Saved locally',
+        error: 'Autosave needs attention',
+    }[saveStatus];
+
     return (
         <div className="min-h-screen">
             <Header
@@ -367,13 +384,8 @@ export const CreateQuiz = () => {
                 saveStatus={saveStatus}
                 lastSavedAt={lastSavedAt}
                 handleCancel={() => navigate('/admin/quizzes')}
-                handleDiscardDraft={discardDraft}
                 handleSaveDraft={() => {
                     void saveDraft();
-                }}
-                handlePublish={() => {
-                    setSubmitIntent('published');
-                    void submitQuiz();
                 }}
             />
 
@@ -395,6 +407,37 @@ export const CreateQuiz = () => {
                     </div>
                 </form>
             </FormProvider>
+
+            <div className="w-full max-w-4xl flex justify-between m-auto border border-default mb-10 p-5 bg-cta rounded-4xl">
+                <div className="flex items-center gap-4">
+                    <Stars className="text-on-brand bg-brand p-2 rounded-full" size={40} />
+                    <div className="">
+                        <h2 className="text-xl font-sans font-bold text-primary">Smart Analysis</h2>
+                        <p className="text-sm font-medium text-secondary">{statusLabel}</p>
+                    </div>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        type="button"
+                        onClick={discardDraft}
+                        disabled={isSubmitting}
+                        className="border border-default bg-surface-alt text-primary px-6 py-3 rounded-full hover:bg-red-500/10 transition-colors font-semibold"
+                    >
+                        Discard Draft
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setSubmitIntent('published');
+                            void submitQuiz();
+                        }}
+                        disabled={isSubmitting}
+                        className="bg-brand  cursor-pointer rounded-full font-bold px-6 py-3 transition-colors text-on-brand"
+                    >
+                        {isSubmitting ? 'Saving...' : 'Publish Quiz'}
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

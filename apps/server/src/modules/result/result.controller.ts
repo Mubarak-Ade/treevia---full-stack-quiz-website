@@ -1,5 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import createHttpError from "http-errors";
+import { AppError } from "../../utils/error-handler.js";
 import ResultService from "./result.service.js";
 
 interface AuthRequest extends Request {

@@ -1,15 +1,13 @@
-import { DashboardHeader } from "@/components/feature/share/DashboardHeader";
-import { User, UsersRoundIcon, CheckCircle, Clock, Ban } from "lucide-react";
-import { Card } from "../../components/feature/admin/users/Card";
-import { useFetchUsers, useDeleteUser } from "@/modules/admin/user/controllers/admin-user.controller";
-import { ColumnDef } from "@tanstack/react-table";
-import { AdminUser } from "@/modules/admin/user/services/admin-user.service";
-import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { Edit2, Trash2 } from "lucide-react";
-import { UsersTable } from "@/components/feature/admin/users/UsersTable";
-import { useNotification } from "@/context/NotificationProvider";
 import { ReusableTable } from "@/components/feature/admin/quiz/QuizTable";
+import { DashboardHeader } from "@/components/feature/share/DashboardHeader";
+import { Button } from "@/components/ui/button";
+import { useNotification } from "@/context/NotificationProvider";
+import { useDeleteUser, useFetchUsers } from "@/modules/admin/user/controllers/admin-user.controller";
+import { AdminUser } from "@/modules/admin/user/services/admin-user.service";
+import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { Ban, CheckCircle, Clock, Edit2, Trash2, User, UsersRoundIcon } from "lucide-react";
+import { Card } from "../../components/feature/admin/users/Card";
 
 const columns: ColumnDef<AdminUser>[] = [
 	{
