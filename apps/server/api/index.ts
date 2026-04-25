@@ -61,7 +61,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 app.get("/", (_req, res) => {
   res.status(200).json({
-    message: "Welcome to the Treevia Quiz API",
+    message: "Welcome to the Treevia Quiz Server API",
   });
 });
 
