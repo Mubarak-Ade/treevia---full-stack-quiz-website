@@ -29,8 +29,8 @@ app.use(cookieParser());
 
 app.set('trust-proxy', 1);
 
-app.use(morgan('dev'));
 app.use(express.json());
+app.use(morgan('dev'));
 
 app.use(async (req, res, next) => {
     try {
@@ -52,8 +52,7 @@ app.use('/api', allRoutes)
 app.use('/api/admin', requireAuth, authorizeRoles, AdminRoutes);
 
 
-app.use(notFound)
-app.use(errorHandler);
+
 
 app.get('/', (_req, res) => {
     res.status(200).json({
@@ -68,5 +67,8 @@ app.get('/health', (_req, res) => {
         timestamp: Date.now(),
     });
 });
+
+app.use(notFound)
+app.use(errorHandler);
 
 export default app;

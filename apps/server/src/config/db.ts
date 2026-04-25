@@ -10,7 +10,7 @@ export const connectDB = async () => {
     }
 
     try {
-        const db = await mongoose.connect(env.MONGO_URI_PROD as string, {
+        const db = await mongoose.connect(env.MONGO_URI as string, {
             // Use connection pooling for serverless
             maxPoolSize: 10,
             serverSelectionTimeoutMS: 5000,

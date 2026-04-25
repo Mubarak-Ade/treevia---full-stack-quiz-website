@@ -22,7 +22,7 @@ export const Profile = () => {
 	}
 
 	const stats = userStats?.data as Stats
-	const { username, profile: profilePic } = userData?.data as User
+	const { username, profile: profilePic } = userData?.data as User ?? {}
 
 	const { totalXp, quizzesTaken, totalCorrect, totalFailed, level, xpForNextLevel } = stats ?? {}
 
