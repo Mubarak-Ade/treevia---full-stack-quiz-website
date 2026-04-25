@@ -2,8 +2,8 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { Links } from "@/models/Dashboard";
 import { Grid2X2, Settings, Trophy, User } from "lucide-react";
 import type { CSSProperties } from "react";
-import { Outlet } from "react-router";
 import { SideBar } from "../feature/dashboard/SideBar";
+import { AnimatedOutlet } from "../feature/Motion";
 
 export const DashboardLayout = () => {
 	const links: Links[] = [
@@ -35,7 +35,7 @@ export const DashboardLayout = () => {
 		>
 			<SideBar links={links} />
 			<main className="bg-surface overflow-hidden w-full min-h-screen">
-				<Outlet />
+				<AnimatedOutlet className="min-h-screen" />
 			</main>
 		</SidebarProvider>
 	);

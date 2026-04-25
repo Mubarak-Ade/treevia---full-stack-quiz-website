@@ -1,6 +1,5 @@
-import { motion } from "framer-motion";
+import { Reveal, hoverLift } from "@/components/feature/Motion";
 import { LucideIcon } from "lucide-react";
-import { HoverVariant } from "../../../utils/Animation/variant/HoverVariant";
 
 interface Props {
 	title: string;
@@ -22,11 +21,10 @@ const Stat = ({
 	suffix = "+",
 }: Props) => {
 	return (
-		<motion.div
-			whileHover="hover"
-			variants={HoverVariant}
+		<Reveal
+			whileHover={hoverLift}
 			transition={{
-				duration: .2,
+				duration: 0.2,
 			}}
 			className="bg-brand-subtle rounded-4xl px-5 py-10 shadow-[0_24px_55px_-38px_var(--shadow-color)] backdrop-blur-sm max-w-sm w-full"
 		>
@@ -39,7 +37,7 @@ const Stat = ({
 					<h2 className="font-poppins mt-1 text-sm dark:text-tertiary text-primary">{title}</h2>
 				</div>
 			</div>
-		</motion.div>
+		</Reveal>
 	);
 };
 

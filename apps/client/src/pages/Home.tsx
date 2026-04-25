@@ -1,13 +1,16 @@
 import Features from '@/components/feature/home/Features';
 import Hero from '@/components/feature/home/Hero';
 import Stat from '@/components/feature/home/Stat';
+import { Reveal, Stagger } from '@/components/feature/Motion';
 import { BookOpenText, Leaf, Users } from 'lucide-react';
 
 const Home = () => {
     return (
         <div className="w-full gap-8 relative bg-cover">
-            <Hero />
-            <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-6 items-center place-items-center w-full justify-center p-10">
+            <Reveal>
+                <Hero />
+            </Reveal>
+            <Stagger className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-6 items-center place-items-center w-full justify-center p-10">
                 <Stat title="Active Thinkers" numbers={50} suffix="K+" Icon={Users} tone="mint" />
                 <Stat
                     title="Leafy Categories"
@@ -30,8 +33,10 @@ const Home = () => {
                     Icon={BookOpenText}
                     tone="sun"
                 />
-            </div>
-            <Features />
+            </Stagger>
+            <Reveal>
+                <Features />
+            </Reveal>
         </div>
     );
 };

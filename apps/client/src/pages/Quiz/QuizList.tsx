@@ -1,4 +1,5 @@
 import BreadCrumbs from '@/components/feature/BreadCrumbs';
+import { Reveal, Stagger } from '@/components/feature/Motion';
 import { QuizCard } from '@/components/feature/quizlist/QuizCard';
 import { useFetchQuizzesByCategory } from '@/modules/quiz/controllers/quiz-api.controller';
 import { Leaf, Sparkles, TimerReset } from 'lucide-react';
@@ -34,9 +35,11 @@ export const QuizList = () => {
             <div className="pointer-events-none absolute -right-16 top-20 h-64 w-64 rounded-full bg-band/40 blur-3xl" />
 
             <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-10 px-5 py-6 md:px-8 lg:px-10">
-                <BreadCrumbs />
+                <Reveal>
+                    <BreadCrumbs />
+                </Reveal>
 
-                <section className="relative overflow-hidden rounded-[2.5rem] border border-white/60 bg-surface px-6 py-8 shadow-[0_30px_80px_-55px_rgba(56,84,103,0.35)] backdrop-blur-md md:px-10 md:py-12">
+                <Reveal className="relative overflow-hidden rounded-[2.5rem] border border-white/60 bg-surface px-6 py-8 shadow-[0_30px_80px_-55px_rgba(56,84,103,0.35)] backdrop-blur-md md:px-10 md:py-12">
                     <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-brand-subtle/20 blur-3xl" />
                     <div className="">
                         <img src="" alt="" />
@@ -120,9 +123,9 @@ export const QuizList = () => {
                             </div>
                         </div>
                     </div>
-                </section>
+                </Reveal>
 
-                <section className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 p-20">
+                <Stagger className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 p-20">
                     {quizzes?.map((q: Quiz) => (
                         <QuizCard
                             updatedAt={q.updatedAt}
@@ -134,7 +137,7 @@ export const QuizList = () => {
                             timeLimitPerQuestion={q.timeLimitPerQuestion}
                         />
                     ))}
-                </section>
+                </Stagger>
             </div>
         </div>
     );

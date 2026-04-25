@@ -12,15 +12,24 @@ import Home from "../pages/Home";
 import { EmptyLayout } from "@/components/layout/EmptyLayout";
 import Register from "@/components/feature/Auth/Register";
 import Login from "@/components/feature/Auth/Login";
+import { PageTransition } from "@/components/feature/Motion";
 
 const PublicRoutes = (): JSX.Element[] => [
 	<Route
 		path="/quizzes/:id/questions"
-		element={<QuizTaking />}
+		element={
+            <PageTransition>
+                <QuizTaking />
+            </PageTransition>
+        }
 	/>,
 	<Route
 		path="/result"
-		element={<Result />}
+		element={
+            <PageTransition>
+                <Result />
+            </PageTransition>
+        }
 	/>,
 	<Route
 		key="layout"

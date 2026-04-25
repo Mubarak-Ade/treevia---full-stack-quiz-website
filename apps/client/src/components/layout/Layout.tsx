@@ -1,7 +1,8 @@
-import { Navigate, Outlet, useLocation } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 import Footer from '../feature/Footer';
 import Navbar from '../feature/Navbar';
 import useAuthStore from '@/modules/auth/store/auth.store';
+import { AnimatedOutlet } from '../feature/Motion';
 
 const Layout = () => {
     // const isDashboard = location.pathname.startsWith('/admin' || '/user')
@@ -21,7 +22,7 @@ const Layout = () => {
         <div className="bg-base min-h-screen">
             <Navbar />
             <main className="relative z-10">
-                <Outlet />
+                <AnimatedOutlet />
             </main>
             <Footer />
         </div>

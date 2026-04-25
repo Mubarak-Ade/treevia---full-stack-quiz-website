@@ -1,8 +1,8 @@
 import { Quiz } from "@/modules/quiz/types/quiz.types";
 import { getColorFromString } from "@/utils/colorFormat";
 import { Clock, ListOrdered, Play } from "lucide-react";
-import { motion } from "motion/react";
 import { Link } from "react-router";
+import { MotionWrap, Reveal, hoverLift, tapPress } from "../Motion";
 // import { Quiz } from "@/types";
 
 interface QuizCardProps extends Quiz { }
@@ -21,8 +21,10 @@ export const QuizCard = ({
 
 	return (
 		<Link to={`/quizzes/${_id}/questions`} state={displayTime}>
-
-			<motion.div className=" border-default border w-full cursor-pointer shadow-[0_-10px_-25px] p-5 shadow-light-surface dark:shadow-secondary rounded-4xl overflow-hidden bg-surface-alt">
+			<Reveal
+				whileHover={hoverLift}
+				className=" border-default border w-full cursor-pointer shadow-[0_-10px_-25px] p-5 shadow-light-surface dark:shadow-secondary rounded-4xl overflow-hidden bg-surface-alt"
+			>
 				<div className={`h-40 relative ${color.gradient} rounded-4xl`}>
 					<span className="text-xs bg-brand-subtle  px-2 py-1 absolute right-0 m-3 text-primary rounded-full">
 						{displayDifficulty}
@@ -49,17 +51,13 @@ export const QuizCard = ({
 							<span className="text-xs">{displayTime}s</span>
 						</div>
 					</div>
-					<motion.button
-						whileTap={{
-							scale: 0.8,
-						}}
-						whileHover={{
-							scale: 1.1,
-						}}
+					<MotionWrap
+						whileHover={hoverLift}
+						whileTap={tapPress}
 						className={`flex items-center w-full hover:text-white px-4 cursor-pointer py-2 ${color.bg} rounded-full mt-5 text-sm text-center text-white justify-center gap-2`}
 					>
 						Start Quiz <Play size={15} />
-					</motion.button>
+					</MotionWrap>
 				</div>
 				{/* <div className="p-4 border-t flex items-center gap-2 text-secondary/50 border-muted">
 				<h6 className="font-bold text-sm">Popular: </h6>
@@ -71,7 +69,7 @@ export const QuizCard = ({
 					))}
 				</ul>
 			</div> */}
-			</motion.div>
+			</Reveal>
 		</Link>
 	);
 };

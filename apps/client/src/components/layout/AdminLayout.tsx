@@ -2,9 +2,9 @@ import { SidebarProvider } from '@/components/ui/sidebar'
 import { Links } from '@/models/Dashboard'
 import { ChartNoAxesColumn, CircleQuestionMark, Grid, Grid2X2, Settings, Users } from 'lucide-react'
 import { CSSProperties } from 'react'
-import { Outlet } from 'react-router'
 import { Modal } from '../../components/feature/admin/Modal'
 import { SideBar } from '../feature/dashboard/SideBar'
+import { AnimatedOutlet } from '../feature/Motion'
 
 export const AdminLayout = () => {
     const links: Links[] = [
@@ -43,7 +43,7 @@ export const AdminLayout = () => {
         <SidebarProvider style={{ ['--sidebar-width']: '18rem' } as CSSProperties}>
             <SideBar links={links} />
             <main className='bg-base overflow-hidden w-full min-h-screen'>
-                <Outlet />
+                <AnimatedOutlet className='min-h-screen' />
             </main>
             <Modal />
         </SidebarProvider>

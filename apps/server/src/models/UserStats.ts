@@ -16,6 +16,9 @@ const UserStatsSchema = new Schema({
         type: Number,
         default: 0
     },
+    rank: {
+        type: Number,
+    },
     totalFailed: {
         type: Number,
         default: 0

@@ -2,9 +2,8 @@ import { Button } from '@/components/ui/button';
 import { useQuizStore } from '@/modules/quiz/store/quiz.store';
 import { Category } from '@/modules/quiz/types/quiz.types';
 import { getColorFromString } from '@/utils/colorFormat';
-import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
-import { MotionWrap } from '../Motion';
+import { MotionWrap, Reveal, hoverLift, tapPress } from '../Motion';
 
 export const CategoriesCard: React.FC<Category> = ({
     slug,
@@ -23,9 +22,9 @@ export const CategoriesCard: React.FC<Category> = ({
 
     const color = getColorFromString(name);
     return (
-        <motion.div
+        <Reveal
             whileHover={{
-                scale: 1.1,
+                ...hoverLift,
                 boxShadow: '1px 0 10px 5px var(--color-secondary-bg)',
             }}
             className={`bg-surface border border-default w-full cursor-pointer rounded-4xl overflow-hidden`}
@@ -57,20 +56,14 @@ export const CategoriesCard: React.FC<Category> = ({
             <div className="p-4">
                 <MotionWrap
                     as={Button}
-                    whileHover={
-                        {
-                            // backgroundColor: 'var(--color-secondary)',
-                        }
-                    }
-                    whileTap={{
-                        scale: 0.9,
-                    }}
+                    whileHover={hoverLift}
+                    whileTap={tapPress}
                     onClick={handleCategoryClick}
                     className={`w-full cursor-pointer ${color.hover} border ${color.border} bg-white hover:text-white ${color.text}`}
                 >
                     Play Now
                 </MotionWrap>
             </div>
-        </motion.div>
+        </Reveal>
     );
 };

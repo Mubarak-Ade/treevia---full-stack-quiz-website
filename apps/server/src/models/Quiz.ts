@@ -127,6 +127,48 @@ QuizSchema.pre('save', function (next) {
     next();
 });
 
+QuizSchema.pre('findOneAndUpdate', function (next) {
+    const update = this.getUpdate() as any;
+
+    // Handle both direct update and $set operator
+    let quiz = update.$set || update;
+
+    // If questions is an array of IDs, convert to proper format
+    if (quiz?.questions && Array.isArray(quiz.questions)) {
+        const questionsArray = quiz.questions;
+        // Check if it's an array of IDs (strings/ObjectIds) vs already formatted objects
+        quiz.questions = questionsArray.map((q: any, index: number) => {
+            if (typeof q === 'string' || (q && q._id && !q.questionId)) {
+                // It's an ID, convert to proper format
+                return {
+                    questionId: q._id || q,
+                    order: index,
+                };
+            }
+            // Already in proper format
+            return q;
+        });
+    }
+
+    const count = quiz?.questions?.length ?? 0;
+    // ~30 s per question as a baseline, converted to minutes
+    const avgSecondsPerQuestion = quiz?.timeLimitPerQuestion ?? 30;
+    const estimatedMinutes = Number(parseFloat(((count * avgSecondsPerQuestion) / 60).toFixed(1)));
+
+    quiz.stats = {
+        questionCount: count,
+        estimatedDurationMinutes: estimatedMinutes,
+        // Placeholder — replace with real ML/historical value
+        estimatedSuccessRate: quiz?.stats?.estimatedSuccessRate ?? 72,
+    };
+
+    if (quiz?.status && quiz?.status === 'published') {
+        quiz.publishedAt = new Date();
+    }
+
+    next();
+});
+
 const Quiz = model<IQuiz>('Quiz', QuizSchema);
 
 export default Quiz;

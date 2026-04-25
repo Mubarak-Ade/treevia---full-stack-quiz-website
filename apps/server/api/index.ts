@@ -37,9 +37,6 @@ app.use(async (req, res, next) => {
     }
 });
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 app.use("/api/user", requireAuth, userRoute)
 app.use('/api/admin', requireAuth, authorizeRoles, AdminRoutes)
 app.use('/api/dashboard', dashboardRoute)
