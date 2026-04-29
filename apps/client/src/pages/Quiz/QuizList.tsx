@@ -18,13 +18,13 @@ export const QuizList = () => {
     const { name, description, tags, quizzes } = data as CategoryWithQuizzes ?? { quizzes: [] };
     const totalQuestions =
         quizzes?.reduce((sum, quiz) => sum + (quiz.questionCount ?? quiz.stats?.questionCount ?? 0), 0) ?? 0;
-    const averageTimeLimit = quizzes.length
+    const averageTimeLimit = quizzes?.length
         ? Math.round(
-              quizzes.reduce(
+              quizzes?.reduce(
                   (sum, quiz) =>
-                      sum + (quiz.stats?.estimatedDurationMinutes ?? quiz.timeLimitPerQuestion ?? 0),
+                      sum + (quiz?.stats?.estimatedDurationMinutes ?? quiz?.timeLimitPerQuestion ?? 0),
                   0
-              ) / quizzes.length
+              ) / quizzes?.length
           )
         : 0;
 
@@ -85,7 +85,7 @@ export const QuizList = () => {
                                     </span>
                                 </div>
                                 <p className="mt-3 text-3xl font-bold text-primary tracking-[-0.05em] ">
-                                    {quizzes.length}
+                                    {quizzes?.length}
                                 </p>
                                 <p className="mt-1 text-sm text-secondary">
                                     Fresh challenges in this category
