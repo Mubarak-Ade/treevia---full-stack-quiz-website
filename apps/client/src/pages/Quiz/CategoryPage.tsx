@@ -21,19 +21,19 @@ export const CategoryPage = () => {
 
     return (
         <div className="w-full m-auto">
-            <section className="h-150 flex p-10 justify-between overflow-hidden">
+            <section className="min-h-150 flex lg:flex-row flex-col-reverse items-center p-10 justify-between overflow-hidden">
                 <Reveal className="relative z-10 p-6 mt-10 max-w-xl">
                    <p className="mb-8 inline-flex  items-center gap-2 rounded-full px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-brand bg-brand-subtle">
 						Cultivate Wisdom
 					</p>
-                    <h1 className="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter text-primary mb-4 neon-glow">
+                    <h1 className="font-headline text-4xl md:text-7xl font-extrabold tracking-tighter text-primary mb-4 neon-glow">
                         Explore the Grove
                     </h1>
-                    <p className="font-body text-lg text-secondary font-light tracking-wide ">
+                    <p className="font-body md:text-lg text-sm text-secondary font-light tracking-wide ">
                         Wander through our curated ecosystems of knowledge. Each grove represents a unique cluster of wisdom, meticulously organized to help you get lost in discovery and find precisely what you seek.
                     </p>
                 </Reveal>
-				<Reveal className="rounded-4xl mt-5 mr-10 rotate-15 size-110 overflow-hidden">
+				<Reveal className="rounded-4xl mt-5 mr-10 rotate-15 max-w-md aspect-square overflow-hidden">
                     <img
                         className="w-full h-full object-cover"
                         data-alt="ultra-wide cinematic shot of a deep mystical forest with bioluminescent plants glowing in vibrant neon green at night"
@@ -55,16 +55,16 @@ export const CategoryPage = () => {
                         />
                     </div>
                     <div className="flex flex-wrap justify-center gap-3">
-                        <Button className="px-6 py-2 bg-brand text-on-brand font-bold shadow-[0_0_15px_rgba(87,241,118,0.3)]">
+                        <Button className="md:px-6 py-2 px-2 md:text-base text-xs bg-brand text-on-brand font-bold shadow-[0_0_15px_rgba(87,241,118,0.3)]">
                             All Seeds
                         </Button>
-                        <Button variant="secondary" className="px-6 py-2 bg-brand-subtle text-on-brand hover:bg-surface-bright">
+                        <Button variant="secondary" className="md:px-6 md:py-2 px-2 py-1 md:text-base text-xs  bg-brand-subtle text-on-brand hover:bg-surface-bright">
                             Newest
                         </Button>
-                        <Button variant="secondary" className="px-6 py-2 bg-brand-subtle text-on-brand hover:bg-surface-bright">
+                        <Button variant="secondary" className="md:px-6 md:py-2 px-2 py-1 md:text-base text-xs bg-brand-subtle text-on-brand hover:bg-surface-bright">
                             Most Popular
                         </Button>
-                        <Button variant="secondary" className="px-6 py-2 bg-brand-subtle text-on-brand hover:bg-surface-bright">
+                        <Button variant="secondary" className="md:px-6 md:py-2 px-2 py-1 md:text-base text-xs bg-brand-subtle text-on-brand hover:bg-surface-bright">
                             Hardest
                         </Button>
                     </div>

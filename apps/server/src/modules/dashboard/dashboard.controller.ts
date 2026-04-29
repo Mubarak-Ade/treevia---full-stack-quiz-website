@@ -1,20 +1,14 @@
-import { RequestHandler } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import DashboardService from "./dashboard.service.js";
 import { AppError } from "../../utils/error-handler.js";
+import { successResponse } from "../../utils/response.js";
 
-export const getUserStats: RequestHandler = async (req, res, next): Promise<void> => {
-  try {
-    if (!req.user) {
-      throw new AppError(401, "Unauthorized");
-    }
-
-    const stats = await DashboardService.getUserStats(req.user);
-    res.json(stats);
-  } catch (error) {
-    next(error);
-  }
+export const getUserStats= async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const stats = await DashboardService.getUserStats(req.user as string);
+    successResponse(res, "Here are your stats", stats, 200)
 };
+
 
 export const getLeaderBoard: RequestHandler = async (req, res, next): Promise<void> => {
   try {

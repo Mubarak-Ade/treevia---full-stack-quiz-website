@@ -21,14 +21,14 @@ const Hero = () => {
 						Dive into an ethereal world of trivia where learning feels like a stroll through a digital grove. Test your skills and watch your intellectual sapling flourish.
 					</p>
 
-					<div className="flex flex-col md:flex-row justify-center lg:justify-normal mt-10 gap-4">
-						<Button asChild className="bg-brand text-on-brand shadow-[0_0_10px] px-7 py-4">
+					<div className="flex flex-col w-full md:flex-row justify-center lg:justify-normal mt-10 gap-4">
+						<Button asChild className="bg-brand text-on-brand shadow-[0_0_10px] px-8 py-4">
 							<Link to="/login">
 								Start Quiz Now
 								<ArrowRight size={18} />
 							</Link>
 						</Button>
-						<Button asChild variant="outline" className="border-primary font-bold px-7 bg-brand-subtle text-brand py-4 rounded-full">
+						<Button asChild variant="outline" className="border-primary  font-bold px-7 bg-brand-subtle text-brand py-4 rounded-full">
 							<Link to="/quizzes">
 								Explore Categories
 							</Link>

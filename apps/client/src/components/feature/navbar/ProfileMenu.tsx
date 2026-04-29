@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from 'motion/react';
 import { Dispatch, memo, SetStateAction } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ProgressBar } from '../quiztaking/ProgressBar';
+import { useFetchUserStats } from '@/modules/result/controllers/result.controller';
+import { QuizLoader } from '../QuizLoader';
 
 interface MenuProps {
     display: boolean;
@@ -18,8 +20,16 @@ export const ProfileMenu = memo(({ display, user, logout, setDisplay }: MenuProp
     const logoutMutation = useLogout();
 
     const navigate = useNavigate();
-
     const { showNotification } = useNotification();
+    const {data, isLoading} = useFetchUserStats()
+
+    if (isLoading) {
+        return <QuizLoader loading />
+    }
+
+    const {level, xp} = data?.data ?? {}
+
+
 
     const handleLogout = () => {
         logoutMutation.mutate(undefined, {
@@ -46,23 +56,23 @@ export const ProfileMenu = memo(({ display, user, logout, setDisplay }: MenuProp
                     <div className="flex items-center flex-col gap-1">
                         <div className="size-15 relative rounded-full border-2 border-white bg-brand-subtle ring-2 ring-brand">
                             <span className="absolute bg-brand size-8 border-2 font-bold  p-2 text-sm text-on-brand rounded-full flex items-center justify-center -bottom-2 right-0">
-                                42
+                                {level}
                             </span>
                         </div>
                         <h4 className="capitalize font-display text-2xl font-bold text-primary">
                             {user?.username ?? 'John Doe'}
                         </h4>
-                        <h6 className="text-lg font-extralight text-secondary">Level 42</h6>
+                        <h6 className="text-lg font-extralight text-secondary">Level {level}</h6>
                     </div>
                     <div className="mt-5 bg-surface-alt p-6 rounded-xl">
                         <div className="flex items-center mb-2 justify-between">
                             <h6 className="text-secondary font-semibold">XP Progress</h6>
-                            <span className="text-primary text-xs font-bold">45</span>
+                            <span className="text-brand text-xs font-bold">{xp?.levelStartXp} / {xp?.levelEndXp}</span>
                         </div>
-                        <ProgressBar progress={50} />
-                        {/* <p className="text-secondary/60 font-semibold text-sm mt-4">
-                                {extraInfo}
-                                </p> */}
+                        <ProgressBar progress={xp?.progress as number} />
+                        <p className="text-secondary italic text-sm mt-2">
+                        {xp?.total}xp remaining until level {(xp?.currentLevel ?? 0) + 1}
+                        </p>
                     </div>
                     <ul className="mt-4 space-y-1">
                         <motion.li

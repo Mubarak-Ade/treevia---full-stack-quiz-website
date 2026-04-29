@@ -99,10 +99,10 @@ export const Chart = ({
 						</span>
 					</div>
 					<div className="flex font-abeezee flex-col text-center mt-2">
-						<h4 className="text-xs font-bold text-white">
+						<h4 className="text-xs font-bold text-primary">
 							{username}
 						</h4>
-						<p className="text-sm text-custom font-bold">
+						<p className="text-sm text-secondary font-bold">
 							{totalXp}
 						</p>
 					</div>

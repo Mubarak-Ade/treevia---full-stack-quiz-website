@@ -15,7 +15,7 @@ export const QuizList = () => {
         return <QuizLoader loading />;
     }
 
-    const { name, description, tags, quizzes } = data as CategoryWithQuizzes;
+    const { name, description, tags, quizzes } = data as CategoryWithQuizzes ?? { quizzes: [] };
     const totalQuestions =
         quizzes?.reduce((sum, quiz) => sum + (quiz.questionCount ?? quiz.stats?.questionCount ?? 0), 0) ?? 0;
     const averageTimeLimit = quizzes.length
@@ -59,7 +59,7 @@ export const QuizList = () => {
                                 <h1 className="text-4xl font-bold tracking-[-0.06em] text-brand md:text-6xl">
                                     {name} Quizzes
                                 </h1>
-                                <p className="max-w-2xl text-base leading-8 text-secondary/80 md:text-lg">
+                                <p className="max-w-2xl text-base leading-8 text-secondary md:text-lg">
                                     {description}
                                 </p>
                             </div>
@@ -125,7 +125,7 @@ export const QuizList = () => {
                     </div>
                 </Reveal>
 
-                <Stagger className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 p-20">
+                <Stagger className="grid grid-cols-1 place-items-center gap-10 md:grid-cols-2 lg:grid-cols-3 md:p-20">
                     {quizzes?.map((q: Quiz) => (
                         <QuizCard
                             updatedAt={q.updatedAt}

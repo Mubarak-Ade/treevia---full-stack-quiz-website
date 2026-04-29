@@ -20,6 +20,7 @@ const PublicRoutes = (): JSX.Element[] => [
 		element={
             <PageTransition>
                 <QuizTaking />
+				
             </PageTransition>
         }
 	/>,

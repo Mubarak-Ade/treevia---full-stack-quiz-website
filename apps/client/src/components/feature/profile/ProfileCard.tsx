@@ -3,7 +3,7 @@ import React from "react";
 interface Props {
 	icon: React.ReactNode;
 	title: string;
-	value: number;
+	value: number | string;
 }
 
 export const ProfileCard = ({ icon, title, value }: Props) => {

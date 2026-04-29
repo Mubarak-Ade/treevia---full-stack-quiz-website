@@ -1,7 +1,8 @@
 import { Quiz } from "@/modules/quiz/types/quiz.types";
+import { useStartQuiz } from "@/modules/quiz/controllers/quiz-api.controller";
 import { getColorFromString } from "@/utils/colorFormat";
 import { Clock, ListOrdered, Play } from "lucide-react";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { MotionWrap, Reveal, hoverLift, tapPress } from "../Motion";
 // import { Quiz } from "@/types";
 
@@ -15,12 +16,24 @@ export const QuizCard = ({
 	_id,
 	questionCount,
 }: QuizCardProps) => {
+	const navigate = useNavigate()
 	const color = getColorFromString(title);
 	const displayDifficulty = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
 	const displayTime = timeLimitPerQuestion ?? timeLimit ?? 60;
+	const startQuiz = useStartQuiz(_id)
+
+	const handleStartButton = () => {
+		navigate(`/quizzes/${_id}/questions`, {
+			state: {
+				timeLimit: displayTime,
+				quizTitle: title,
+			},
+		})
+		startQuiz.mutate()
+	}
 
 	return (
-		<Link to={`/quizzes/${_id}/questions`} state={displayTime}>
+		<div className="w-full max-w-xs">
 			<Reveal
 				whileHover={hoverLift}
 				className=" border-default border w-full cursor-pointer shadow-[0_-10px_-25px] p-5 shadow-light-surface dark:shadow-secondary rounded-4xl overflow-hidden bg-surface-alt"
@@ -54,6 +67,7 @@ export const QuizCard = ({
 					<MotionWrap
 						whileHover={hoverLift}
 						whileTap={tapPress}
+						onClick={handleStartButton}
 						className={`flex items-center w-full hover:text-white px-4 cursor-pointer py-2 ${color.bg} rounded-full mt-5 text-sm text-center text-white justify-center gap-2`}
 					>
 						Start Quiz <Play size={15} />
@@ -70,6 +84,6 @@ export const QuizCard = ({
 				</ul>
 			</div> */}
 			</Reveal>
-		</Link>
+		</div>
 	);
 };

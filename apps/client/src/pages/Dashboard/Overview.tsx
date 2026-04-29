@@ -45,11 +45,11 @@ const columns: ColumnDef<GetResult>[] = [
 		header: "Score",
 		cell: ( { row } ) =>
 		{
-			const color = getScoreColor( row.original.score, row.original.correctAnswers.length );
+			const color = getScoreColor( row.original.score, row.original.answers.length );
 			// log
 			return (
 				<span className={ `${ color } px-2 py-1 text-xs rounded-full` }>
-					{ row.original.score } / { row.original.correctAnswers.length }
+					{ row.original.score } / { row.original.answers.length }
 				</span>
 			);
 		},
@@ -83,21 +83,18 @@ const columns: ColumnDef<GetResult>[] = [
 export const Overview = () =>
 {
 	const user = useAuthStore( ( s ) => s.user );
-	const userStats = useFetchUserStats();
+	const {data: userStats, isLoading: statIsLoading} = useFetchUserStats();
 	const randomQuiz = useFetchRandomQuiz();
 	const quiz = useFetchResult()
 
-	if ( userStats.isLoading || randomQuiz.isLoading || quiz.isLoading )
+	if ( statIsLoading || randomQuiz.isLoading || quiz.isLoading )
 	{
 		return <QuizLoader loading />;
 	}
 
-	const stats = userStats.data as Stats;
+	const stats = userStats?.data as Stats;
 
-	( stats );
-
-
-	const progressBar = ( stats?.totalXp / stats?.xpForNextLevel ) * 100;
+	const attempts = quiz.data?.data
 
 	return (
 		<div className="py-5 px-10">
@@ -117,10 +114,10 @@ export const Overview = () =>
 			</div>
 			<div className="mt-5 p-5 flex gap-5">
 				<DashboardProfileCard
-					progress={ progressBar }
+					progress={ stats.xp.progress }
 					tag={ `Lvl ${ stats?.level }` }
-					progressInfo={ `${ stats?.totalXp } / ${ stats.xpForNextLevel } XP` }
-					extraInfo={ `${ stats.xpIntoLevel } XP to next level` }
+					progressInfo={ `${ stats?.xp.levelStartXp } / ${ stats.xp.levelEndXp } XP` }
+					extraInfo={ `${ stats.xp.total } XP to next level` }
 					name={ user?.username }
 					profile={ user?.profile }
 					subtitle={ user?.email }
@@ -134,13 +131,13 @@ export const Overview = () =>
 				<DashboardCard
 					icon={ <Droplet /> }
 					title="Accuracy"
-					value={ Math.round(stats.accuracy) }
+					value={ `${Math.round(stats.accuracy)}%` }
 					id="accuracy"
 				/>
 				<DashboardCard
 					icon={ <Droplet /> }
 					title="Global Rank"
-					value={ `#${Math.round(stats.accuracy)}` }
+					value={ `#${Math.round(stats.rank)}` }
 					id="accuracy"
 				/>
 			</div>
@@ -165,7 +162,7 @@ export const Overview = () =>
 				<h1 className="text-xl mb-4 text-primary font-bold flex items-center gap-2">
 					<History color="var(--color-brand)" /> Recent Harvest
 				</h1>
-				<OverviewTable columns={ columns } data={ quiz.data } />
+				<OverviewTable columns={ columns } data={ attempts ?? [] } />
 			</div>
 		</div>
 	);

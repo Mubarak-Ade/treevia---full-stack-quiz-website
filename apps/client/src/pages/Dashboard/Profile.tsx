@@ -21,17 +21,19 @@ export const Profile = () => {
 		<QuizLoader loading={isLoading} />
 	}
 
-	const stats = userStats?.data as Stats
+	const stats = userStats?.data?.data as Stats
 	const { username, profile: profilePic } = userData?.data as User ?? {}
 
-	const { totalXp, quizzesTaken, totalCorrect, totalFailed, level, xpForNextLevel } = stats ?? {}
+	const { totalXp, quizzesTaken, totalCorrect, totalFailed, level, xp } = stats ?? {}
+
+	const attempts = result.data?.data
 
 	console.log(userData);
 
 
 	return (
 		<div className="max-w-4xl w-full m-auto p-6">
-			<ProfileHeader username={username} profile={profilePic} level={level} nextXp={xpForNextLevel} totalXp={totalXp} />
+			<ProfileHeader username={username} profile={profilePic} level={level} nextXp={xp.total} totalXp={totalXp} />
 			<div className="mt-5 grid grid-cols-4 gap-4 justify-between">
 				<ProfileCard
 					icon={
@@ -71,7 +73,7 @@ export const Profile = () => {
 						/>
 					}
 					title="Accuracy"
-					value={Math.round(stats.accuracy)}
+					value={`${Math.round(stats.accuracy)}%`}
 				/>
 			</div>
 			<div className="mt-2 p-2">
@@ -87,18 +89,18 @@ export const Profile = () => {
 					</Link>
 				</div>
 				<ul className="space-y-4 py-2">
-					{result?.data?.slice(0, 5)?.map((result) => (
-						<li key={result._id} className="flex gap-4 bg-card p-4 rounded-xl items-center">
-							<span className="bg-background text-primary rounded-xl border p-2">
+					{attempts?.slice(0, 5)?.map((result) => (
+						<li key={result._id} className="flex gap-4 bg-surface-alt p-4 rounded-xl items-center">
+							<span className="bg-surface text-primary rounded-xl border p-2">
 								<Globe size={30} />
 							</span>
 							<div className="flex-1">
 								<h2 className="text-white text-xl font-bold">{result.quiz}</h2>
-								<h4 className="text-primary text-sm font-semibold">{result.category}</h4>
+								<h4 className="text-secondary text-sm font-semibold">{result.category}</h4>
 							</div>
 							<div className="">
-								<h4 className="text-xl font-bold text-white">{result.score * result.xpEarned}</h4>
-								<h6 className="text-custom font-bold">+{result.xpEarned}</h6>
+								<h4 className="text-xl font-bold text-white">{result.xpEarned}</h4>
+								<h6 className="text-brand font-bold">+{result.xpEarned}</h6>
 							</div>
 						</li>
 					))}

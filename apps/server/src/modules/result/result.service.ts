@@ -1,8 +1,9 @@
-import Result from '../../models/QuizResult.js';
+import Attempt from '../../models/Attempts.js';
+import Result from '../../models/Attempts.js';
 import { AppError } from '../../utils/error-handler.js';
 
 const getResult = async (userId: string) => {
-    const results = await Result.find({ user: userId })
+    const results = await Attempt.find({ user: userId })
         .sort({ createdAt: -1 })
         .populate('quiz', 'title category')
         .populate({
@@ -14,15 +15,15 @@ const getResult = async (userId: string) => {
         })
         .lean();
 
-    return results.map((result:any) => ({
+    return results.map((result: any) => ({
         ...result,
-        quiz: result.quiz.title ,
+        quiz: result.quiz.title,
         category: result.quiz.category.name,
     }));
 };
 
 const getSingleResult = async (userId: string, quizId: string) => {
-    const result = await Result.findOne({ user: userId, quiz: quizId }).populate(
+    const result = await Attempt.findOne({ user: userId, quiz: quizId }).populate(
         'user',
         'username'
     );

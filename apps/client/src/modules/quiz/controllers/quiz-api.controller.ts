@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchCategories, fetchQuizByCategories, fetchQuizQuestion, fetchRandomQuiz, submitQuizAnswers } from "../services/quiz-api.service";
-import { Category, PublicQuestion, Quiz } from "@/modules/quiz/types/quiz.types";
+import { fetchCategories, fetchQuizByCategories, fetchQuizQuestion, fetchRandomQuiz, startQuiz, submitQuizAnswers } from "../services/quiz-api.service";
+import { Category, Quiz, SelectedAnswer } from "@/modules/quiz/types/quiz.types";
 
 export const useFetchQuizzesByCategory = (slug: string) => {
     // const category = useQuizStore(s => s.category)
@@ -13,7 +13,7 @@ export const useFetchQuizzesByCategory = (slug: string) => {
 }
 
 export const useFetchQuestion = (id: string) => {
-    return useQuery<PublicQuestion[]>({
+    return useQuery({
         queryKey: ["quizzes", "question", id],
         queryFn: () => fetchQuizQuestion(id),
         enabled: !!id,
@@ -25,9 +25,15 @@ export const useFetchCategories = () => useQuery<Category[]>({
     queryFn: fetchCategories
 })
 
-export const useSubmitAnswers = () => {
+export const useSubmitAnswers = (quizId: string) => {
     return useMutation({
-        mutationFn: submitQuizAnswers,
+        mutationFn: (data:  SelectedAnswer[]) => submitQuizAnswers(quizId, data),
+    })
+}
+
+export const useStartQuiz = (quizId: string) => {
+    return useMutation({
+        mutationFn: () => startQuiz(quizId),
     })
 }
 

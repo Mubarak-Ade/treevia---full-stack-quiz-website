@@ -1,17 +1,16 @@
 import { GetResult, Leaderboard, Stats } from "@/modules/quiz/types/quiz.types";
 import { useQuery } from "@tanstack/react-query";
 import { getLeaderboard, getResult, getUserStats } from "../services/result.service";
+import { Response } from "@/modules/auth/types/auth.types";
 
-export const useFetchResult = () => useQuery<GetResult[]>({
+export const useFetchResult = () => useQuery({
     queryKey: ['result'],
     queryFn: getResult,
-    initialData: [],
 })
 
-export const useFetchUserStats = () => useQuery<Stats>({
+export const useFetchUserStats = () => useQuery<Response<Stats>>({
     queryKey: ['stat'],
     queryFn: getUserStats,
-    initialData: {} as Stats
 })
 
 export const useFetchLeaderboard = () => useQuery<Leaderboard>({

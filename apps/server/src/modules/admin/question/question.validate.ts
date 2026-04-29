@@ -19,7 +19,7 @@ export const QuestionSchema = {
 
 export const UpdateQuestionSchema = {
     params: z.object({
-        id: z.string()
+        id: z.string(),
     }),
     body: z.object({
         prompt: z.string().optional(),
@@ -35,5 +35,11 @@ export const AddQuestionParamSchema = {
     }),
 };
 
-export type UpdateQuestionDTO = z.infer<typeof UpdateQuestionSchema.body>
+export const QuestionParamSchema = {
+    params: z.object({
+        id: z.string(),
+    }),
+};
+
+export type UpdateQuestionDTO = z.infer<typeof UpdateQuestionSchema.body>;
 export type AddQuestionDTO = z.infer<typeof QuestionSchema.body>;

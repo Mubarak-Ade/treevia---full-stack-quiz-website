@@ -7,6 +7,11 @@ export const getQuestions = async (req: Request, res: Response): Promise<void> =
     successResponse(res, 'Fetched Question Sucessfully', question);
 };
 
+export const getQuestion = async (req: Request, res: Response): Promise<void> => {
+    const question = await AdminQuestionService.getQuestion(req.params.id);
+    successResponse(res, 'Fetched Question Sucessfully', question);
+};
+
 export const createQuestion = async (req: Request, res: Response): Promise<void> => {
     const userId = req.user as string;
     const quiz = await AdminQuestionService.createQuestion(req.body);

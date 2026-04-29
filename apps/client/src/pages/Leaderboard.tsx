@@ -23,12 +23,12 @@ export const Leaderboard = () =>
 	if ( !data || data.leaderboard.length === 0 ) return <Navigate to="/empty/board" replace />
 
 	return (
-		<div className="max-w-4xl m-auto p-5">
+		<div className="max-w-4xl relative min-h-screen m-auto p-5">
 			<Reveal className="">
-				<h1 className="text-5xl text-white font-ubuntu">
+				<h1 className="text-5xl text-primary font-ubuntu">
 					Global Leaderboard
 				</h1>
-				<h6 className="text-custom font-poppins m-1">
+				<h6 className="text-secondary font-poppins m-1">
 					Compete with the top minds in treevia
 				</h6>
 			</Reveal>
@@ -61,20 +61,20 @@ export const Leaderboard = () =>
 					{
 
 						return (
-							<li key={ index } className="flex rounded-xl text-white font-bold items-center gap-10 px-5 py-5 bg-card">
+							<li key={ index } className="flex rounded-xl text-primary font-bold items-center gap-10 px-5 py-5 bg-card">
 								<span className="">{ index + 1 }</span>
 								<div className="flex-1 flex items-center gap-4">
 									<ProfileAvatar username={ rank.user } profile={ rank.profile } className="size-10" />
 									<p className="capitalize">{ rank.user }</p>
 								</div>
-								<p className="text-custom">{ rank.totalXp }</p>
+								<p className="text-brand">{ rank.totalXp }</p>
 							</li>
 						);
 					} ) }
 				</ul>
 			</Reveal>
 			{ data.userRank.name && (
-				<Reveal className="bg-background border-t z-20 flex items-center justify-center border-muted fixed bottom-0 w-full left-0 px-4 py-5">
+				<Reveal className="bg-surface border-t z-20 flex items-center justify-center border-default sticky top-0 w-full left-0 px-4 py-5">
 					<div className="max-w-4xl w-full flex items-center gap-10 justify-between">
 						<span className="font-ubuntu text-white text-xl">
 							#{ data.userRank.rank }
@@ -84,7 +84,7 @@ export const Leaderboard = () =>
 							<p className="capitalize text-secondary font-bold">{ data.userRank.name }</p>
 						</div>
 
-						<p className="text-custom text-sm">
+						<p className="text-brand text-sm">
 							Total XP: { data.userRank.totalXp }
 						</p>
 					</div>

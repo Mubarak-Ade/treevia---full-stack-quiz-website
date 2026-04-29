@@ -10,6 +10,14 @@ export const AdminQuestionService = {
         return question;
     },
 
+    async getQuestion(questionId: string) {
+        const question = await Question.findById(questionId)
+        if(!question) {
+            throw new AppError(404, "Question Not Found")
+        }
+        return question
+    },
+
     async createQuestion(dto: AddQuestionDTO) {
         const correctCount = dto.options.filter(q => q.isCorrect).length;
         if (dto.options.length < 2 || dto.options.length > 4) {

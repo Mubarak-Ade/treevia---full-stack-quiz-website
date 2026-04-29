@@ -7,6 +7,7 @@ import { ZodError } from 'zod';
 export const errorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
     if (err instanceof AppError) {
         res.status(err.statusCode).json({
+            type: "General Error",
             success: false,
             message: err.message,
             details: err.details,
@@ -14,6 +15,7 @@ export const errorHandler = (err: Error, _req: Request, res: Response, _next: Ne
     }
     if (err instanceof mongoose.Error.ValidationError) {
         res.status(400).json({
+            type: "Mongoose Validation Error",
             success: false,
             message: err.message,
             details: err.errors,
@@ -21,6 +23,7 @@ export const errorHandler = (err: Error, _req: Request, res: Response, _next: Ne
     }
     if (err instanceof mongoose.Error.CastError) {
         res.status(400).json({
+            type: "Mongoose Cast Error",
             success: false,
             message: err.message,
             details: err.path,

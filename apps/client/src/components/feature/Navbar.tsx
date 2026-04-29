@@ -35,7 +35,7 @@ const links = [
 		name: "Leaderboard",
 	},
 	{
-		link: "/result",
+		link: "*",
 		icon: <Info />,
 		name: "About",
 	},
@@ -77,7 +77,7 @@ const Navbar = () => {
 		>
 			<button
 				onClick={() => setShowNav(!showNav)}
-				className="leaf-card-strong cursor-pointer block md:hidden p-3 text-foreground"
+				className=" cursor-pointer block md:hidden p-3 text-primary"
 			>
 				{showNav ? <X /> : <Menu />}
 			</button>

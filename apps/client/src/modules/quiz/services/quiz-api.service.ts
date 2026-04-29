@@ -1,4 +1,5 @@
-import { Category, CategoryWithQuizzes, PublicQuestion, Quiz } from "@/modules/quiz/types/quiz.types"
+import { Response } from "@/modules/auth/types/auth.types"
+import { Category, CategoryWithQuizzes, PublicQuestion, Quiz, Result, SelectedAnswer } from "@/modules/quiz/types/quiz.types"
 import api from "@/utils/axios"
 
 export const fetchQuizzes  = async (params: string) => {
@@ -17,12 +18,17 @@ export const fetchQuizByCategories = async (slug: string) : Promise<CategoryWith
 }
 
 export const fetchQuizQuestion = async (id: string): Promise<PublicQuestion[]> =>  {
-    const res = await api.get<PublicQuestion[]>(`/quizzes/${id}/questions`)
+    const res = await api.get<Response<PublicQuestion[]>>(`/quizzes/${id}/questions`)
+    return res.data.data
+}
+
+export const startQuiz = async (quizId: string): Promise<void> => {
+    const res = await api.post(`/attempts/${quizId}/start`)
     return res.data
 }
 
-export const submitQuizAnswers = async (data: {quizId: string, selectedOptions: number[]}) => {
-    const res = await api.post("/quizzes/submit", data)
+export const submitQuizAnswers = async (quizId: string, data: SelectedAnswer[]): Promise<Result> => {
+    const res = await api.post<Result>(`/attempts/${quizId}/submit`, data)
     return res.data
 }
 

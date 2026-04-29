@@ -1,5 +1,4 @@
-import { Document, InferSchemaType, model, Schema } from 'mongoose';
-import { maxLength } from 'zod';
+import { Document, model, Schema } from 'mongoose';
 
 interface IAnswer {
     label: 'A' | 'B' | 'C' | 'D';

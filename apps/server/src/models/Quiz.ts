@@ -62,9 +62,9 @@ const QuizSchema = new Schema<IQuiz>(
         },
         xpReward: {
             type: Number,
-            default: 500,
+            default: 50,
             min: 0,
-            max: 10000,
+            max: 1000,
         },
         shuffleQuestions: {
             type: Boolean,

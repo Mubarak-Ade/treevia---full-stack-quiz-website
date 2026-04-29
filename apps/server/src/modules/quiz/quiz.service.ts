@@ -1,8 +1,16 @@
 import Quiz from '../../models/Quiz.js';
-import Result from '../../models/QuizResult.js';
+import Result from '../../models/Attempts.js';
 import UserStats from '../../models/UserStats.js';
 import { AppError } from '../../utils/error-handler.js';
 import { QuizRepository } from '../admin/quiz/quiz.repository.js';
+import Question from '../../models/Question.js';
+import { SelectedOption } from '../attempt/attempt.validate.js';
+
+type QuizOption = {
+    label: string;
+    text: string;
+    isCorrect: boolean;
+};
 
 const getQuizzes = async (category?: string | string[]) => {
     const filter = category ? { category, status: 'published' } : { status: 'published' };
@@ -30,42 +38,16 @@ const getQuestions = async (quizId: string, userId?: string) => {
     if (!quiz) {
         throw new AppError(404, 'Quiz not found');
     }
-
-    const questions = [...quiz.questions]
+    const questionIds = quiz.questions
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-        .map(item => {
-            const question = item.questionId as any;
-            return {
-                _id: String(question._id),
-                prompt: question.prompt,
-                options: question.options.map((option: any) => option.text),
-                correctAnswer: question.options.findIndex((option: any) => option.isCorrect),
-            };
-        });
+        .map(q => q.questionId);
+    const questions = await Question.find({ _id: { $in: questionIds } }).lean();
+    // const questionMap = new Map(questions.map(question => [question._id.toString(), question]));
 
-    if (userId) {
-        const activeAttempt = await Result.findOne({
-            user: userId,
-            quiz: quizId,
-            submittedAt: null,
-        });
-
-        if (!activeAttempt) {
-            await Result.create({
-                user: userId,
-                quiz: quizId,
-                score: 0,
-                xpEarned: 0,
-                correctAnswers: [],
-                startedAt: new Date(),
-            });
-        }
-    }
-
-    return questions;
+    return questions
 };
 
-const submitQuiz = async (quizId: string, selectedOptions: number[], userId?: string) => {
+const submitQuiz = async (quizId: string, selectedOptions: SelectedOption, userId?: string) => {
     if (!quizId || !Array.isArray(selectedOptions)) {
         throw new AppError(400, 'invalid submission data');
     }
@@ -80,17 +62,33 @@ const submitQuiz = async (quizId: string, selectedOptions: number[], userId?: st
         .map(item => {
             const question = item.questionId as any;
             return {
+                id: question._id.toString(),
                 prompt: question.prompt,
-                options: question.options.map((option: any) => option.text),
-                correctAnswer: question.options.findIndex((option: any) => option.isCorrect),
+                options: question.options.map((option: any): QuizOption => ({
+                    label: option.label,
+                    text: option.text,
+                    isCorrect: option.isCorrect,
+                })),
             };
         });
 
+    const validQuestionIds = new Set(questions.map(question => question.id));
+    for (const selectedOption of selectedOptions) {
+        if (!validQuestionIds.has(selectedOption.questionId)) {
+            throw new AppError(400, `Question ${selectedOption.questionId} does not belong to this quiz`);
+        }
+    }
+
+    const selectedByQuestionId = new Map(
+        selectedOptions.map(selectedOption => [selectedOption.questionId, selectedOption.label])
+    );
+
     let correctCount = 0;
-    const attempts = questions.map((question, index) => {
-        const selectedIndex = selectedOptions[index];
-        const isCorrect =
-            typeof selectedIndex === 'number' && selectedIndex === question.correctAnswer;
+    const attempts = questions.map((question) => {
+        const selectedLabel = selectedByQuestionId.get(question.id);
+        const selectedOption = question.options.find((option: QuizOption) => option.label === selectedLabel);
+        const correctOption = question.options.find((option: QuizOption) => option.isCorrect);
+        const isCorrect = !!selectedOption?.isCorrect;
 
         if (isCorrect) {
             correctCount++;
@@ -98,8 +96,8 @@ const submitQuiz = async (quizId: string, selectedOptions: number[], userId?: st
 
         return {
             question: question.prompt,
-            selected: question.options[selectedIndex] ?? null,
-            correct: question.options[question.correctAnswer],
+            selected: selectedOption?.text ?? null,
+            correct: correctOption?.text ?? '',
             isCorrect,
         };
     });
@@ -107,12 +105,9 @@ const submitQuiz = async (quizId: string, selectedOptions: number[], userId?: st
     const totalQuestions = questions.length;
     const score = correctCount;
     const xpEarned = correctCount * 10;
-    const correctAnswers = questions.map(q => q.correctAnswer);
 
     let saved = false;
     let elapsedSeconds = 0;
-
-    userId;
 
     if (userId) {
         let attempt = await Result.findOne({
@@ -127,7 +122,8 @@ const submitQuiz = async (quizId: string, selectedOptions: number[], userId?: st
                 quiz: quizId,
                 score: 0,
                 xpEarned: 0,
-                correctAnswers: [],
+                answers: [],
+                status: 'in-progress',
                 startedAt: new Date(),
             });
         }
@@ -143,7 +139,17 @@ const submitQuiz = async (quizId: string, selectedOptions: number[], userId?: st
         attempt.timeTaken = Math.floor(elapsedSeconds);
         attempt.score = score;
         attempt.xpEarned = xpEarned;
-        attempt.correctAnswers = correctAnswers;
+        attempt.answers = questions.map((question) => {
+            const selectedLabel = selectedByQuestionId.get(question.id) ?? '';
+            const selectedOption = question.options.find((option: QuizOption) => option.label === selectedLabel);
+
+            return {
+                questionId: question.id,
+                selectedOptionLabel: selectedLabel,
+                isCorrect: !!selectedOption?.isCorrect,
+            };
+        });
+        attempt.status = 'completed';
         await attempt.save();
 
         await UserStats.findOneAndUpdate(

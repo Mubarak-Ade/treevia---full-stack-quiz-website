@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import QuizService from './quiz.service.js';
 import { AppError } from '../../utils/error-handler.js';
+import { successResponse } from '../../utils/response.js';
 
 interface AuthRequest extends Request {
     user?: any;
@@ -48,17 +49,9 @@ export const getQuestions = async (
     res: Response,
     next: NextFunction
 ): Promise<void> => {
-    try {
-        const quizId = req.params.quizId;
-        if (!quizId) {
-            throw new AppError(400, 'quizId is required');
-        }
-
+        const quizId = req.params.quizId as string
         const questions = await QuizService.getQuestions(quizId, req.user);
-        res.json(questions);
-    } catch (error) {
-        next(error);
-    }
+        successResponse(res, "", questions);
 };
 
 export const getRandomQuiz = async (
