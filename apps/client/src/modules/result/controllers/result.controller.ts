@@ -1,7 +1,7 @@
-import { GetResult, Leaderboard, Stats } from "@/modules/quiz/types/quiz.types";
+import { Response } from "@/modules/auth/types/auth.types";
+import { Leaderboard, Stats } from "@/modules/quiz/types/quiz.types";
 import { useQuery } from "@tanstack/react-query";
 import { getLeaderboard, getResult, getUserStats } from "../services/result.service";
-import { Response } from "@/modules/auth/types/auth.types";
 
 export const useFetchResult = () => useQuery({
     queryKey: ['result'],
