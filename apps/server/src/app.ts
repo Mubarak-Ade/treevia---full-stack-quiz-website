@@ -32,13 +32,6 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/api', allRoutes)
-app.use('/api/admin', requireAuth, authorizeRoles, AdminRoutes);
-
-
-app.use(notFound)
-app.use(errorHandler);
-
 app.get('/', (_req, res) => {
     res.status(200).json({
         message: 'Welcome to the Treevia Quiz API',
@@ -52,5 +45,12 @@ app.get('/health', (_req, res) => {
         timestamp: Date.now(),
     });
 });
+
+app.use('/api', allRoutes)
+app.use('/api/admin', requireAuth, authorizeRoles, AdminRoutes);
+
+
+app.use(notFound)
+app.use(errorHandler);
 
 export default app;

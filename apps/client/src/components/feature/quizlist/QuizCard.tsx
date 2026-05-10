@@ -4,6 +4,7 @@ import { getColorFromString } from "@/utils/colorFormat";
 import { Clock, ListOrdered, Play } from "lucide-react";
 import { useNavigate } from "react-router";
 import { MotionWrap, Reveal, hoverLift, tapPress } from "../Motion";
+import { useNotification } from "@/context/NotificationProvider";
 // import { Quiz } from "@/types";
 
 interface QuizCardProps extends Quiz { }
@@ -17,19 +18,28 @@ export const QuizCard = ({
 	questionCount,
 }: QuizCardProps) => {
 	const navigate = useNavigate()
+	const { showNotification } = useNotification();
 	const color = getColorFromString(title);
 	const displayDifficulty = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
 	const displayTime = timeLimitPerQuestion ?? timeLimit ?? 60;
 	const startQuiz = useStartQuiz(_id)
 
 	const handleStartButton = () => {
-		navigate(`/quizzes/${_id}/questions`, {
-			state: {
-				timeLimit: displayTime,
-				quizTitle: title,
+		if (startQuiz.isPending) return;
+
+		startQuiz.mutate(undefined, {
+			onSuccess: () => {
+				navigate(`/quizzes/${_id}/questions`, {
+					state: {
+						timeLimit: displayTime,
+						quizTitle: title,
+					},
+				})
+			},
+			onError: () => {
+				showNotification("error", "Unable to start this quiz. Please try again.");
 			},
 		})
-		startQuiz.mutate()
 	}
 
 	return (
@@ -68,9 +78,12 @@ export const QuizCard = ({
 						whileHover={hoverLift}
 						whileTap={tapPress}
 						onClick={handleStartButton}
-						className={`flex items-center w-full hover:text-white px-4 cursor-pointer py-2 ${color.bg} rounded-full mt-5 text-sm text-center text-white justify-center gap-2`}
+						aria-disabled={startQuiz.isPending}
+						className={`flex items-center w-full hover:text-white px-4 py-2 ${color.bg} rounded-full mt-5 text-sm text-center text-white justify-center gap-2 ${
+							startQuiz.isPending ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+						}`}
 					>
-						Start Quiz <Play size={15} />
+						{startQuiz.isPending ? "Starting..." : "Start Quiz"} <Play size={15} />
 					</MotionWrap>
 				</div>
 				{/* <div className="p-4 border-t flex items-center gap-2 text-secondary/50 border-muted">

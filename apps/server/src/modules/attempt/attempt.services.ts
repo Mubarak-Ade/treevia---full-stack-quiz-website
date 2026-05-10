@@ -3,7 +3,6 @@ import Question from '../../models/Question.js';
 import UserStats from '../../models/UserStats.js';
 import { AppError } from '../../utils/error-handler.js';
 import { QuizRepository } from '../admin/quiz/quiz.repository.js';
-import { AttemptRepository } from './attempt.repository.js';
 import { SelectedOption } from './attempt.validate.js';
 
 const AttemptService = {
@@ -40,17 +39,43 @@ const AttemptService = {
         return result;
     },
 
-    async startQuiz(quizId: string, userId: string) {
-        const attempt = await Attempt.create({
-            quiz: quizId,
-            user: userId,
-            startedAt: new Date(),
-            status: 'in-progress',
-        });
+    async startQuiz(quizId: string, userId?: string) {
+        const quiz = await QuizRepository.findById(quizId).lean();
+        if (!quiz) {
+            throw new AppError(404, 'Quiz Not Found');
+        }
+
+        if (!userId) {
+            return {
+                quiz: quizId,
+                startedAt: new Date(),
+                status: 'guest',
+                saved: false,
+            };
+        }
+
+        const attempt = await Attempt.findOneAndUpdate(
+            {
+                quiz: quizId,
+                user: userId,
+                status: 'in-progress',
+                submittedAt: { $exists: false },
+            },
+            {
+                $setOnInsert: {
+                    quiz: quizId,
+                    user: userId,
+                    startedAt: new Date(),
+                    status: 'in-progress',
+                },
+            },
+            { new: true, upsert: true, runValidators: true }
+        );
+
         return attempt;
     },
 
-    async submitQuiz(quizId: string, selectedAnswers: SelectedOption, userId: string) {
+    async submitQuiz(quizId: string, selectedAnswers: SelectedOption, userId?: string) {
         // validate quiz data
 
         if (!quizId || !Array.isArray(selectedAnswers)) {
@@ -83,28 +108,59 @@ const AttemptService = {
             const selectedLabel = answerMap.get(question._id.toString()) ?? '';
 
             const matched = question.options.find(opt => opt.label === selectedLabel);
+            const correctOption = question.options.find(opt => opt.isCorrect);
             if (matched?.isCorrect) correctCount++;
 
             return {
                 questionId: question._id,
                 selectedOptionLabel: selectedLabel,
                 isCorrect: matched?.isCorrect ?? false,
+                correctOptionText: correctOption?.text ?? '',
             };
         });
+
+        const totalQuestion = quiz.questions.length ?? 0;
+
+        const accuracy = totalQuestion ? Math.round((correctCount / totalQuestion) * 100) : 0;
+
+        if (!userId) {
+            const now = new Date();
+
+            return {
+                attempt: {
+                    quiz: quizId,
+                    user: 'guest',
+                    score: correctCount,
+                    answers: attempts,
+                    xpEarned: 0,
+                    status: 'completed',
+                    startedAt: now,
+                    submittedAt: now,
+                    timeTaken: 0,
+                    createdAt: now,
+                    updatedAt: now,
+                },
+                accuracy,
+                stats: null,
+                saved: false,
+            };
+        }
 
         let elapsedSeconds = 0;
 
         // save quiz attempts
 
-        let attempt = await Attempt.findOne({ user: userId, quiz: quizId });
+        let attempt = await Attempt.findOne({
+            user: userId,
+            quiz: quizId,
+            status: 'in-progress',
+            submittedAt: { $exists: false },
+        }).sort({ startedAt: -1, createdAt: -1 });
 
         if (!attempt) {
-            throw new AppError(403, 'Please Start Quiz First');
+            throw new AppError(409, 'This quiz attempt is no longer active. Please restart the quiz.');
         }
 
-        if (attempt.status === 'completed') {
-            throw new AppError(403, 'Quiz Already Submitted');
-        }
 
         const attemptStartedAt = attempt.startedAt ?? attempt.createdAt ?? new Date();
         if (!attempt.startedAt) {
@@ -114,16 +170,12 @@ const AttemptService = {
         elapsedSeconds = (Date.now() - attemptStartedAt.getTime()) / 1000;
 
         attempt.score = correctCount;
-        attempt.answers = attempts;
+        attempt.answers = attempts.map(({ correctOptionText, ...answer }) => answer);
         attempt.xpEarned = quiz.xpReward;
         attempt.submittedAt = new Date();
         attempt.timeTaken = Math.floor(elapsedSeconds);
         attempt.status = 'completed';
         await attempt.save();
-
-        const totalQuestion = quiz.questions.length ?? 0;
-
-        const accuracy = Math.round((correctCount / totalQuestion) * 100);
 
         const BASE_XP = 10;
         const ACCURACY_BONUS = accuracy >= 80 ? 20 : 0;
@@ -143,6 +195,8 @@ const AttemptService = {
 
                 $set: {
                     lastQuizDate: attempt.createdAt,
+                },
+                $max: {
                     highestScore: correctCount,
                 },
             },

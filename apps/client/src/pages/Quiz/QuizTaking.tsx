@@ -12,14 +12,12 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 
 export const QuizTaking = () => {
     const { id } = useParams<{ id: string }>();
-    if (!id) {
-        return <p>No quiz id provided</p>;
-    }
+    const quizId = id ?? '';
     const navigate = useNavigate();
     const location = useLocation();
     const { showNotification } = useNotification();
-    const submit = useSubmitAnswers(id);
-    const { data, isLoading } = useFetchQuestion(id);
+    const submit = useSubmitAnswers(quizId);
+    const { data, isLoading } = useFetchQuestion(quizId);
     const quizState =
         typeof location.state === 'object' && location.state !== null ? location.state : null;
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,6 +34,7 @@ export const QuizTaking = () => {
     const quizTitle = typeof quizState?.quizTitle === 'string' ? quizState.quizTitle : '';
     const [timeLeft, setTimeLeft] = useState(initialTimeLimit);
     const [hasAutoSubmitted, setHasAutoSubmitted] = useState(false);
+    const [submissionError, setSubmissionError] = useState<string | null>(null);
     const questions = data ?? [];
     const hasQuestions = questions.length > 0;
     const currentQuestion = hasQuestions ? questions[currentIndex] : undefined;
@@ -61,8 +60,28 @@ export const QuizTaking = () => {
         }
     }, [currentIndex, hasQuestions, questions.length]);
 
-    const handleSendResults = useCallback(() => {
+    const getErrorMessage = (error: unknown) => {
+        if (
+            typeof error === 'object' &&
+            error !== null &&
+            'response' in error &&
+            typeof (error as { response?: { data?: { message?: unknown } } }).response?.data
+                ?.message === 'string'
+        ) {
+            return (error as { response: { data: { message: string } } }).response.data.message;
+        }
+
+        return error instanceof Error ? error.message : 'Unable to submit quiz.';
+    };
+
+    const handleSendResults = useCallback((isAutoSubmit = false) => {
         if (!hasQuestions || submit.isPending) return;
+        if (isAutoSubmit && hasAutoSubmitted) return;
+
+        if (isAutoSubmit) {
+            setHasAutoSubmitted(true);
+        }
+
         submit.mutate(
             questions
                 .map(question => question._id && selectedOptions[question._id])
@@ -78,17 +97,18 @@ export const QuizTaking = () => {
                     });
                 },
                 onError: error => {
-                    setHasAutoSubmitted(false);
-                    showNotification('error', error.message);
+                    const message = getErrorMessage(error);
+                    setSubmissionError(message);
+                    showNotification('error', message);
                 },
             }
         );
     }, [
-        id,
+        hasAutoSubmitted,
         hasQuestions,
+        initialTimeLimit,
         navigate,
-        options,
-        questionText,
+        quizTitle,
         selectedOptions,
         showNotification,
         submit,
@@ -98,8 +118,7 @@ export const QuizTaking = () => {
     useEffect(() => {
         if (!hasQuestions || submit.isPending || hasAutoSubmitted) return;
         if (timeLeft <= 0) {
-            setHasAutoSubmitted(true);
-            handleSendResults();
+            handleSendResults(true);
             return;
         }
 
@@ -152,6 +171,10 @@ export const QuizTaking = () => {
 
     const progress = hasQuestions ? ((currentIndex + 1) / questions.length) * 100 : 0;
 
+    if (!quizId) {
+        return <p>No quiz id provided</p>;
+    }
+
     if (isLoading || submit.isPending) {
         return <QuizLoader loading />;
     }
@@ -167,6 +190,24 @@ export const QuizTaking = () => {
                 >
                     Go Back
                 </button>
+            </div>
+        );
+    }
+
+    if (timeLeft <= 0 && submissionError) {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-center bg-base p-6 text-center text-primary">
+                <div className="max-w-md rounded-2xl border border-default bg-surface-alt p-6 shadow-xl">
+                    <p className="text-xl font-semibold">Time is up</p>
+                    <p className="mt-3 text-sm text-secondary">{submissionError}</p>
+                    <button
+                        type="button"
+                        onClick={() => navigate('/quizzes')}
+                        className="mt-5 rounded-full bg-brand px-5 py-3 font-semibold text-on-brand"
+                    >
+                        Back to quizzes
+                    </button>
+                </div>
             </div>
         );
     }

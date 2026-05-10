@@ -2,20 +2,59 @@ import BreadCrumbs from '@/components/feature/BreadCrumbs';
 import { Reveal, Stagger } from '@/components/feature/Motion';
 import { QuizCard } from '@/components/feature/quizlist/QuizCard';
 import { useFetchQuizzesByCategory } from '@/modules/quiz/controllers/quiz-api.controller';
-import { Leaf, Sparkles, TimerReset } from 'lucide-react';
+import { Leaf, Search, Sparkles, TimerReset } from 'lucide-react';
 import { useParams } from 'react-router';
 import { QuizLoader } from '@/components/feature/QuizLoader';
 import type { CategoryWithQuizzes, Category, Quiz } from '@/modules/quiz/types/quiz.types';
+import { useMemo, useState } from 'react';
+
+type DifficultyFilter = 'all' | 'easy' | 'medium' | 'hard';
+type QuizSort = 'newest' | 'title' | 'questions' | 'time';
 
 export const QuizList = () => {
     const { slug } = useParams();
     const { data, isLoading } = useFetchQuizzesByCategory(slug as string);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>('all');
+    const [sortBy, setSortBy] = useState<QuizSort>('newest');
+    const categoryData = data as CategoryWithQuizzes | undefined;
+    const quizzes = categoryData?.quizzes ?? [];
+
+    const filteredQuizzes = useMemo(() => {
+        const normalizedSearch = searchTerm.trim().toLowerCase();
+        const quizList = [...quizzes].filter(quiz => {
+            const matchesSearch =
+                !normalizedSearch ||
+                quiz.title.toLowerCase().includes(normalizedSearch) ||
+                quiz.category?.name?.toLowerCase().includes(normalizedSearch);
+            const matchesDifficulty =
+                difficultyFilter === 'all' ||
+                quiz.difficulty.toLowerCase() === difficultyFilter;
+
+            return matchesSearch && matchesDifficulty;
+        });
+
+        return quizList.sort((a, b) => {
+            if (sortBy === 'title') return a.title.localeCompare(b.title);
+            if (sortBy === 'questions') {
+                return (
+                    (b.questionCount ?? b.stats?.questionCount ?? 0) -
+                    (a.questionCount ?? a.stats?.questionCount ?? 0)
+                );
+            }
+            if (sortBy === 'time') {
+                return (a.timeLimitPerQuestion ?? 0) - (b.timeLimitPerQuestion ?? 0);
+            }
+
+            return new Date(b.updatedAt ?? 0).getTime() - new Date(a.updatedAt ?? 0).getTime();
+        });
+    }, [difficultyFilter, quizzes, searchTerm, sortBy]);
 
     if (isLoading || !data) {
         return <QuizLoader loading />;
     }
 
-    const { name, description, tags, quizzes } = data as CategoryWithQuizzes ?? { quizzes: [] };
+    const { name, description, tags } = categoryData ?? { quizzes: [] };
     const totalQuestions =
         quizzes?.reduce((sum, quiz) => sum + (quiz.questionCount ?? quiz.stats?.questionCount ?? 0), 0) ?? 0;
     const averageTimeLimit = quizzes?.length
@@ -27,7 +66,6 @@ export const QuizList = () => {
               ) / quizzes?.length
           )
         : 0;
-
 
     return (
         <div className="relative overflow-hidden">
@@ -125,8 +163,43 @@ export const QuizList = () => {
                     </div>
                 </Reveal>
 
+                <Reveal className="flex flex-col gap-4 rounded-2xl border border-default bg-surface-alt p-4 md:flex-row md:items-center md:justify-between">
+                    <div className="relative w-full md:max-w-md">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-brand" size={18} />
+                        <input
+                            className="w-full rounded-full border border-default bg-base py-3 pl-11 pr-4 text-sm text-primary outline-none focus:ring-2 focus:ring-brand"
+                            placeholder="Search quizzes..."
+                            type="text"
+                            value={searchTerm}
+                            onChange={event => setSearchTerm(event.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                        <select
+                            className="rounded-full border border-default bg-base px-4 py-3 text-sm font-semibold text-primary outline-none focus:ring-2 focus:ring-brand"
+                            value={difficultyFilter}
+                            onChange={event => setDifficultyFilter(event.target.value as DifficultyFilter)}
+                        >
+                            <option value="all">All difficulties</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                        <select
+                            className="rounded-full border border-default bg-base px-4 py-3 text-sm font-semibold text-primary outline-none focus:ring-2 focus:ring-brand"
+                            value={sortBy}
+                            onChange={event => setSortBy(event.target.value as QuizSort)}
+                        >
+                            <option value="newest">Newest</option>
+                            <option value="title">Title</option>
+                            <option value="questions">Most questions</option>
+                            <option value="time">Shortest timer</option>
+                        </select>
+                    </div>
+                </Reveal>
+
                 <Stagger className="grid grid-cols-1 place-items-center gap-10 md:grid-cols-2 lg:grid-cols-3 md:p-20">
-                    {quizzes?.map((q: Quiz) => (
+                    {filteredQuizzes.map((q: Quiz) => (
                         <QuizCard
                             updatedAt={q.updatedAt}
                             _id={q._id}
@@ -138,6 +211,11 @@ export const QuizList = () => {
                         />
                     ))}
                 </Stagger>
+                {filteredQuizzes.length === 0 && (
+                    <p className="pb-16 text-center text-secondary">
+                        No quizzes match your filters.
+                    </p>
+                )}
             </div>
         </div>
     );

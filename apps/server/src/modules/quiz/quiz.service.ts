@@ -38,13 +38,31 @@ const getQuestions = async (quizId: string, userId?: string) => {
     if (!quiz) {
         throw new AppError(404, 'Quiz not found');
     }
-    const questionIds = quiz.questions
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-        .map(q => q.questionId);
-    const questions = await Question.find({ _id: { $in: questionIds } }).lean();
-    // const questionMap = new Map(questions.map(question => [question._id.toString(), question]));
 
-    return questions
+    const questions = quiz.questions
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .map(item => item.questionId as any)
+        .filter(question => question?._id);
+
+    const completedAttempt = userId
+        ? await Result.exists({
+              user: userId,
+              quiz: quizId,
+              status: 'completed',
+              submittedAt: { $exists: true },
+          })
+        : null;
+
+    return questions.map(question => ({
+            _id: question._id,
+            prompt: question.prompt,
+            difficulty: question.difficulty,
+            options: question.options.map((option: QuizOption) => ({
+                label: option.label,
+                text: option.text,
+                isCorrect: completedAttempt ? option.isCorrect : false,
+            })),
+    }));
 };
 
 const submitQuiz = async (quizId: string, selectedOptions: SelectedOption, userId?: string) => {

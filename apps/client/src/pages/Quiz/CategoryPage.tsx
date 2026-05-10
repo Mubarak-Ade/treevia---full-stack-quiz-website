@@ -5,9 +5,44 @@ import { QuizLoader } from '@/components/feature/QuizLoader';
 import { useFetchCategories } from '@/modules/quiz/controllers/quiz-api.controller';
 import Treevia from "@/assets/images/treevia-1.png"
 import { Search } from 'lucide-react';
+import { useMemo, useState } from 'react';
+
+type CategorySort = 'all' | 'newest' | 'popular';
 
 export const CategoryPage = () => {
     const { data, isLoading, isError } = useFetchCategories();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortBy, setSortBy] = useState<CategorySort>('all');
+    const categories = data ?? [];
+
+    const filteredCategories = useMemo(() => {
+        const normalizedSearch = searchTerm.trim().toLowerCase();
+        const visibleCategories = [...categories].filter(category => {
+            if (!normalizedSearch) return true;
+
+            const tagText = category.tags
+                ?.map(tag => (typeof tag === 'string' ? tag : tag.name))
+                .join(' ')
+                .toLowerCase();
+
+            return [category.name, category.description, tagText]
+                .filter(Boolean)
+                .some(value => value?.toLowerCase().includes(normalizedSearch));
+        });
+
+        if (sortBy === 'newest') {
+            return visibleCategories.sort(
+                (a, b) =>
+                    new Date(b.updatedAt ?? 0).getTime() - new Date(a.updatedAt ?? 0).getTime()
+            );
+        }
+
+        if (sortBy === 'popular') {
+            return visibleCategories.sort((a, b) => (b.quizCount ?? 0) - (a.quizCount ?? 0));
+        }
+
+        return visibleCategories;
+    }, [categories, searchTerm, sortBy]);
 
     if (isLoading || !data) {
         return <QuizLoader loading={isLoading} />;
@@ -16,8 +51,6 @@ export const CategoryPage = () => {
     if (isError) {
         return <p>error loading categories</p>;
     }
-
-    data;
 
     return (
         <div className="w-full m-auto">
@@ -52,26 +85,45 @@ export const CategoryPage = () => {
                             className="w-full bg-cta border-none rounded-full py-4 pl-12 pr-6 text-primary focus:ring-2 focus:ring-primary transition-all"
                             placeholder="Search the categories..."
                             type="text"
+                            value={searchTerm}
+                            onChange={event => setSearchTerm(event.target.value)}
                         />
                     </div>
                     <div className="flex flex-wrap justify-center gap-3">
-                        <Button className="md:px-6 py-2 px-2 md:text-base text-xs bg-brand text-on-brand font-bold shadow-[0_0_15px_rgba(87,241,118,0.3)]">
+                        <Button
+                            type="button"
+                            onClick={() => setSortBy('all')}
+                            className={`md:px-6 py-2 px-2 md:text-base text-xs font-bold shadow-[0_0_15px_rgba(87,241,118,0.3)] ${
+                                sortBy === 'all' ? 'bg-brand text-on-brand' : 'bg-brand-subtle text-on-brand'
+                            }`}
+                        >
                             All Seeds
                         </Button>
-                        <Button variant="secondary" className="md:px-6 md:py-2 px-2 py-1 md:text-base text-xs  bg-brand-subtle text-on-brand hover:bg-surface-bright">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={() => setSortBy('newest')}
+                            className={`md:px-6 md:py-2 px-2 py-1 md:text-base text-xs text-on-brand hover:bg-surface-bright ${
+                                sortBy === 'newest' ? 'bg-brand' : 'bg-brand-subtle'
+                            }`}
+                        >
                             Newest
                         </Button>
-                        <Button variant="secondary" className="md:px-6 md:py-2 px-2 py-1 md:text-base text-xs bg-brand-subtle text-on-brand hover:bg-surface-bright">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={() => setSortBy('popular')}
+                            className={`md:px-6 md:py-2 px-2 py-1 md:text-base text-xs text-on-brand hover:bg-surface-bright ${
+                                sortBy === 'popular' ? 'bg-brand' : 'bg-brand-subtle'
+                            }`}
+                        >
                             Most Popular
-                        </Button>
-                        <Button variant="secondary" className="md:px-6 md:py-2 px-2 py-1 md:text-base text-xs bg-brand-subtle text-on-brand hover:bg-surface-bright">
-                            Hardest
                         </Button>
                     </div>
                 </div>
             </Reveal>
             <Stagger className="mt-10 gap-10 max-w-7xl p-10 m-auto place-items-center grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                {data.map((category, index) => (
+                {filteredCategories.map((category, index) => (
                     <CategoriesCard
                         key={index}
                         name={category.name}
@@ -82,6 +134,11 @@ export const CategoryPage = () => {
                     />
                 ))}
             </Stagger>
+            {filteredCategories.length === 0 && (
+                <p className="px-10 pb-16 text-center text-secondary">
+                    No categories match your search.
+                </p>
+            )}
         </div>
     );
 };

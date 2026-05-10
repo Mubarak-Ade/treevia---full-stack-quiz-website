@@ -25,8 +25,8 @@ const getResultFromState = (state: ResultLocationState | null | undefined) => {
     return payload && 'attempt' in payload ? payload : null;
 };
 
-const findCorrectOption = (question?: PublicQuestion) =>
-    question?.options.find(option => option.isCorrect)?.text ?? '';
+const findCorrectOption = (answer: AttemptAnswer, question?: PublicQuestion) =>
+    answer.correctOptionText ?? question?.options.find(option => option.isCorrect)?.text ?? '';
 
 const findSelectedOption = (answer: AttemptAnswer) =>
     answer.selectedOptionLabel ?? answer.selectOptionLabel ?? 'No answer selected';
@@ -36,8 +36,12 @@ const Result = () => {
     const location = useLocation();
     const state = location.state as ResultLocationState | null;
     const result = getResultFromState(state);
+    const attempt = result?.attempt;
+    const accuracy = result?.accuracy ?? 0;
+    const startQuiz = useStartQuiz(attempt?.quiz ?? '');
+    const { data: questions = [] } = useFetchQuestion(attempt?.quiz ?? '');
 
-    if (!result) {
+    if (!result || !attempt) {
         return (
             <div className="min-h-screen bg-base px-5 py-16">
                 <div className="mx-auto max-w-xl rounded-[2rem] border border-default bg-surface-alt px-6 py-10 text-center">
@@ -53,16 +57,12 @@ const Result = () => {
         );
     }
 
-    const { attempt, accuracy } = result;
     const quizTitle = state?.quizTitle || 'this quiz';
     const retryTimeLimit = typeof state?.timeLimit === 'number' ? state.timeLimit : 60;
     const totalQuestions = attempt.answers.length;
     const correctAnswers = attempt.score;
     const incorrectAnswers = Math.max(totalQuestions - correctAnswers, 0);
     const score = Math.round(accuracy);
-    const startQuiz = useStartQuiz(attempt.quiz);
-    const { data: questions = [] } = useFetchQuestion(attempt.quiz);
-
     const questionMap = new Map(questions.map(question => [question._id, question]));
 
     const handleRetakeQuiz = () => {
@@ -187,7 +187,7 @@ const Result = () => {
                                 | PublicQuestion
                                 | undefined;
                             const selectedOption = findSelectedOption(answer);
-                            const correctOption = findCorrectOption(question);
+                            const correctOption = findCorrectOption(answer, question);
 
                             return (
                                 <li

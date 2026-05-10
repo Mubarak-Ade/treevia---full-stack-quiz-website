@@ -95,6 +95,7 @@ export interface AttemptAnswer {
     questionId: string;
     selectedOptionLabel?: string;
     selectOptionLabel?: string;
+    correctOptionText?: string;
     isCorrect: boolean;
 }
 

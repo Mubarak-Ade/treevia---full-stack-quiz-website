@@ -1,5 +1,5 @@
 import Notification from "@/components/feature/Notification";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useCallback, useContext, useState, ReactNode } from "react";
 
 interface Toast {
 	id: number;
@@ -39,21 +39,31 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
 }) => {
 	const [toasts, setToasts] = useState<Toast[]>([]);
 
-	const showNotification = (
+	const removeNotification = useCallback((id: number) => {
+		setToasts((prev) => prev.filter((toast) => toast.id !== id));
+	}, []);
+
+	const showNotification = useCallback((
 		type: "success" | "error" | "info" | "warning",
 		message: string
 	) => {
 		const id = toastId++;
 		const newToast: Toast = { id, type, message };
-		setToasts((prev) => [...prev, newToast]);
+		setToasts((prev) => {
+			const alreadyVisible = prev.some(
+				(toast) => toast.type === type && toast.message === message
+			);
+
+			if (alreadyVisible) {
+				return prev;
+			}
+
+			return [...prev.slice(-3), newToast];
+		});
 		setTimeout(() => {
 			removeNotification(id);
 		}, 4000);
-	};
-
-	const removeNotification = (id: number) => {
-		setToasts((prev) => prev.filter((toast) => toast.id !== id));
-	};
+	}, [removeNotification]);
 
 	return (
 		<NotificationContext.Provider value={{ showNotification }}>
