@@ -1,13 +1,15 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcryptjs';
-import User, { IUser } from '../../models/User.js';
-import UserStats from '../../models/UserStats.js';
+import User, { IUser } from '../user/user.model.js';
+import UserStats from '../user/user-stats.model.js';
 import { createAccessToken, createRefreshToken } from '../../utils/jwt.js';
-import type { Login, Register } from '../../schema/auth.schema.js';
-import Session from '../../models/Session.js';
+import type { Login, Register, ResetToken, VerifyToken } from './auth.schema.js';
+import Session from '../session/session.model.js';
 import jwt from 'jsonwebtoken';
 import env from '../../env.js';
 import { AppError } from '../../utils/error-handler.js';
+import { generateVerifyToken, hashValue } from '../../utils/tokens.js';
+import { resetPasswordEmail, sendVerificationEmail } from '../../utils/email.js';
 
 interface SessionMeta {
     userAgent: string;
@@ -66,88 +68,186 @@ const findActiveSession = async (sessionId: string) => {
     return session;
 };
 
-const register = async (userInfo: Register, meta: SessionMeta) => {
-    const { username, email, password } = userInfo;
+const AuthService = {
+    async register(userInfo: Register, meta: SessionMeta) {
+        const { username, email, password } = userInfo;
 
-    let user = await User.findOne({ email });
-    if (user) {
-        throw new AppError(400, 'User already exists');
-    }
+        let user = await User.findOne({ email });
+        if (user) {
+            throw new AppError(400, 'User already exists');
+        }
 
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, salt);
 
-    user = new User({
-        username,
-        email,
-        password: passwordHash,
-    });
+        const { token, expires } = generateVerifyToken();
 
-    await user.save();
-    await UserStats.create({ user: user._id });
+        user = new User({
+            username,
+            email,
+            password: passwordHash,
+            emailVerificationToken: token,
+            emailVerificationExpires: expires,
+        });
 
-    const { accessToken, refreshToken } = await createSessionAndTokens(user._id.toString(), meta);
+        await user.save();
+        await UserStats.create({ user: user._id });
 
-    return {
-        user: structureUser(user),
-        accessToken,
-        refreshToken,
-    };
+        const { accessToken, refreshToken } = await createSessionAndTokens(
+            user._id.toString(),
+            meta
+        );
+
+        await sendVerificationEmail(user.email, token);
+
+        return {
+            user: structureUser(user),
+            accessToken,
+            refreshToken,
+        };
+    },
+
+    async login(userInfo: Login, meta: SessionMeta) {
+        const { email, password } = userInfo;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            throw new AppError(401, INVALID_CREDENTIALS_ERROR);
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            throw new AppError(400, INVALID_CREDENTIALS_ERROR);
+        }
+
+        const { accessToken, refreshToken } = await createSessionAndTokens(
+            user._id.toString(),
+            meta
+        );
+
+        return {
+            user: structureUser(user),
+            accessToken,
+            refreshToken,
+        };
+    },
+    async refresh(token: string) {
+        const decoded = verifyRefreshToken(token);
+        const session = await findActiveSession(decoded.id);
+
+        const valid = await bcrypt.compare(token, session.refreshTokenHash);
+        if (!valid) {
+            await Session.findByIdAndDelete(session._id);
+            throw new AppError(400, INVALID_SESSION_ERROR);
+        }
+
+        const newAccessToken = createAccessToken(session.user);
+        const newRefreshToken = createRefreshToken(session._id.toString());
+
+        session.refreshTokenHash = await bcrypt.hash(newRefreshToken, 10);
+        session.expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
+        await session.save();
+
+        return {
+            access: newAccessToken,
+            refresh: newRefreshToken,
+        };
+    },
+
+    async verifyEmail(token: string) { 
+        if (!token) {
+            throw new AppError(400, 'Invalid Token');
+        }
+
+        const user = await User.findOne({ emailVerificationToken: token, emailVerificationExpires: { $gt: new Date() } });
+
+        if (!user) {
+            throw new AppError(400, 'Invalid Token, or Token expired');
+        }
+        
+        user.isVerfified = true;
+        user.emailVerificationExpires = null;
+        user.emailVerificationToken = null;
+
+        await user.save();
+
+        return true;
+    },
+
+    async getAllSession() {
+        const session = await Session.find({}).lean();
+        return session;
+    },
+
+    async logout(token: string) {
+        const decoded = verifyRefreshToken(token);
+
+        await Session.findByIdAndDelete(decoded.id);
+    },
+
+    async sendResetToken({email}: ResetToken) {
+
+        const user = await User.findOne({ email });
+
+        console.log(user);
+        
+        if (!user) {
+            throw new AppError(400, 'invalid email');
+        }
+
+        await Session.deleteMany({ user: user._id });
+
+        const { token, expires } = generateVerifyToken();
+
+        user.emailVerificationToken = token;
+        user.emailVerificationExpires = expires;
+
+        await user.save();
+
+        await resetPasswordEmail(user.email, token)
+
+        return token;
+    },
+
+    async resendVerificationEmail(email: string) {
+        const user = await User.findOne({email})
+
+        if (!user || user.isVerfified) return false
+
+        const { token, expires } = generateVerifyToken();
+
+        user.emailVerificationToken = token;
+        user.emailVerificationExpires = expires;
+
+        await user.save();
+
+        await sendVerificationEmail(user.email, token)
+
+        return true
+    },
+
+    async verifyResetToken(payload: VerifyToken) {
+        const { token, password } = payload
+        const user = await User.findOne({
+            emailVerificationToken: token,
+            emailVerificationExpires: { $gt: new Date() },
+        });
+
+        if (!user) {
+            throw new AppError(400, 'Invalid Token, or Token expired');
+        }
+
+        const newPassword = await hashValue(password);
+
+        user.password = newPassword;
+
+        user.emailVerificationExpires = null;
+        user.emailVerificationToken = null;
+
+        await user.save();
+
+        return true;
+    },
 };
 
-const login = async (userInfo: Login, meta: SessionMeta) => {
-    const { email, password } = userInfo;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-        throw new AppError(401, INVALID_CREDENTIALS_ERROR);
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        throw new AppError(400, INVALID_CREDENTIALS_ERROR);
-    }
-
-    const { accessToken, refreshToken } = await createSessionAndTokens(user._id.toString(), meta);
-
-    return {
-        user: structureUser(user),
-        accessToken,
-        refreshToken,
-    };
-};
-export const refresh = async (token: string) => {
-    const decoded = verifyRefreshToken(token);
-    const session = await findActiveSession(decoded.id);
-
-    const valid = await bcrypt.compare(token, session.refreshTokenHash);
-    if (!valid) {
-        await Session.findByIdAndDelete(session._id);
-        throw new AppError(400, INVALID_SESSION_ERROR);
-    }
-
-    const newAccessToken = createAccessToken(session.user);
-    const newRefreshToken = createRefreshToken(session._id.toString());
-
-    session.refreshTokenHash = await bcrypt.hash(newRefreshToken, 10);
-    session.expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
-    await session.save();
-
-    return {
-        access: newAccessToken,
-        refresh: newRefreshToken,
-    };
-};
-
-export const getAllSession = async () => {
-    const session = await Session.find({}).lean();
-    return session;
-};
-
-export const logout = async (token: string) => {
-    const decoded = verifyRefreshToken(token);
-
-    await Session.findByIdAndDelete(decoded.id);
-};
-
-export default { register, login, refresh, logout, getAllSession };
+export default AuthService;

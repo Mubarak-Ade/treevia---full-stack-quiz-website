@@ -1,6 +1,13 @@
 import useAuthStore from '@/modules/auth/store/auth.store';
 import { useMutation } from '@tanstack/react-query';
-import { LoginApi, logoutApi, RegisterApi } from '../services/auth.service';
+import {
+    LoginApi,
+    logoutApi,
+    RegisterApi,
+    sendResetPasswordTokenApi,
+    verifyEmailApi,
+    verifyResetPasswordApi,
+} from '../services/auth.service';
 
 export const useLogin = () => {
     const setAuth = useAuthStore(s => s.setAuth);
@@ -29,5 +36,23 @@ export const useLogout = () => {
         onSuccess: () => {
 			setAuth(null)
 		},
+    });
+};
+
+export const useSendResetPasswordToken = () => {
+    return useMutation({
+        mutationFn: sendResetPasswordTokenApi,
+    });
+};
+
+export const useVerifyResetPassword = () => {
+    return useMutation({
+        mutationFn: verifyResetPasswordApi,
+    });
+};
+
+export const useVerifyEmail = () => {
+    return useMutation({
+        mutationFn: verifyEmailApi,
     });
 };

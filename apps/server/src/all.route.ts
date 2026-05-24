@@ -1,14 +1,14 @@
 import { Router } from 'express';
 
-import quizRoutes from './routes/quizRoute.js';
-import attemptRoute from './routes/attemptRoute.js';
-import sessionRoute from './routes/sessionRoutes.js';
+import quizRoutes from './modules/quiz/quiz.routes.js';
+import attemptRoute from './modules/attempt/attempt.routes.js';
+import sessionRoute from './modules/session/session.routes.js';
 import optionalAuth from './middleware/optionalAuth.js';
 import requireAuth from './middleware/requireAuth.js';
-import authRoutes from './routes/authRoute.js';
-import categoryRoute from './routes/categoryRoute.js';
-import dashboardRoute from './routes/dashboardRoutes.js';
-import userRoute from './routes/userRoute.js';
+import authRoutes from './modules/auth/auth.routes.js';
+import categoryRoute from './modules/category/category.routes.js';
+import dashboardRoute from './modules/dashboard/dashboard.routes.js';
+import userRoute from './modules/user/user.routes.js';
 
 const router = Router();
 

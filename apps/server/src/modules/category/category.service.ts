@@ -1,4 +1,4 @@
-import Category from "../../models/Category.js";
+import Category from "./category.model.js";
 import { AppError } from "../../utils/error-handler.js";
 import { QuizRepository } from "../admin/quiz/quiz.repository.js";
 

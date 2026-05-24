@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import mongoose from "mongoose";
-import User from "../../../models/User.js";
+import User from "../../user/user.model.js";
 import { AppError } from "../../../utils/error-handler.js";
 
 const getUsers = async (query: Record<string, unknown>) => {

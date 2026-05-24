@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
-import Category from '../../../models/Category.js';
-import Quiz from '../../../models/Quiz.js';
-import { CreateQuizDTO, UpdateQuizDTO } from '../../../schema/quiz.shema.js';
+import Category from '../../category/category.model.js';
+import Quiz from '../../quiz/quiz.model.js';
+import { CreateQuizDTO, UpdateQuizDTO } from './quiz.schema.js';
 import { AppError } from '../../../utils/error-handler.js';
 import { QuizRepository } from './quiz.repository.js';
 

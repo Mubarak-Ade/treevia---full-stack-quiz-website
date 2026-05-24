@@ -1,8 +1,8 @@
 import e from "express";
-import { createQuiz, getAllQuiz, getSingleQuiz, deleteQuiz, updateQuiz, publishQuiz, saveDraft, archiveQuiz, recoverQuiz } from "../../modules/admin/quiz/quiz.controller.js";
-import { zodValidator } from "../../utils/zodError.js";
-import { CreateQuizSchema, UpdateQuizSchema } from "../../schema/quiz.shema.js";
-import { asyncHandler } from "../../utils/asyncHandler.js";
+import { createQuiz, getAllQuiz, getSingleQuiz, deleteQuiz, updateQuiz, publishQuiz, saveDraft, archiveQuiz, recoverQuiz } from "./quiz.controller.js";
+import { zodValidator } from "../../../utils/zodError.js";
+import { CreateQuizSchema, UpdateQuizSchema } from "./quiz.schema.js";
+import { asyncHandler } from "../../../utils/asyncHandler.js";
 
 const router = e.Router()
 

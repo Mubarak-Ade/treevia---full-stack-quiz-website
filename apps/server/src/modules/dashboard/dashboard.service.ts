@@ -1,4 +1,4 @@
-import UserStats from '../../models/UserStats.js';
+import UserStats from '../user/user-stats.model.js';
 import { calculateAccuracy, calcuteTotalQuestion, matchStage } from '../../pipelines/stats.js';
 import { AppError } from '../../utils/error-handler.js';
 import { calculateLevel } from '../../utils/xp_level_calculator.js';

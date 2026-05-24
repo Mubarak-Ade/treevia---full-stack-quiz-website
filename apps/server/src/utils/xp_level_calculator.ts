@@ -1,4 +1,4 @@
-import { IStats } from "../models/UserStats.js";
+import { IStats } from "../modules/user/user-stats.model.js";
 
 const BASE = 100;
 const RATE = 1.5;

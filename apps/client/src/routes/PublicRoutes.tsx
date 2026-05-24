@@ -13,6 +13,9 @@ import { EmptyLayout } from "@/components/layout/EmptyLayout";
 import Register from "@/components/feature/Auth/Register";
 import Login from "@/components/feature/Auth/Login";
 import { PageTransition } from "@/components/feature/Motion";
+import ForgotPassword from "@/components/feature/Auth/ForgotPassword";
+import ResetPassword from "@/components/feature/Auth/ResetPassword";
+import VerifyEmail from "@/components/feature/Auth/VerifyEmail";
 
 const PublicRoutes = (): JSX.Element[] => [
 	<Route
@@ -52,6 +55,18 @@ const PublicRoutes = (): JSX.Element[] => [
 		<Route
 			path="/register"
 			element={<Register />}
+		/>
+		<Route
+			path="/forgot-password"
+			element={<ForgotPassword />}
+		/>
+		<Route
+			path="/reset-password"
+			element={<ResetPassword />}
+		/>
+		<Route
+			path="/verify-email"
+			element={<VerifyEmail />}
 		/>
 		<Route
 			path="/quizzes"

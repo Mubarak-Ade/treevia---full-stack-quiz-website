@@ -94,9 +94,9 @@ const Login = () => {
                         errors={errors.password}
                     />
                     {/* Password Field */}
-                    <a href="" className="text-primary ">
+                    <Link to="/forgot-password" className="text-primary ">
                         Forgotten Password
-                    </a>
+                    </Link>
 
                     {/* Submit Button */}
                     <motion.button

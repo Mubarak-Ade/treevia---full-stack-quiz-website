@@ -1,5 +1,5 @@
-import Quiz from '../../../models/Quiz.js';
-import { CreateQuizDTO, UpdateQuizDTO } from '../../../schema/quiz.shema.js';
+import Quiz from '../../quiz/quiz.model.js';
+import { CreateQuizDTO, UpdateQuizDTO } from './quiz.schema.js';
 import { toObjectId } from './quiz.service.js';
 
 export const QuizRepository = {

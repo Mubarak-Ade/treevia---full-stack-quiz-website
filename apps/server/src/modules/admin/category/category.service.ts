@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
-import Category, { CategoryModel } from '../../../models/Category.js';
-import Quiz from '../../../models/Quiz.js';
+import Category, { CategoryModel } from '../../category/category.model.js';
+import Quiz from '../../quiz/quiz.model.js';
 import { CreateCategoryDTO, UpdateCategoryDTO } from './category.validate.js';
 import { CategoryRepostory } from './category.repository.js';
 import { AppError } from '../../../utils/error-handler.js';

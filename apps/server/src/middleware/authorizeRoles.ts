@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import createHttpError from 'http-errors';
-import User from '../models/User.js';
+import User from '../modules/user/user.model.js';
 import { AppError } from '../utils/error-handler.js';
 
 interface AuthRequest extends Request {

@@ -1,5 +1,5 @@
-import Attempt from '../../models/Attempts.js';
-import Result from '../../models/Attempts.js';
+import Attempt from '../attempt/attempt.model.js';
+import Result from '../attempt/attempt.model.js';
 import { AppError } from '../../utils/error-handler.js';
 
 const getResult = async (userId: string) => {

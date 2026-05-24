@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import Session from '../../models/Session.js';
+import Session from './session.model.js';
 
 export const getSessions: RequestHandler = async (req, res, next): Promise<void> => {
     try {

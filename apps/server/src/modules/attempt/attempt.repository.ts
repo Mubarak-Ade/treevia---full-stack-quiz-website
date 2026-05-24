@@ -1,4 +1,4 @@
-import Attempt from "../../models/Attempts.js";
+import Attempt from "./attempt.model.js";
 
 export const AttemptRepository = {
     findAll: (payload: any) => Attempt.find(payload),

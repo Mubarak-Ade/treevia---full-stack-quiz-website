@@ -7,6 +7,15 @@ export interface Register extends Login {
     username: string
 }
 
+export interface ResetPasswordRequest {
+    email: string
+}
+
+export interface VerifyResetPassword {
+    token: string
+    password: string
+}
+
 export interface Response<T> {
     message: string
     data: T,

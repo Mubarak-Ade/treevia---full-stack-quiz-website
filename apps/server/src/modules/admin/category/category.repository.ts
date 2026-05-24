@@ -1,4 +1,4 @@
-import Category from '../../../models/Category.js';
+import Category from '../../category/category.model.js';
 import { CreateCategoryDTO, UpdateCategoryDTO } from './category.validate.js';
 
 export const CategoryRepostory = {

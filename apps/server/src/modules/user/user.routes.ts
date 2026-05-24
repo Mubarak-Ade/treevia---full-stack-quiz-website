@@ -1,6 +1,6 @@
 import express from "express"
 import multer from "multer";
-import { getUserInfo, uploadProfilePic } from "../modules/user/user.controller.js";
+import { getUserInfo, uploadProfilePic } from "./user.controller.js";
 
 const router = express.Router();
 

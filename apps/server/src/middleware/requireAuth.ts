@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/User.js';
+import User from '../modules/user/user.model.js';
 import env from '../env.js';
 import createHttpError from 'http-errors';
 import { AppError } from '../utils/error-handler.js';

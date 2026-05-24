@@ -10,9 +10,11 @@ const api: AxiosInstance = axios.create({
 const byPass = new Set([
     '/auth/login',
     '/auth/register',
-    '/auth/forgot-password',
-    '/auth/reset-password',
+    '/auth/reset',
+    '/auth/verify',
+    '/auth/verify-email',
     '/auth/refresh',
+    '/auth/logout',
 ]);
 
 api.interceptors.response.use(

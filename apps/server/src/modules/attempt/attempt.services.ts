@@ -1,6 +1,6 @@
-import Attempt from '../../models/Attempts.js';
-import Question from '../../models/Question.js';
-import UserStats from '../../models/UserStats.js';
+import Attempt from './attempt.model.js';
+import Question from '../quiz/question.model.js';
+import UserStats from '../user/user-stats.model.js';
 import { AppError } from '../../utils/error-handler.js';
 import { QuizRepository } from '../admin/quiz/quiz.repository.js';
 import { SelectedOption } from './attempt.validate.js';

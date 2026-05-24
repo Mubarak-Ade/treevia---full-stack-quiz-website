@@ -1,4 +1,4 @@
-import User from "../../models/User.js";
+import User from "./user.model.js";
 
 const uploadProfilePic = async (userId: string, filename?: string) => {
   const imagePath = `/uploads/${filename}`;

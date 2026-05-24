@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import env from '../env.js';
-import Quiz from '../models/Quiz.js';
+import Quiz from '../modules/quiz/quiz.model.js';
 
 const applyQuizPreSave = async () => {
     await mongoose.connect(env.MONGO_URI);

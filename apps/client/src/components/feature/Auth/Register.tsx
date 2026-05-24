@@ -43,7 +43,7 @@ const Register = () => {
             onSuccess: () => {
                 showNotification(
                     'success',
-                    'Successfully Sign up, redirecting to your dashboard...'
+                    'Successfully signed up. Check your email to verify your account.'
                 );
                 navigate("/quizzes")
 

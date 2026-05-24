@@ -1,9 +1,9 @@
-import Quiz from '../../models/Quiz.js';
-import Result from '../../models/Attempts.js';
-import UserStats from '../../models/UserStats.js';
+import Quiz from './quiz.model.js';
+import Result from '../attempt/attempt.model.js';
+import UserStats from '../user/user-stats.model.js';
 import { AppError } from '../../utils/error-handler.js';
 import { QuizRepository } from '../admin/quiz/quiz.repository.js';
-import Question from '../../models/Question.js';
+import Question from './question.model.js';
 import { SelectedOption } from '../attempt/attempt.validate.js';
 
 type QuizOption = {

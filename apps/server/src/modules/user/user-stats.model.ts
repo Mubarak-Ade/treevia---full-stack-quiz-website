@@ -1,6 +1,6 @@
 import { Document, InferSchemaType, model, Schema, Types } from 'mongoose';
-import { calculateLevel, getNextXp } from '../utils/xp_level_calculator.js';
-import { getUserRank } from '../modules/dashboard/dashboard.service.js';
+import { calculateLevel, getNextXp } from '../../utils/xp_level_calculator.js';
+import { getUserRank } from '../dashboard/dashboard.service.js';
 
 export interface IStats extends Document {
     user: Types.ObjectId;

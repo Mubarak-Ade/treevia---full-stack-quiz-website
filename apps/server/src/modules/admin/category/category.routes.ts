@@ -4,13 +4,13 @@ import {
     getCategories,
     deleteCategory,
     updateCategory,
-} from '../../modules/admin/category/category.controller.js';
-import { asyncHandler } from '../../utils/asyncHandler.js';
-import { zodValidator } from '../../utils/zodError.js';
+} from './category.controller.js';
+import { asyncHandler } from '../../../utils/asyncHandler.js';
+import { zodValidator } from '../../../utils/zodError.js';
 import {
     CreateCategorySchema,
     UpdateCategorySchema,
-} from '../../modules/admin/category/category.validate.js';
+} from './category.validate.js';
 
 const router = Router();
 

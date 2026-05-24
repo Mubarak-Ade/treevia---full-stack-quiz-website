@@ -1,5 +1,5 @@
-import Question from '../../../models/Question.js';
-import { IQuiz } from '../../../models/Quiz.js';
+import Question from '../../quiz/question.model.js';
+import { IQuiz } from '../../quiz/quiz.model.js';
 import { AppError } from '../../../utils/error-handler.js';
 import AdminQuizService, { toObjectId } from '../quiz/quiz.service.js';
 import { AddQuestionDTO, UpdateQuestionDTO } from './question.validate.js';
