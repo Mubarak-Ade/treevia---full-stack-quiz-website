@@ -154,18 +154,21 @@ const AuthService = {
         };
     },
 
-    async verifyEmail(token: string) { 
+    async verifyEmail(token: string) {
         if (!token) {
             throw new AppError(400, 'Invalid Token');
         }
 
-        const user = await User.findOne({ emailVerificationToken: token, emailVerificationExpires: { $gt: new Date() } });
+        const user = await User.findOne({
+            emailVerificationToken: token,
+            emailVerificationExpires: { $gt: new Date() },
+        });
 
         if (!user) {
             throw new AppError(400, 'Invalid Token, or Token expired');
         }
-        
-        user.isVerfified = true;
+
+        user.isVerified = true;
         user.emailVerificationExpires = null;
         user.emailVerificationToken = null;
 
@@ -185,12 +188,9 @@ const AuthService = {
         await Session.findByIdAndDelete(decoded.id);
     },
 
-    async sendResetToken({email}: ResetToken) {
-
+    async sendResetToken({ email }: ResetToken) {
         const user = await User.findOne({ email });
 
-        console.log(user);
-        
         if (!user) {
             throw new AppError(400, 'invalid email');
         }
@@ -203,16 +203,15 @@ const AuthService = {
         user.emailVerificationExpires = expires;
 
         await user.save();
+        await resetPasswordEmail(user.email, token);
 
-        await resetPasswordEmail(user.email, token)
-
-        return token;
+        return true;
     },
 
     async resendVerificationEmail(email: string) {
-        const user = await User.findOne({email})
+        const user = await User.findOne({ email });
 
-        if (!user || user.isVerfified) return false
+        if (!user || user.isVerified) return false;
 
         const { token, expires } = generateVerifyToken();
 
@@ -221,13 +220,13 @@ const AuthService = {
 
         await user.save();
 
-        await sendVerificationEmail(user.email, token)
+        await sendVerificationEmail(user.email, token);
 
-        return true
+        return true;
     },
 
     async verifyResetToken(payload: VerifyToken) {
-        const { token, password } = payload
+        const { token, password } = payload;
         const user = await User.findOne({
             emailVerificationToken: token,
             emailVerificationExpires: { $gt: new Date() },

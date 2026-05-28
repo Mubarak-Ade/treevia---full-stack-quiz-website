@@ -1,0 +1,60 @@
+name: treevia
+
+services:
+  # ─── MongoDB ────────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: treevia_mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: quiz_app
+    networks:
+      - treevia_net
+
+  # ─── Backend (Express + TypeScript) ─────────────────────────────────────────
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    container_name: treevia_server
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - "4000:4000"
+    env_file:
+      - apps/server/.env
+    environment:
+      # Override the local MONGO_URI to point at the mongo service
+      MONGO_URI: mongodb://mongo:27017/quiz_app
+      NODE_ENV: production
+    networks:
+      - treevia_net
+
+  # ─── Frontend (React + Vite → nginx) ─────────────────────────────────────────
+  client:
+    build:
+      context: .
+      dockerfile: apps/client/Dockerfile
+      args:
+        # In production the nginx proxy forwards /api → server:4000,
+        # so the browser just hits /api relative to its own origin.
+        VITE_API_BASE_URL: /api
+    container_name: treevia_client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "80:80"
+    networks:
+      - treevia_net
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  treevia_net:
+    driver: bridge
