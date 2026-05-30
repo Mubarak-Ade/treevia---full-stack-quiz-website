@@ -6,15 +6,16 @@ import {
   submitQuiz
 } from './quiz.controller.js';
 import optionalAuth from '../../middleware/optionalAuth.js';
+import { rateLimitStrategies } from '../../middleware/rateLimiter.js';
 
 const router: Router = express.Router();
 
 // router.get('/:quizId', getQuizById);
-router.get('/:quizId/questions', optionalAuth, getQuestions);
-router.post('/submit', optionalAuth, submitQuiz);
-router.get('/random', getRandomQuiz);
+router.get('/:quizId/questions', rateLimitStrategies.publicRead, optionalAuth, getQuestions);
+router.post('/submit', optionalAuth, rateLimitStrategies.quizSubmission, submitQuiz);
+router.get('/random', rateLimitStrategies.publicRead, getRandomQuiz);
 // router.post('/quizzes', createQuiz);
-router.get('/', getQuizzes);
+router.get('/', rateLimitStrategies.search, rateLimitStrategies.publicRead, getQuizzes);
 // router.get('/quizzes', getQuizzes);
 // router.get('/questions', getQuestions);
 // router.delete('/:id', deleteQuizById);

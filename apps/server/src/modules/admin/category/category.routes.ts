@@ -11,12 +11,13 @@ import {
     CreateCategorySchema,
     UpdateCategorySchema,
 } from './category.validate.js';
+import { rateLimitStrategies } from '../../../middleware/rateLimiter.js';
 
 const router = Router();
 
 router.get('/', asyncHandler(getCategories));
-router.post('/', zodValidator(CreateCategorySchema), asyncHandler(createCategory));
-router.delete('/:id', asyncHandler(deleteCategory));
-router.patch('/:id', zodValidator(UpdateCategorySchema), asyncHandler(updateCategory));
+router.post('/', rateLimitStrategies.adminWrite, zodValidator(CreateCategorySchema), asyncHandler(createCategory));
+router.delete('/:id', rateLimitStrategies.adminWrite, asyncHandler(deleteCategory));
+router.patch('/:id', rateLimitStrategies.adminWrite, zodValidator(UpdateCategorySchema), asyncHandler(updateCategory));
 
 export default router;

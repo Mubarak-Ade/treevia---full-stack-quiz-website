@@ -5,12 +5,25 @@ import { getAttempt, getSingleAttempt, startQuiz, submitQuiz } from './attempt.c
 import { AttemptParams, AttemptSchema } from './attempt.validate.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { zodValidator } from '../../utils/zodError.js';
+import { rateLimitStrategies } from '../../middleware/rateLimiter.js';
 
 const router: Router = express.Router();
 
 router.get('/', requireAuth, getAttempt);
 router.get('/:id', requireAuth, getSingleAttempt);
-router.post('/:quizId/start', optionalAuth, zodValidator(AttemptParams), asyncHandler(startQuiz))
-router.post('/:quizId/submit', optionalAuth, zodValidator(AttemptSchema), asyncHandler(submitQuiz))
+router.post(
+    '/:quizId/start',
+    optionalAuth,
+    rateLimitStrategies.quizAttempt,
+    zodValidator(AttemptParams),
+    asyncHandler(startQuiz)
+)
+router.post(
+    '/:quizId/submit',
+    optionalAuth,
+    rateLimitStrategies.quizSubmission,
+    zodValidator(AttemptSchema),
+    asyncHandler(submitQuiz)
+)
 
 export default router;
