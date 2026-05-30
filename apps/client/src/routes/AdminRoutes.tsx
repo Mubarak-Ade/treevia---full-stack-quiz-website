@@ -9,7 +9,6 @@ import { Route } from "react-router";
 
 export const AdminRoutes = () => [
 	<Route
-		key="admin"
 		element={
 			<AdminRoute>
 				<AdminLayout />

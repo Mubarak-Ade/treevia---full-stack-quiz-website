@@ -7,8 +7,8 @@ export const fetchQuizzes  = async (params: string) => {
     return res.data
 }
 
-export const fetchCategories = async () : Promise<Category[]> => {
-    const res = await api.get<Category[]>("/categories")
+export const fetchCategories = async (params?: any) : Promise<Category[]> => {
+    const res = await api.get<Category[]>("/categories", { params })
     return res.data
 }
 

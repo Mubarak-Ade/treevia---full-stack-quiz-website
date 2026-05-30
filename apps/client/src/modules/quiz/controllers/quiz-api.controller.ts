@@ -20,9 +20,9 @@ export const useFetchQuestion = (id: string) => {
     })
 }
 
-export const useFetchCategories = () => useQuery<Category[]>({
-    queryKey: ["categories"],
-    queryFn: fetchCategories
+export const useFetchCategories = (params?: { searchTerm?: string }) => useQuery<Category[]>({
+    queryKey: ["categories", params],
+    queryFn: () => fetchCategories(params)
 })
 
 export const useSubmitAnswers = (quizId: string) => {

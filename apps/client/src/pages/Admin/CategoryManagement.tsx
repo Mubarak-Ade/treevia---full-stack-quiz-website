@@ -8,7 +8,8 @@ import { useQuizStore } from '@/modules/quiz/store/quiz.store';
 import { Category } from '@/modules/quiz/types/quiz.types';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { Eye, PenBox, Plus, Trash2 } from 'lucide-react';
+import { Eye, PenBox, Plus, Trash2, Search } from 'lucide-react';
+import { useState, useMemo } from 'react';
 
 const columns: ColumnDef<Category>[] = [
 	{
@@ -76,8 +77,12 @@ const columns: ColumnDef<Category>[] = [
 ];
 
 export const CategoryManagement = () => {
-	const { data, isLoading } = useFetchCategories()
 	const showModal = useQuizStore(s => s.showCategoryModal)
+	const [searchTerm, setSearchTerm] = useState("");
+	const { data, isLoading } = useFetchCategories({ searchTerm })
+
+	const filteredCategories = useMemo(() => data || [], [data]);
+
 	if (isLoading || !data) {
 		return <QuizLoader loading={isLoading} />
 	}
@@ -87,7 +92,7 @@ export const CategoryManagement = () => {
 	}
 
 	return (
-		<div className="p-5">
+		<div className="p-5 space-y-6">
 			<DashboardHeader
 				title='Category Management'
 				subtitle='Manage, organize, and update your quiz categories'
@@ -95,8 +100,21 @@ export const CategoryManagement = () => {
 				buttonIcon={<Plus />}
 				onClick={openCreateModal}
 			/>
-			<div className="p-5">
-				<CategoryTable columns={columns} data={data} />
+
+			{/* Search Input Bar */}
+			<div className="relative w-full max-w-md">
+				<Search className="absolute left-3 top-4 text-secondary-btn w-4 h-4" />
+				<input
+					type="text"
+					placeholder="Search categories by name or description..."
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
+					className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-default rounded-lg text-primary placeholder-secondary-btn focus:outline-none focus:border-secondary-btn/60 transition-colors"
+				/>
+			</div>
+
+			<div className="p-5 bg-surface rounded-xl shadow-lg border border-default">
+				<CategoryTable columns={columns} data={filteredCategories} />
 			</div>
 		</div>
 	)

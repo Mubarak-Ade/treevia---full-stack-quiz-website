@@ -3,9 +3,9 @@ import React from "react";
 import { Navigate } from "react-router";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-	const user = useAuthStore((s) => s.user);
+	const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
-	return user ? (
+	return isAuthenticated ? (
 		children
 	) : (
 		<Navigate

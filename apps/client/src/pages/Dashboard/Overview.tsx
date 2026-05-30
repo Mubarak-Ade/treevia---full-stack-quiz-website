@@ -11,8 +11,9 @@ import { useFetchResult, useFetchUserStats } from "@/modules/result/controllers/
 import { getColorFromString, getScoreColor } from "@/utils/colorFormat";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Droplet, History, Leaf, RefreshCcw, Shuffle, ThumbsUp, Trees } from "lucide-react";
+import { Droplet, History, Leaf, RefreshCcw, Shuffle, ThumbsUp, Trees, Search } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useState, useMemo } from "react";
 
 const columns: ColumnDef<GetResult>[] = [
 	{
@@ -85,7 +86,12 @@ export const Overview = () =>
 	const user = useAuthStore( ( s ) => s.user );
 	const {data: userStats, isLoading: statIsLoading} = useFetchUserStats();
 	const randomQuiz = useFetchRandomQuiz();
-	const quiz = useFetchResult()
+	const [searchTerm, setSearchTerm] = useState("");
+	const quiz = useFetchResult({ searchTerm });
+
+	const attempts = useMemo(() => quiz.data?.data || [], [quiz.data]);
+
+	const filteredAttempts = attempts;
 
 	if ( statIsLoading || randomQuiz.isLoading || quiz.isLoading )
 	{
@@ -93,8 +99,6 @@ export const Overview = () =>
 	}
 
 	const stats = userStats?.data as Stats;
-
-	const attempts = quiz.data?.data
 
 	return (
 		<div className="py-5 px-10">
@@ -158,11 +162,23 @@ export const Overview = () =>
 					) ) }
 				</ul>
 			</div>
-			<div className="p-4">
-				<h1 className="text-xl mb-4 text-primary font-bold flex items-center gap-2">
-					<History color="var(--color-brand)" /> Recent Harvest
-				</h1>
-				<OverviewTable columns={ columns } data={ attempts ?? [] } />
+			<div className="p-4 space-y-4">
+				<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+					<h1 className="text-xl text-primary font-bold flex items-center gap-2">
+						<History color="var(--color-brand)" /> Recent Harvest
+					</h1>
+					<div className="relative w-full md:max-w-xs">
+						<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-btn w-4 h-4" />
+						<input
+							type="text"
+							placeholder="Search recent quizzes..."
+							value={searchTerm}
+							onChange={e => setSearchTerm(e.target.value)}
+							className="w-full pl-9 pr-4 py-2 bg-surface-alt border border-default rounded-lg text-primary placeholder-secondary-btn focus:outline-none focus:border-secondary-btn/60 transition-colors text-sm"
+						/>
+					</div>
+				</div>
+				<OverviewTable columns={ columns } data={ filteredAttempts } />
 			</div>
 		</div>
 	);

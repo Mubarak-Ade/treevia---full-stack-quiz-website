@@ -5,4 +5,6 @@ export const useFetchUser = () =>
   useQuery({
     queryKey: ["user"],
     queryFn: getUserInfo,
+    retry: false,
+    staleTime: Infinity,
   });

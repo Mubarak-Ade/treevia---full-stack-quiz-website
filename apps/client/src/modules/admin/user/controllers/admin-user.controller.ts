@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUsers, deleteUser, updateUserRole, UsersResponse } from "../services/admin-user.service";
 
-export const useFetchUsers = () => useQuery<UsersResponse>({
-    queryKey: ["admin-users"],
-    queryFn: () => getUsers(),
+export const useFetchUsers = (params?: { searchTerm?: string; role?: string; status?: string }) => useQuery<UsersResponse>({
+    queryKey: ["admin-users", params],
+    queryFn: () => getUsers(params),
     initialData: {
         users: [],
         page: 0,

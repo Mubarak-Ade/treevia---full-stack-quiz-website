@@ -5,11 +5,14 @@ import useAuthStore from './modules/auth/store/auth.store';
 import { useFetchUser } from './modules/user/controllers/user.controller';
 import AppRoutes from './routes/AppRoutes';
 import useThemeStore from './stores/useThemeStore';
+import { QuizLoader } from './components/feature/QuizLoader';
 
 function App() {
     const setAuth = useAuthStore(s => s.setAuth);
+    const clearAuth = useAuthStore(s => s.clearAuth);
+    const isAuthLoading = useAuthStore(s => s.isAuthLoading);
 
-    const { data: user } = useFetchUser();
+    const { data: user, isLoading } = useFetchUser();
     const initTheme = useThemeStore(s => s.initTheme);
 
     useEffect(() => {
@@ -17,16 +20,16 @@ function App() {
     }, [initTheme]);
 
     useEffect(() => {
-        if (user) {
-            setAuth(user.data);
-        }
-    }, [user]);
+        if (!isLoading) return
+            if (user) {
+                setAuth(user);
+            } else {
+                clearAuth();
+            }
 
-    return (
-        <BrowserRouter>
-            <AppRoutes />
-        </BrowserRouter>
-    );
+    }, [isLoading, user]);
+
+    return <BrowserRouter>{isAuthLoading ? <QuizLoader loading /> : <AppRoutes />}</BrowserRouter>;
 }
 
 export default App;

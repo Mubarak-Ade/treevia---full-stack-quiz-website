@@ -6,8 +6,9 @@ import { useDeleteUser, useFetchUsers } from "@/modules/admin/user/controllers/a
 import { AdminUser } from "@/modules/admin/user/services/admin-user.service";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Ban, CheckCircle, Clock, Edit2, Trash2, User, UsersRoundIcon } from "lucide-react";
+import { Ban, CheckCircle, Clock, Edit2, Trash2, User, UsersRoundIcon, Search } from "lucide-react";
 import { Card } from "../../components/feature/admin/users/Card";
+import { useState, useMemo } from "react";
 
 const columns: ColumnDef<AdminUser>[] = [
 	{
@@ -110,33 +111,51 @@ const columns: ColumnDef<AdminUser>[] = [
 ];
 
 export const UserManagement = () => {
-	const { data, isLoading } = useFetchUsers();
+	const [searchTerm, setSearchTerm] = useState("");
+	const [roleFilter, setRoleFilter] = useState("all");
+	const [statusFilter, setStatusFilter] = useState("all");
 
-	const stats = [
-		{
-			title: "TOTAL USERS",
-			value: data?.total || 0,
-			icon: <UsersRoundIcon size={30} />,
-		},
-		{
-			title: "ACTIVE ROLES",
-			value: 42,
-			icon: <CheckCircle size={30} />,
-		},
-		{
-			title: "PENDING APPROVAL",
-			value: 14,
-			icon: <Clock size={30} />,
-		},
-		{
-			title: "BANNED ENTITIES",
-			value: 3,
-			icon: <Ban size={30} />,
-		},
-	];
+	const { data, isLoading } = useFetchUsers({
+		searchTerm,
+		role: roleFilter,
+		status: statusFilter
+	});
+
+	const usersList = useMemo(() => data?.users || [], [data]);
+	const filteredUsers = usersList;
+
+	const stats = useMemo(() => {
+		const total = usersList.length;
+		const active = usersList.filter(u => u.isOnline).length;
+		const staff = usersList.filter(u => u.role === "admin" || u.role === "moderator").length;
+		const standard = usersList.filter(u => u.role === "user").length;
+
+		return [
+			{
+				title: "TOTAL USERS",
+				value: total,
+				icon: <UsersRoundIcon size={30} />,
+			},
+			{
+				title: "ACTIVE USERS",
+				value: active,
+				icon: <CheckCircle size={30} />,
+			},
+			{
+				title: "STAFF MEMBERS",
+				value: staff,
+				icon: <Clock size={30} />,
+			},
+			{
+				title: "STANDARD USERS",
+				value: standard,
+				icon: <Ban size={30} />,
+			},
+		];
+	}, [usersList]);
 
 	return (
-		<div className="p-5">
+		<div className="p-5 space-y-6">
 			<DashboardHeader
 				title="User Management"
 				subtitle="View, edit, or manage roles and permissions for the Forest Matrix platform. Monitor global activity across the digital arboretum."
@@ -145,20 +164,53 @@ export const UserManagement = () => {
 			/>
 
 			{/* Stats Cards */}
-			<div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 				{stats.map((stat, index) => (
 					<Card key={index} title={stat.title} value={stat.value} icon={stat.icon} />
 				))}
 			</div>
 
+			{/* Filter & Search Bar */}
+			<div className="flex flex-wrap gap-3 items-center">
+				<div className="flex-1 relative">
+					<Search className="absolute left-3 top-4 text-secondary-btn w-4 h-4" />
+					<input
+						type="text"
+						placeholder="Search by username or email..."
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						className="w-full pl-10 pr-4 py-3 bg-surface-alt border border-default rounded-lg text-primary placeholder-secondary-btn focus:outline-none focus:border-secondary-btn/60 transition-colors"
+					/>
+				</div>
+				<select
+					value={roleFilter}
+					onChange={(e) => setRoleFilter(e.target.value)}
+					className="px-4 py-3 bg-surface-alt border border-default rounded-lg text-primary focus:outline-none focus:border-secondary-btn/60 transition-colors"
+				>
+					<option value="all">All Roles</option>
+					<option value="admin">Admin</option>
+					<option value="moderator">Moderator</option>
+					<option value="user">User</option>
+				</select>
+				<select
+					value={statusFilter}
+					onChange={(e) => setStatusFilter(e.target.value)}
+					className="px-4 py-3 bg-surface-alt border border-default rounded-lg text-primary focus:outline-none focus:border-secondary-btn/60 transition-colors"
+				>
+					<option value="all">All Statuses</option>
+					<option value="active">Active (Online)</option>
+					<option value="pending">Pending (Offline)</option>
+				</select>
+			</div>
+
 			{/* Users Table */}
-			<div className="mt-8">
+			<div className="mt-4">
 				{isLoading ? (
 					<div className="flex items-center justify-center py-10">
 						<p className="text-secondary">Loading users...</p>
 					</div>
 				) : (
-					<ReusableTable columns={columns} data={data?.users || []} />
+					<ReusableTable columns={columns} data={filteredUsers} />
 				)}
 			</div>
 		</div>
