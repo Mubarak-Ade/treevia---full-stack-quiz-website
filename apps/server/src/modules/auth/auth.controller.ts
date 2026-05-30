@@ -3,7 +3,7 @@ import { AuthSchema, LoginSchema } from './auth.schema.js';
 import AuthService from './auth.service.js';
 import { sendToken } from '../../utils/tokens.js';
 import createHttpError from 'http-errors';
-import env from '../../env.js';
+import env from '../../config/env.js';
 import { zodValidator } from '../../utils/zodError.js';
 import { AppError } from '../../utils/error-handler.js';
 import { successResponse } from '../../utils/response.js';
@@ -77,17 +77,17 @@ const AuthController = {
         successResponse(res, 'Logout successfully');
     },
 
-    async sendResetToken (req: Request, res: Response) {        
+    async sendResetToken(req: Request, res: Response) {
         const token = await AuthService.sendResetToken(req.body)
         successResponse(res, "Verify Token Has Been Sent", token, 201)
     },
 
-    async verifyResetToken (req: Request, res: Response) {
+    async verifyResetToken(req: Request, res: Response) {
         const data = await AuthService.verifyResetToken(req.body)
         successResponse(res, "Password reset successfully", data, 200)
     },
 
-    
+
 };
 
 

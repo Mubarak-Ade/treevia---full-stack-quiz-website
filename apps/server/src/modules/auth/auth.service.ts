@@ -6,7 +6,7 @@ import { createAccessToken, createRefreshToken } from '../../utils/jwt.js';
 import type { Login, Register, ResetToken, VerifyToken } from './auth.schema.js';
 import Session from '../session/session.model.js';
 import jwt from 'jsonwebtoken';
-import env from '../../env.js';
+import env from '../../config/env.js';
 import { AppError } from '../../utils/error-handler.js';
 import { generateVerifyToken, hashValue } from '../../utils/tokens.js';
 import { resetPasswordEmail, sendVerificationEmail } from '../../utils/email.js';

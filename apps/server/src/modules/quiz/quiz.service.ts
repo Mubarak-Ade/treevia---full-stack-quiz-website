@@ -5,6 +5,7 @@ import { AppError } from '../../utils/error-handler.js';
 import { QuizRepository } from '../admin/quiz/quiz.repository.js';
 import Question from './question.model.js';
 import { SelectedOption } from '../attempt/attempt.validate.js';
+import { getOrSetCache } from '../../utils/cache.js';
 
 type QuizOption = {
     label: string;
@@ -34,35 +35,43 @@ const getQuizzes = async (category?: string | string[]) => {
 };
 
 const getQuestions = async (quizId: string, userId?: string) => {
-    const quiz = await Quiz.findById(quizId).populate('questions.questionId');
-    if (!quiz) {
-        throw new AppError(404, 'Quiz not found');
-    }
+    const cacheKey = `questions_${quizId}`;
 
-    const questions = quiz.questions
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-        .map(item => item.questionId as any)
-        .filter(question => question?._id);
+    return getOrSetCache(
+        cacheKey,
 
-    const completedAttempt = userId
-        ? await Result.exists({
-              user: userId,
-              quiz: quizId,
-              status: 'completed',
-              submittedAt: { $exists: true },
-          })
-        : null;
+        async () => {
 
-    return questions.map(question => ({
-            _id: question._id,
-            prompt: question.prompt,
-            difficulty: question.difficulty,
-            options: question.options.map((option: QuizOption) => ({
-                label: option.label,
-                text: option.text,
-                isCorrect: completedAttempt ? option.isCorrect : false,
-            })),
-    }));
+            const quiz = await Quiz.findById(quizId).populate('questions.questionId');
+            if (!quiz) {
+                throw new AppError(404, 'Quiz not found');
+            }
+
+            const questions = quiz.questions
+                .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+                .map(item => item.questionId as any)
+                .filter(question => question?._id);
+
+            const completedAttempt = userId
+                ? await Result.exists({
+                    user: userId,
+                    quiz: quizId,
+                    status: 'completed',
+                    submittedAt: { $exists: true },
+                })
+                : null;
+
+            return questions.map(question => ({
+                _id: question._id,
+                prompt: question.prompt,
+                difficulty: question.difficulty,
+                options: question.options.map((option: QuizOption) => ({
+                    label: option.label,
+                    text: option.text,
+                    isCorrect: completedAttempt ? option.isCorrect : false,
+                })),
+            }));
+        }, 60 * 60 * 6)
 };
 
 const submitQuiz = async (quizId: string, selectedOptions: SelectedOption, userId?: string) => {

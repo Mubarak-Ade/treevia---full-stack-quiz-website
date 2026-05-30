@@ -7,7 +7,7 @@ import path from 'path';
 import { uptime } from 'process';
 import { fileURLToPath } from 'url';
 import AdminRoutes from './admin.route.js';
-import env from './env.js';
+import env from './config/env.js';
 import authorizeRoles from './middleware/authorizeRoles.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 import requireAuth from './middleware/requireAuth.js';
@@ -47,7 +47,7 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/api', allRoutes)
-app.use('/api/admin', requireAuth, authorizeRoles, AdminRoutes);
+
 
 
 app.use(notFound)

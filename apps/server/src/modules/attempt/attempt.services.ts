@@ -6,10 +6,14 @@ import { QuizRepository } from '../admin/quiz/quiz.repository.js';
 import { SelectedOption } from './attempt.validate.js';
 
 const AttemptService = {
-    async getAttempt(userId: string) {
+    async getAttempt(userId: string, query?: { searchTerm?: string }) {
         const results = await Attempt.find({ user: userId })
             .sort({ createdAt: -1 })
-            .populate('quiz', 'title category')
+            .populate({
+                path: 'quiz',
+                select: 'title category',
+                match: query?.searchTerm ? { title: { $regex: query.searchTerm, $options: 'i' } } : {}
+            })
             .populate({
                 path: 'quiz',
                 populate: {
@@ -19,11 +23,13 @@ const AttemptService = {
             })
             .lean();
 
-        return results.map((result: any) => ({
-            ...result,
-            quiz: result.quiz.title,
-            category: result.quiz.category.name,
-        }));
+        return results
+            .filter((result: any) => result.quiz)
+            .map((result: any) => ({
+                ...result,
+                quiz: result.quiz.title,
+                category: result.quiz?.category?.name || 'N/A',
+            }));
     },
 
     async getSingleAttempt(userId: string, quizId: string) {

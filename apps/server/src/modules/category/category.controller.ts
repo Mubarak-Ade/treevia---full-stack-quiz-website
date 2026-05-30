@@ -15,9 +15,9 @@ export const getQuizByCategory: RequestHandler<QuizParams> = async (req, res, ne
   }
 };
 
-export const getCategories: RequestHandler = async (_req, res, next): Promise<void> => {
+export const getCategories: RequestHandler = async (req, res, next): Promise<void> => {
   try {
-    const categories = await CategoryService.getCategories();
+    const categories = await CategoryService.getCategories(req.query as any);
     res.json(categories);
   } catch (error) {
     next(error);

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import slugify from '@sindresorhus/slugify';
-import env from '../env.js';
+import env from '../config/env.js';
 import Quiz from '../modules/quiz/quiz.model.js';
 import Question from '../modules/quiz/question.model.js';
 import Category from '../modules/category/category.model.js';

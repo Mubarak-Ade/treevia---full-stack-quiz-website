@@ -4,7 +4,7 @@ import { successResponse } from '../../utils/response.js';
 
 export const getAttempt = async (req: Request, res: Response): Promise<void> => {
     const userId = req.user as string
-    const attempt = await AttemptService.getAttempt(userId)
+    const attempt = await AttemptService.getAttempt(userId, req.query as any)
     successResponse(res, "", attempt)
 }
 

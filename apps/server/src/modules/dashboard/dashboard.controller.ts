@@ -12,7 +12,7 @@ export const getUserStats= async (req: Request, res: Response, next: NextFunctio
 
 export const getLeaderBoard: RequestHandler = async (req, res, next): Promise<void> => {
   try {
-    const payload = await DashboardService.getLeaderBoard(req.user);
+    const payload = await DashboardService.getLeaderBoard(req.user, req.query as any);
     res.json(payload);
   } catch (error) {
     next(error);

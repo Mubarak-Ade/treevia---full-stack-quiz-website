@@ -12,4 +12,7 @@ export default cleanEnv(process.env, {
     SMTP_PORT: port(),
     SMTP_USER: str(),
     SMTP_PASS: str(),
+    REDIS_HOST: str(),
+    REDIS_PORT: str(),
+    REDIS_PASSWORD: str(),
 });

@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import env from '../env.js';
+import env from '../config/env.js';
 
 interface AuthUser {
     id: string;

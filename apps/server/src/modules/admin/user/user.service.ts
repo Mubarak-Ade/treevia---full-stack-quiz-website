@@ -3,21 +3,32 @@ import mongoose from "mongoose";
 import User from "../../user/user.model.js";
 import { AppError } from "../../../utils/error-handler.js";
 
-const getUsers = async (query: Record<string, unknown>) => {
-  const { online = false, search } = query as { online?: boolean; search?: string };
+const getUsers = async (query: Record<string, any>) => {
+  const filter: Record<string, any> = {};
 
-  const filter: any = { isOnline: online };
-  if (search) {
-    filter.$or = [{ username: { $regex: search, $options: "i" } }];
+  if (query.searchTerm) {
+    filter.$or = [
+      { username: { $regex: query.searchTerm, $options: "i" } },
+      { email: { $regex: query.searchTerm, $options: "i" } }
+    ];
   }
 
-  const users = await User.find(filter, "-password").sort({ createdAt: -1 });
-
-  if (!users || users.length === 0) {
-    throw new AppError(404, "No users");
+  if (query.role && query.role !== "all") {
+    filter.role = query.role;
   }
 
-  return users;
+  if (query.status && query.status !== "all") {
+    filter.isOnline = query.status === "active";
+  }
+
+  const users = await User.find(filter);
+
+  return {
+    users,
+    total: users.length,
+    page: 1,
+    pages: 1
+  };
 };
 
 const getSingleUser = async (userId: string) => {

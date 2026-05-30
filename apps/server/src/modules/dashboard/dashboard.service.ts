@@ -42,8 +42,8 @@ export const getUserRank = async (userId: string) => {
     return rank;
 };
 
-const getLeaderBoard = async (userId?: string) => {
-    const leaderboard = await UserStats.aggregate([
+const getLeaderBoard = async (userId?: string, query?: { searchTerm?: string }) => {
+    const pipeline: any[] = [
         {
             $lookup: {
                 from: 'users',
@@ -63,7 +63,17 @@ const getLeaderBoard = async (userId?: string) => {
             },
         },
         { $sort: { totalXp: -1 } },
-    ]);
+    ];
+
+    if (query?.searchTerm) {
+        pipeline.push({
+            $match: {
+                user: { $regex: query.searchTerm, $options: 'i' }
+            }
+        });
+    }
+
+    const leaderboard = await UserStats.aggregate(pipeline);
 
     const currentUser = userId
         ? await UserStats.findOne({ user: userId }).populate('user', 'username profilePic').lean()

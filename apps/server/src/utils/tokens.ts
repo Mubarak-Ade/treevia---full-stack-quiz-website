@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import env from '../env.js';
+import env from '../config/env.js';
 import crypto from "crypto"
 import bcrypt from 'bcryptjs';
 
@@ -26,7 +26,7 @@ export const generateVerifyToken = () => {
     const token = crypto.randomBytes(12).toString("hex")
     const expires = new Date(Date.now() + 24 * 60 * 60 * 100)
 
-    return {token, expires}
+    return { token, expires }
 }
 
 export const hashValue = async (value: string) => {
