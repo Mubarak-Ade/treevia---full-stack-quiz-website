@@ -4,6 +4,7 @@ import Quiz from '../../quiz/quiz.model.js';
 import { CreateQuizDTO, UpdateQuizDTO } from './quiz.schema.js';
 import { AppError } from '../../../utils/error-handler.js';
 import { QuizRepository } from './quiz.repository.js';
+import { invalidatePatternCache } from '../../../utils/cache.js';
 
 interface QuizQuery {
     search?: string;
@@ -21,6 +22,14 @@ const categoryExist = async (categoryId: string) => {
         throw new AppError(404, 'Please choose an existing category');
     }
     return id;
+};
+
+export const invalidateQuizCaches = async (quizId?: string) => {
+    await Promise.all([
+        invalidatePatternCache('quizzes:*'),
+        invalidatePatternCache('quiz_by_category_*'),
+        quizId ? invalidatePatternCache(`questions:${quizId}`) : invalidatePatternCache('questions:*'),
+    ]);
 };
 
 export function toObjectId(id: string, label = 'id'): Types.ObjectId {
@@ -81,6 +90,7 @@ const AdminQuizService = {
             timeLimitPerQuestion: timeLimitPerQuestion,
             xpReward: xpReward,
         });
+        await invalidateQuizCaches();
         return quiz;
     },
 
@@ -119,6 +129,8 @@ const AdminQuizService = {
             throw new AppError(404, 'Quiz not found');
         }
 
+        await invalidateQuizCaches(quizId);
+
         return updatedQuiz;
     },
 
@@ -140,6 +152,8 @@ const AdminQuizService = {
 
         quiz.status = 'published';
         await quiz.save(); // pre-save hook sets publishedAt
+
+        await invalidateQuizCaches(quizId);
 
         return quiz;
     },
@@ -185,6 +199,7 @@ const AdminQuizService = {
         quiz.status = 'archived';
 
         await quiz.save();
+        await invalidateQuizCaches(quizId);
         return quiz;
     },
 
@@ -198,6 +213,7 @@ const AdminQuizService = {
         }
 
         await quiz.deleteOne();
+        await invalidateQuizCaches(quizId);
         return quiz;
     },
 
@@ -208,6 +224,7 @@ const AdminQuizService = {
         }
         quiz.status = 'draft';
         await quiz.save();
+        await invalidateQuizCaches(quizId);
         return quiz;
     },
 

@@ -5,6 +5,15 @@ import { CreateCategoryDTO, UpdateCategoryDTO } from './category.validate.js';
 import { CategoryRepostory } from './category.repository.js';
 import { AppError } from '../../../utils/error-handler.js';
 import mongoose from 'mongoose';
+import { invalidatePatternCache } from '../../../utils/cache.js';
+
+const invalidateCategoryCaches = async () => {
+    await Promise.all([
+        invalidatePatternCache('categories*'),
+        invalidatePatternCache('quiz_by_category_*'),
+        invalidatePatternCache('quizzes:*'),
+    ]);
+};
 
 export const CategoryService = {
     async getCategories() {
@@ -17,6 +26,9 @@ export const CategoryService = {
             ...body,
             tags: body.tags.map(t => ({ name: t })),
         });
+
+        await invalidateCategoryCaches();
+
         return {
             message: 'category created successfully',
             category,
@@ -28,6 +40,8 @@ export const CategoryService = {
         if (!category) {
             throw new AppError(404, 'category not found');
         }
+
+        await invalidateCategoryCaches();
 
         return category;
     },
@@ -46,6 +60,8 @@ export const CategoryService = {
         if (!category) {
             throw new AppError(404, 'category does not exist');
         }
+
+        await invalidateCategoryCaches();
 
         return category;
     },

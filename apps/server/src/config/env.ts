@@ -1,4 +1,4 @@
-import { cleanEnv, port, str } from 'envalid';
+import { cleanEnv, num, port, str } from 'envalid';
 
 export default cleanEnv(process.env, {
     PORT: port(),
@@ -15,4 +15,6 @@ export default cleanEnv(process.env, {
     REDIS_HOST: str(),
     REDIS_PORT: str(),
     REDIS_PASSWORD: str(),
+    RATE_LIMIT_WINDOW_SECONDS: num({ default: 60 }),
+    RATE_LIMIT_MAX_REQUESTS: num({ default: 100 }),
 });

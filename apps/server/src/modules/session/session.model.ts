@@ -1,42 +1,47 @@
-import mongoose, { model, Model, Schema } from 'mongoose';
+import { randomUUID } from 'node:crypto';
 
 export interface ISession {
+    _id: string;
     user: string;
     refreshTokenHash: string;
     userAgent: string;
     ip: string;
     expiresAt: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-const sessionSchema = new Schema(
-    {
-        user: {
-            type: mongoose.Types.ObjectId,
-            ref: 'User',
-            required: true,
-            index: true,
-        },
-        refreshTokenHash: {
-            type: String,
-            required: true,
-        },
-        userAgent: {
-            type: String,
-            default: 'unknown',
-        },
-        ip: {
-            type: String,
-            default: 'unknown',
-        },
-        expiresAt: {
-            type: Date,
-            required: true,
-            index: true,
-        },
-    },
-    { timestamps: true }
-);
+export interface CreateSessionInput {
+    _id?: string;
+    user: string;
+    refreshTokenHash?: string;
+    userAgent?: string;
+    ip?: string;
+    expiresAt: Date;
+}
 
-const Session: Model<ISession> = model<ISession>('Session', sessionSchema);
+export interface UpdateSessionInput {
+    refreshTokenHash?: string;
+    expiresAt?: Date;
+}
 
-export default Session;
+export const createSessionEntity = (input: CreateSessionInput): ISession => {
+    const now = new Date();
+
+    return {
+        _id: input._id ?? randomUUID(),
+        user: input.user.toString(),
+        refreshTokenHash: input.refreshTokenHash ?? '',
+        userAgent: input.userAgent ?? 'unknown',
+        ip: input.ip ?? 'unknown',
+        expiresAt: input.expiresAt,
+        createdAt: now,
+        updatedAt: now,
+    };
+};
+
+export const applySessionUpdate = (session: ISession, input: UpdateSessionInput): ISession => ({
+    ...session,
+    ...input,
+    updatedAt: new Date(),
+});

@@ -1,10 +1,10 @@
-import createHttpError from 'http-errors';
 import bcrypt from 'bcryptjs';
+import { randomUUID } from 'node:crypto';
 import User, { IUser } from '../user/user.model.js';
 import UserStats from '../user/user-stats.model.js';
 import { createAccessToken, createRefreshToken } from '../../utils/jwt.js';
 import type { Login, Register, ResetToken, VerifyToken } from './auth.schema.js';
-import Session from '../session/session.model.js';
+import SessionService from '../session/session.service.js';
 import jwt from 'jsonwebtoken';
 import env from '../../config/env.js';
 import { AppError } from '../../utils/error-handler.js';
@@ -29,19 +29,18 @@ const structureUser = (user: IUser) => ({
 });
 
 const createSessionAndTokens = async (userId: string, { userAgent, ip }: SessionMeta) => {
-    const session = new Session({
+    const sessionId = randomUUID();
+    const accessToken = createAccessToken(userId);
+    const refreshToken = createRefreshToken(sessionId);
+
+    const session = await SessionService.create({
+        _id: sessionId,
         user: userId,
+        refreshTokenHash: await bcrypt.hash(refreshToken, 10),
         userAgent,
         ip,
         expiresAt: new Date(Date.now() + SESSION_DURATION_MS),
     });
-
-    const accessToken = createAccessToken(userId);
-    const refreshToken = createRefreshToken(session._id.toString());
-
-    session.refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-
-    await session.save();
 
     return { session, accessToken, refreshToken };
 };
@@ -55,11 +54,11 @@ const verifyRefreshToken = (token: string): { id: string } => {
 };
 
 const findActiveSession = async (sessionId: string) => {
-    const session = await Session.findById(sessionId);
+    const session = await SessionService.findById(sessionId);
 
     if (!session || session.expiresAt.getTime() <= Date.now()) {
         if (session) {
-            await Session.findByIdAndDelete(session._id);
+            await SessionService.deleteById(session._id);
         }
 
         throw new AppError(401, INVALID_SESSION_ERROR);
@@ -137,16 +136,17 @@ const AuthService = {
 
         const valid = await bcrypt.compare(token, session.refreshTokenHash);
         if (!valid) {
-            await Session.findByIdAndDelete(session._id);
+            await SessionService.deleteById(session._id);
             throw new AppError(400, INVALID_SESSION_ERROR);
         }
 
         const newAccessToken = createAccessToken(session.user);
         const newRefreshToken = createRefreshToken(session._id.toString());
 
-        session.refreshTokenHash = await bcrypt.hash(newRefreshToken, 10);
-        session.expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
-        await session.save();
+        await SessionService.update(session._id, {
+            refreshTokenHash: await bcrypt.hash(newRefreshToken, 10),
+            expiresAt: new Date(Date.now() + SESSION_DURATION_MS),
+        });
 
         return {
             access: newAccessToken,
@@ -178,14 +178,14 @@ const AuthService = {
     },
 
     async getAllSession() {
-        const session = await Session.find({}).lean();
+        const session = await SessionService.findAll();
         return session;
     },
 
     async logout(token: string) {
         const decoded = verifyRefreshToken(token);
 
-        await Session.findByIdAndDelete(decoded.id);
+        await SessionService.deleteById(decoded.id);
     },
 
     async sendResetToken({ email }: ResetToken) {
@@ -195,7 +195,7 @@ const AuthService = {
             throw new AppError(400, 'invalid email');
         }
 
-        await Session.deleteMany({ user: user._id });
+        await SessionService.deleteByUser(user._id.toString());
 
         const { token, expires } = generateVerifyToken();
 

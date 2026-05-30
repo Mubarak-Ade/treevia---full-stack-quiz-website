@@ -10,6 +10,7 @@ import AdminRoutes from './admin.route.js';
 import env from './config/env.js';
 import authorizeRoles from './middleware/authorizeRoles.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
+import { rateLimiter } from './middleware/rateLimiter.js';
 import requireAuth from './middleware/requireAuth.js';
 import allRoutes from "./all.route.js"
 
@@ -46,7 +47,7 @@ app.get('/health', (_req, res) => {
     });
 });
 
-app.use('/api', allRoutes)
+app.use('/api', rateLimiter(), allRoutes)
 
 
 

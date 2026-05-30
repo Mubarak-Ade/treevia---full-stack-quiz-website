@@ -5,7 +5,7 @@ import { AppError } from '../../utils/error-handler.js';
 import { QuizRepository } from '../admin/quiz/quiz.repository.js';
 import Question from './question.model.js';
 import { SelectedOption } from '../attempt/attempt.validate.js';
-import { getOrSetCache } from '../../utils/cache.js';
+import { getOrSetCache, invalidatePatternCache } from '../../utils/cache.js';
 
 type QuizOption = {
     label: string;
@@ -14,34 +14,41 @@ type QuizOption = {
 };
 
 const getQuizzes = async (category?: string | string[]) => {
-    const filter = category ? { category, status: 'published' } : { status: 'published' };
-    const quizzes = await QuizRepository.findAll(filter).populate('category', 'name');
-
-    return quizzes.map(quiz => ({
-        _id: String(quiz._id),
-        title: quiz.title,
-        category: quiz.category,
-        difficulty: quiz.difficulty,
-        createdAt: quiz.createdAt,
-        updatedAt: quiz.updatedAt,
-        status: quiz.status,
-        questionCount: quiz.stats?.questionCount ?? 0,
-        timeLimitPerQuestion: quiz.timeLimitPerQuestion,
-        xpReward: quiz.xpReward,
-        coverImage: quiz.coverImage,
-        estimatedDurationMinutes: quiz.stats?.estimatedDurationMinutes ?? 0,
-        estimatedSuccessRate: quiz.stats?.estimatedSuccessRate ?? 0,
-    }));
-};
-
-const getQuestions = async (quizId: string, userId?: string) => {
-    const cacheKey = `questions_${quizId}`;
+    const categoryKey = Array.isArray(category) ? category.sort().join(',') : category ?? 'all';
+    const cacheKey = `quizzes:${categoryKey}`;
 
     return getOrSetCache(
         cacheKey,
-
         async () => {
+            const filter = category ? { category, status: 'published' } : { status: 'published' };
+            const quizzes = await QuizRepository.findAll(filter).populate('category', 'name');
 
+            return quizzes.map(quiz => ({
+                _id: String(quiz._id),
+                title: quiz.title,
+                category: quiz.category,
+                difficulty: quiz.difficulty,
+                createdAt: quiz.createdAt,
+                updatedAt: quiz.updatedAt,
+                status: quiz.status,
+                questionCount: quiz.stats?.questionCount ?? 0,
+                timeLimitPerQuestion: quiz.timeLimitPerQuestion,
+                xpReward: quiz.xpReward,
+                coverImage: quiz.coverImage,
+                estimatedDurationMinutes: quiz.stats?.estimatedDurationMinutes ?? 0,
+                estimatedSuccessRate: quiz.stats?.estimatedSuccessRate ?? 0,
+            }));
+        },
+        10 * 60
+    );
+};
+
+const getQuestions = async (quizId: string, userId?: string) => {
+    const cacheKey = `questions:${quizId}`;
+
+    const questions = await getOrSetCache(
+        cacheKey,
+        async () => {
             const quiz = await Quiz.findById(quizId).populate('questions.questionId');
             if (!quiz) {
                 throw new AppError(404, 'Quiz not found');
@@ -52,15 +59,6 @@ const getQuestions = async (quizId: string, userId?: string) => {
                 .map(item => item.questionId as any)
                 .filter(question => question?._id);
 
-            const completedAttempt = userId
-                ? await Result.exists({
-                    user: userId,
-                    quiz: quizId,
-                    status: 'completed',
-                    submittedAt: { $exists: true },
-                })
-                : null;
-
             return questions.map(question => ({
                 _id: question._id,
                 prompt: question.prompt,
@@ -68,10 +66,29 @@ const getQuestions = async (quizId: string, userId?: string) => {
                 options: question.options.map((option: QuizOption) => ({
                     label: option.label,
                     text: option.text,
-                    isCorrect: completedAttempt ? option.isCorrect : false,
+                    isCorrect: option.isCorrect,
                 })),
             }));
-        }, 60 * 60 * 6)
+        },
+        60 * 60 * 6
+    );
+
+    const completedAttempt = userId
+        ? await Result.exists({
+              user: userId,
+              quiz: quizId,
+              status: 'completed',
+              submittedAt: { $exists: true },
+          })
+        : null;
+
+    return questions.map((question: any) => ({
+        ...question,
+        options: question.options.map((option: QuizOption) => ({
+            ...option,
+            isCorrect: completedAttempt ? option.isCorrect : false,
+        })),
+    }));
 };
 
 const submitQuiz = async (quizId: string, selectedOptions: SelectedOption, userId?: string) => {
@@ -194,6 +211,8 @@ const submitQuiz = async (quizId: string, selectedOptions: SelectedOption, userI
             { upsert: true }
         );
 
+        await invalidatePatternCache('leaderboard:*');
+
         saved = true;
     }
 
@@ -213,32 +232,37 @@ const submitQuiz = async (quizId: string, selectedOptions: SelectedOption, userI
 };
 
 const getRandomQuiz = async () => {
-    const randomQuiz = await Quiz.aggregate([
-        { $match: { status: 'published' } },
-        { $sample: { size: 3 } },
-        {
-            $lookup: {
-                from: 'categories',
-                localField: 'category',
-                foreignField: '_id',
-                as: 'category',
-            },
-        },
-        {
-            $project: {
-                _id: 1,
-                title: 1,
-                category: { $arrayElemAt: ['$category', 0] },
-                difficulty: 1,
-                status: 1,
-                coverImage: 1,
-                timeLimitPerQuestion: 1,
-                createdAt: 1,
-                updatedAt: 1,
-                questionCount: '$stats.questionCount',
-            },
-        },
-    ]);
+    const randomQuiz = await getOrSetCache(
+        'quizzes:random',
+        async () =>
+            Quiz.aggregate([
+                { $match: { status: 'published' } },
+                { $sample: { size: 3 } },
+                {
+                    $lookup: {
+                        from: 'categories',
+                        localField: 'category',
+                        foreignField: '_id',
+                        as: 'category',
+                    },
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        title: 1,
+                        category: { $arrayElemAt: ['$category', 0] },
+                        difficulty: 1,
+                        status: 1,
+                        coverImage: 1,
+                        timeLimitPerQuestion: 1,
+                        createdAt: 1,
+                        updatedAt: 1,
+                        questionCount: '$stats.questionCount',
+                    },
+                },
+            ]),
+        60
+    );
 
     if (randomQuiz.length === 0) {
         throw new AppError(404, 'No quizzes available');

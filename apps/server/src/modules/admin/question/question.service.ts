@@ -1,7 +1,7 @@
 import Question from '../../quiz/question.model.js';
 import { IQuiz } from '../../quiz/quiz.model.js';
 import { AppError } from '../../../utils/error-handler.js';
-import AdminQuizService, { toObjectId } from '../quiz/quiz.service.js';
+import AdminQuizService, { invalidateQuizCaches, toObjectId } from '../quiz/quiz.service.js';
 import { AddQuestionDTO, UpdateQuestionDTO } from './question.validate.js';
 
 export const AdminQuestionService = {
@@ -59,6 +59,7 @@ export const AdminQuestionService = {
         this._normaliseOrder(quiz);
 
         await quiz.save();
+        await invalidateQuizCaches(quizId);
 
         return quiz;
     },
@@ -80,6 +81,7 @@ export const AdminQuestionService = {
         }
 
         const question = await Question.findByIdAndUpdate(questionId, update, { new: true });
+        await invalidateQuizCaches();
         return question;
     },
 
@@ -110,6 +112,7 @@ export const AdminQuestionService = {
         this._normaliseOrder(quiz);
 
         await quiz.save();
+        await invalidateQuizCaches(quizId);
 
         return quiz;
     },

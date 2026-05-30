@@ -2,6 +2,7 @@ import UserStats from '../user/user-stats.model.js';
 import { calculateAccuracy, calcuteTotalQuestion, matchStage } from '../../pipelines/stats.js';
 import { AppError } from '../../utils/error-handler.js';
 import { calculateLevel } from '../../utils/xp_level_calculator.js';
+import { getOrSetCache } from '../../utils/cache.js';
 
 const getUserStats = async (userId: string) => {
     if (!userId) {
@@ -43,37 +44,45 @@ export const getUserRank = async (userId: string) => {
 };
 
 const getLeaderBoard = async (userId?: string, query?: { searchTerm?: string }) => {
-    const pipeline: any[] = [
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'user',
-                foreignField: '_id',
-                as: 'user',
-            },
-        },
-        { $unwind: '$user' },
-        {
-            $project: {
-                user: '$user.username',
-                profile: '$user.profilePic',
-                level: 1,
-                totalXp: 1,
-                rank: 1,
-            },
-        },
-        { $sort: { totalXp: -1 } },
-    ];
+    const cacheKey = `leaderboard:${query?.searchTerm ?? 'all'}`;
 
-    if (query?.searchTerm) {
-        pipeline.push({
-            $match: {
-                user: { $regex: query.searchTerm, $options: 'i' }
+    const leaderboard = await getOrSetCache(
+        cacheKey,
+        async () => {
+            const pipeline: any[] = [
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'user',
+                    },
+                },
+                { $unwind: '$user' },
+                {
+                    $project: {
+                        user: '$user.username',
+                        profile: '$user.profilePic',
+                        level: 1,
+                        totalXp: 1,
+                        rank: 1,
+                    },
+                },
+                { $sort: { totalXp: -1 } },
+            ];
+
+            if (query?.searchTerm) {
+                pipeline.push({
+                    $match: {
+                        user: { $regex: query.searchTerm, $options: 'i' },
+                    },
+                });
             }
-        });
-    }
 
-    const leaderboard = await UserStats.aggregate(pipeline);
+            return UserStats.aggregate(pipeline);
+        },
+        5 * 60
+    );
 
     const currentUser = userId
         ? await UserStats.findOne({ user: userId }).populate('user', 'username profilePic').lean()
