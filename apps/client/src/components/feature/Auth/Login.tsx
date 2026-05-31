@@ -45,7 +45,6 @@ const Login = () => {
                     type: 'manual',
                     message: error.message,
                 });
-                (error.message);
             },
         });
     };

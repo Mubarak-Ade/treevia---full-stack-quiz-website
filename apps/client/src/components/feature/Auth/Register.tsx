@@ -49,12 +49,11 @@ const Register = () => {
 
             },
             onError: error => {
-                showNotification('error', JSON.stringify(error.message));
+                showNotification('error', error.message);
                 setError('root', {
                     type: 'manual',
                     message: error.message,
                 });
-                (errors.root?.message);
             },
         });
     };

@@ -73,7 +73,11 @@ const AuthService = {
 
         let user = await User.findOne({ email });
         if (user) {
-            throw new AppError(400, 'User already exists');
+            if (user.isVerified) {
+                throw new AppError(400, 'User already exists');
+            }
+            await this.resendVerificationEmail(email);
+            throw new AppError(403, 'User already exists but email not verified. A new verification email has been sent.');
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -90,19 +94,12 @@ const AuthService = {
         });
 
         await user.save();
-        await UserStats.create({ user: user._id });
-
-        const { accessToken, refreshToken } = await createSessionAndTokens(
-            user._id.toString(),
-            meta
-        );
+        await UserStats.create({ user: user._id })
 
         await sendVerificationEmail(user.email, token);
 
         return {
             user: structureUser(user),
-            accessToken,
-            refreshToken,
         };
     },
 
@@ -117,6 +114,11 @@ const AuthService = {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             throw new AppError(400, INVALID_CREDENTIALS_ERROR);
+        }
+
+        if (!user.isVerified) {
+            await this.resendVerificationEmail(email);
+            throw new AppError(400, 'Email not verified. Please verify your email before logging in.');
         }
 
         const { accessToken, refreshToken } = await createSessionAndTokens(
