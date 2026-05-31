@@ -25,8 +25,7 @@ const option: CookieOptions = {
 const AuthController = {
     async register(req: Request, res: Response) {
         const meta = structureMeta(req);
-        const { user, accessToken, refreshToken } = await AuthService.register(req.body, meta);
-        sendToken(res, accessToken, refreshToken);
+        const user = await AuthService.register(req.body, meta);
         successResponse(res, 'Register Account Success', user, 201);
     },
 
@@ -59,6 +58,15 @@ const AuthController = {
     async verifyEmail(req: Request, res: Response) {
         const data = await AuthService.verifyEmail(req.query.token as string)
         successResponse(res, "Email verified", data, 200)
+    },
+
+    async resendVerificationEmail(req: Request, res: Response) {
+        const { email } = req.body as { email: string };
+        const data = await AuthService.resendVerificationEmail(email);
+        if (!data) {
+            throw new AppError(400, 'Unable to resend verification email.');
+        }
+        successResponse(res, 'Verification email resent', true, 200);
     },
 
     async logout(req: Request, res: Response) {

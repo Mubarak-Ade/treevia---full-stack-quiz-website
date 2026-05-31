@@ -118,7 +118,7 @@ const AuthService = {
 
         if (!user.isVerified) {
             await this.resendVerificationEmail(email);
-            throw new AppError(400, 'Email not verified. Please verify your email before logging in.');
+            throw new AppError(400, 'Email not verified. Please verify your email before logging in.', "EMAIL_NOT_VERIFIED");
         }
 
         const { accessToken, refreshToken } = await createSessionAndTokens(

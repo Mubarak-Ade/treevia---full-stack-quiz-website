@@ -7,6 +7,7 @@ import {
     sendResetPasswordTokenApi,
     verifyEmailApi,
     verifyResetPasswordApi,
+    resendVerificationEmailApi,
 } from '../services/auth.service';
 
 export const useLogin = () => {
@@ -54,5 +55,11 @@ export const useVerifyResetPassword = () => {
 export const useVerifyEmail = () => {
     return useMutation({
         mutationFn: verifyEmailApi,
+    });
+};
+
+export const useResendVerificationEmail = () => {
+    return useMutation({
+        mutationFn: resendVerificationEmailApi,
     });
 };

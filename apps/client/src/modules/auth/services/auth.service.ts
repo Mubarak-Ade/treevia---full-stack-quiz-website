@@ -30,3 +30,8 @@ export const verifyEmailApi = async (token: string) => {
     const res = await api.get("auth/verify-email", { params: { token } })
     return res.data
 }
+
+export const resendVerificationEmailApi = async (data: { email: string }) => {
+    const res = await api.post("auth/resend-verification", data)
+    return res.data
+}

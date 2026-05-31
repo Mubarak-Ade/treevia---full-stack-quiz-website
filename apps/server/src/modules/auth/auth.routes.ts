@@ -10,6 +10,7 @@ router.post('/register', rateLimitStrategies.register, zodValidator(AuthSchema),
 router.post('/login', rateLimitStrategies.login, zodValidator(LoginSchema), AuthController.login);
 router.post('/refresh', rateLimitStrategies.refreshToken, AuthController.refreshController);
 router.post('/logout', AuthController.logout);
+router.post('/resend-verification', rateLimitStrategies.forgotPassword, zodValidator(SendResetTokenSchema), AuthController.resendVerificationEmail);
 router.get('/verify-email', AuthController.verifyEmail);
 router.post(
     '/reset',

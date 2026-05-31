@@ -6,11 +6,12 @@ import { submitVariant } from '../../../utils/Animation/variant/authVariant';
 
 import Image from '@/assets/images/transparent tree illustration.png';
 import { useNotification } from '@/context/NotificationProvider';
-import { useLogin } from '@/modules/auth/controllers/auth.controller';
+import { useLogin, useResendVerificationEmail } from '@/modules/auth/controllers/auth.controller';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import { InputField } from '../share/InputField';
+import { useState } from 'react';
 
 const schema = z.object({
     email: z.string().email('invalid email address'),
@@ -22,7 +23,10 @@ type FormData = z.infer<typeof schema>;
 const Login = () => {
     const { showNotification } = useNotification();
     const login = useLogin();
+    const resendVerificationEmail = useResendVerificationEmail();
     const navigate = useNavigate()
+    const [pendingResendEmail, setPendingResendEmail] = useState<string | null>(null);
+    const [showResendButton, setShowResendButton] = useState(false);
 
     const {
         register,
@@ -33,6 +37,13 @@ const Login = () => {
         resolver: zodResolver(schema),
     });
 
+    const isEmailNotVerifiedError = (error: unknown) => {
+        if (!error || typeof error !== 'object') return false;
+        const response = (error as any).response;
+        const details = response?.data?.details;
+        return details === 'EMAIL_NOT_VERIFIED';
+    };
+
     const onSubmit: SubmitHandler<FormData> = data => {
         login.mutate(data, {
             onSuccess: () => {
@@ -40,13 +51,34 @@ const Login = () => {
                 navigate("/quizzes")
             },
             onError: error => {
-                showNotification('error', error.message);
+                const unverified = isEmailNotVerifiedError(error);
+
+                setShowResendButton(unverified);
+                setPendingResendEmail(unverified ? data.email : null);
+
+                showNotification('error', (error as any)?.message || 'Login failed');
                 setError('root', {
                     type: 'manual',
-                    message: error.message,
+                    message: (error as any)?.message || 'Login failed',
                 });
             },
         });
+    };
+
+    const handleResendVerification = () => {
+        if (!pendingResendEmail) return;
+
+        resendVerificationEmail.mutate(
+            { email: pendingResendEmail },
+            {
+                onSuccess: () => {
+                    showNotification('success', 'Verification email resent. Check your inbox.');
+                },
+                onError: error => {
+                    showNotification('error', (error as any)?.message || 'Unable to resend verification email.');
+                },
+            }
+        );
     };
 
     return (
@@ -96,6 +128,20 @@ const Login = () => {
                     <Link to="/forgot-password" className="text-primary ">
                         Forgotten Password
                     </Link>
+
+                    {showResendButton && (
+                        <div className="mt-4 p-4 rounded-3xl border border-yellow-400/30 bg-yellow-500/10 text-yellow-100">
+                            <p className="text-sm font-medium">Your email is not verified.</p>
+                            <button
+                                type="button"
+                                onClick={handleResendVerification}
+                                disabled={resendVerificationEmail.isPending}
+                                className="mt-3 inline-flex items-center justify-center rounded-full bg-yellow-400/20 px-4 py-2 text-sm font-semibold text-yellow-200 transition hover:bg-yellow-400/30 disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                                {resendVerificationEmail.isPending ? 'Resending…' : 'Resend Verification Email'}
+                            </button>
+                        </div>
+                    )}
 
                     {/* Submit Button */}
                     <motion.button
