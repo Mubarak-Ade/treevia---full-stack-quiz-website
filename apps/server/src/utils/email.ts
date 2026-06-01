@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer'
-import env from '../config/env.js'
+import nodemailer from 'nodemailer';
+import env from '../config/env.js';
 
 const transporter = nodemailer.createTransport({
     host: env.SMTP_HOST,
@@ -8,10 +8,15 @@ const transporter = nodemailer.createTransport({
         user: env.SMTP_USER,
         pass: env.SMTP_PASS,
     },
-})
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+});
+
+console.log({ host: env.SMTP_HOST, user: env.SMTP_USER });
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-    const link = `${env.CLIENT_URL}/verify-email?token=${token}`
+    const link = `${env.CLIENT_URL}/verify-email?token=${token}`;
     await transporter.sendMail({
         from: `Treevia: <${env.SMTP_USER}>`,
         to: email,
@@ -25,11 +30,11 @@ export const sendVerificationEmail = async (email: string, token: string) => {
                     </a>
                     <p>If you didn’t sign up, ignore this email.</p>
                 </div>`,
-    })
-}
+    });
+};
 
 export const resetPasswordEmail = async (email: string, token: string) => {
-    const link = `${env.CLIENT_URL}/reset-password?token=${token}`
+    const link = `${env.CLIENT_URL}/reset-password?token=${token}`;
     await transporter.sendMail({
         from: `Treevia: <${env.SMTP_USER}>`,
         to: email,
@@ -43,5 +48,5 @@ export const resetPasswordEmail = async (email: string, token: string) => {
                     </a>
                     <p>If you didn’t request a password reset, ignore this email.</p>
                 </div>`,
-    })
-}
+    });
+};
