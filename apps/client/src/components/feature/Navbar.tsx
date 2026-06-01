@@ -63,6 +63,8 @@ const Navbar = () => {
 	const user = useAuthStore((s) => s.user);
 	const logoutMutation = useLogout();	
 
+	console.log({ user })
+
 	const logout = () => logoutMutation.mutate()
 	
 

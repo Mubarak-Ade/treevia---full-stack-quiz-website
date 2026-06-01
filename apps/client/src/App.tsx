@@ -19,15 +19,17 @@ function App() {
         initTheme();
     }, [initTheme]);
 
+    console.log({user})
+
     useEffect(() => {
-        if (!isLoading) return
+        if (isLoading) return
             if (user) {
-                setAuth(user);
+                setAuth(user.data);
             } else {
                 clearAuth();
             }
 
-    }, [isLoading, user]);
+    }, [isLoading, user, setAuth, clearAuth]);
 
     return <BrowserRouter>{isAuthLoading ? <QuizLoader loading /> : <AppRoutes />}</BrowserRouter>;
 }
